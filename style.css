@@ -1,0 +1,116 @@
+:root {
+  --pink: #f3ebde;
+  --peach: #ffc6a8;
+  --cream: #fff5ec;
+  --brown: #5a3e36;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #f3ebde, #ffc6a8, #c3f0ff);
+    min-height: 100vh;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background: rgba(255, 255, 255, 0.8);
+    background-image: url('img/products/bgbear.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    backdrop-filter: blur(10px);
+}
+
+
+header p {
+  font-size: 1 rem;
+  color: #fff5ec;
+  font-style: italic;
+}
+
+
+h1 {
+    color: #f3ebde;
+}
+
+.cart {
+    background: #f3ebde;
+    padding: 10px 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 20px 40px;
+}
+
+input {
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    width: 250px;
+}
+
+.filters button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    background: #ffffff;
+    transition: 0.3s;
+}
+
+.filters button.active,
+.filters button:hover {
+    background: #f3ebde;
+}
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    padding: 20px 40px;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 20px;
+    padding: 15px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card h3 {
+    margin: 10px 0 5px;
+    color: #5a3e36;
+}
+
+.card p {
+    margin: 0 0 10px;
+    color: #777;
+}
+
+.card button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 15px;
+    background: #ffc6a8;
+    color: white;
+    cursor: pointer;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+}
