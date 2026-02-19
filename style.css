@@ -18,10 +18,11 @@ header {
     align-items: center;
     padding: 20px 40px;
     background: rgba(255, 255, 255, 0.8);
-    background-image: url('img/products/bgbear.jpg');
+    background-image: url('img/icon/bgHeader.png');
     background-repeat: no-repeat;
     background-position: center;
     backdrop-filter: blur(10px);
+    min-width: 800px;
 }
 
 
@@ -33,7 +34,7 @@ header p {
 
 
 h1 {
-    color: #f3ebde;
+    color: #5a3e36;
 }
 
 .cart {
@@ -49,6 +50,16 @@ h1 {
     gap: 15px;
     padding: 20px 40px;
 }
+
+
+#contactUs {
+    background: #f3ebde;
+    margin: 20px 40px 0 40px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
 
 input {
     padding: 10px;
