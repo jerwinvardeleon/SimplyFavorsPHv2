@@ -1,8 +1,8 @@
 const products = [
-  { id: 1, name: "Wipes in can", price: 5, category: "Accessories", bimg: "img/products/wipes.jpg" },
-  { id: 2, name: "Pastel Tote Bag", price: 15, category: "Bags" },
-  { id: 3, name: "Mini Plushie", price: 12, category: "Toys" },
-  { id: 4, name: "Sticker Pack", price: 4, category: "Stationery" },
+  { id: 1, name: "Keychain (bottle)", price: 35, category: "keychain", bimg: "img/products/KC_bottle.jpg" },
+  { id: 2, name: "Keychain (acrylic)", price: 35, category: "keychain" , bimg: "img/products/KC_acrylic.jpg"},
+  { id: 3, name: "Pin (badge)", price: 35, category: "pins", bimg: "img/products/pin.jpg" },
+  { id: 4, name: "Baptismal candle", price: 40, category: "candle" , bimg: "img/products/bapt.jpg"},
   { id: 5, name: "Souvenir Mug", price: 10, category: "Home" }
 ];
 
@@ -16,6 +16,7 @@ const cartCount = document.getElementById("cart-count");
 const cartTotal = document.getElementById("cart-total");
 
 const categories = ["All", ...new Set(products.map(p => p.category))];
+// const categories = ["All", "Bags","Toys"];
 
 function renderFilters() {
   filtersContainer.innerHTML = "";
@@ -46,7 +47,7 @@ function renderProducts() {
     card.className = "card";
 
     card.innerHTML = `
-      <div style="height:190px;background-image: url(${product.bimg});background-size: contain;background-repeat: no-repeat;border-radius:15px;"></div>
+      <div style="height:246px;background-image: url(${product.bimg});background-size: contain;background-repeat: no-repeat;border-radius:15px;"></div>
       <h3>${product.name}</h3>
       <p>${product.category}</p>
       <strong>₱ ${product.price}</strong><br><br>
