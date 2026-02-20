@@ -23,7 +23,7 @@ const products = [
   { id: 21, name: "Spray Bottle - Gold (perfume)", price: 55, category: "perfume", bimg: "img/products/perfg.jpg" },
   { id: 22, name: "Scented Candle", price: 65, category: "candle", bimg: "img/products/scncand.jpeg" },
   { id: 22, name: "Keychain (perfume)", price: 55, category: "keychain", bimg: "img/products/KC_ess.png" },
-
+  // additional category filter
   { id: 71, name: "Spray Bottle (perfume)", price: 65, category: "spray bottle", bimg: "img/products/spry_per.png" },
   { id: 61, name: "Spray Bottle (alcohol)", price: 40, category: "spray bottle", bimg: "img/products/spry_alc.png" },
   { id: 211, name: "Spray Bottle - Gold (perfume)", price: 55, category: "spray bottle", bimg: "img/products/perfg.jpg" }
@@ -101,17 +101,6 @@ function renderProducts() {
   });
 }
 
-// Setting up filter per amount..............
-
-
-
-
-
-
-
-
-
-
 function addToCart(id) {
   const product = products.find(p => p.id === id);
   cart.push(product);
@@ -128,3 +117,21 @@ searchInput.addEventListener("input", renderProducts);
 
 renderFilters();
 renderProducts();
+
+// BEST SELLING PRODUCT DISPLAY
+document.addEventListener("DOMContentLoaded", () => {
+  const bestSelling = document.getElementById("bestSelling");
+  const product = products.find(p => p.id === 12);
+  if (product && bestSelling) {
+    const card = document.createElement("div");
+    card.className = "bestSelling";
+    card.innerHTML = `
+      <div style="height:253px;background-image: url(${product.bimg});background-size: cover;background-repeat: no-repeat;border-radius:15px; max-width=353px";></div>
+      <h3>${product.name}</h3>
+      <p>${product.category}</p>
+      <strong>₱ ${product.price}</strong><br><br>
+      <button onclick="addToCart(${product.id})">Add</button>
+    `;
+    bestSelling.appendChild(card);
+  }
+});

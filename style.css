@@ -10,6 +10,20 @@ body {
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, #f3ebde, #ffc6a8, #c3f0ff);
     min-height: 100vh;
+    padding-top: 110px; /* Adjust if header height changes */
+}
+
+.bestSelling {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+    max-width: 353px;
+}
+
+.bestSelling:hover {
+    transform: scale(1.05);
 }
 
 header {
@@ -23,6 +37,11 @@ header {
     background-position: center;
     backdrop-filter: blur(10px);
     min-width: 800px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    z-index: 1000;
 }
 
 
@@ -34,6 +53,16 @@ header p {
 
 
 h1 {
+    color: #5a3e36;
+}
+
+h2 {
+    position: sticky;
+    top: 95px;
+    background: linear-gradient(135deg, #ffc6a8, #f3ebde, #ffc6a8);
+    padding: 10px 40px 6px;
+    margin: 0;
+    z-index: 999;
     color: #5a3e36;
 }
 
