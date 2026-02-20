@@ -56,14 +56,33 @@ function renderFilters() {
   });
 }
 
+// Price filter variables
+const minPriceInput = document.getElementById("minPrice");
+const maxPriceInput = document.getElementById("maxPrice");
+const priceFilterBtn = document.getElementById("priceFilterBtn");
+
+let minPrice = null;
+let maxPrice = null;
+
+if (priceFilterBtn) {
+  priceFilterBtn.addEventListener("click", () => {
+    minPrice = minPriceInput.value ? parseFloat(minPriceInput.value) : null;
+    maxPrice = maxPriceInput.value ? parseFloat(maxPriceInput.value) : null;
+    renderProducts();
+  });
+}
+
 function renderProducts() {
   productsContainer.innerHTML = "";
   const searchText = searchInput.value.toLowerCase();
 
-  const filtered = products.filter(p =>
-    (currentFilter === "All" || p.category === currentFilter) &&
-    p.name.toLowerCase().includes(searchText)
-  );
+  const filtered = products.filter(p => {
+    const matchesCategory = (currentFilter === "All" || p.category === currentFilter);
+    const matchesSearch = p.name.toLowerCase().includes(searchText);
+    const matchesMin = minPrice === null || p.price >= minPrice;
+    const matchesMax = maxPrice === null || p.price <= maxPrice;
+    return matchesCategory && matchesSearch && matchesMin && matchesMax;
+  });
 
   filtered.forEach(product => {
     const card = document.createElement("div");
