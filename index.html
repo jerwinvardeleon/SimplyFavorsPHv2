@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simply Favors PH 🧸</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <header>
-        <img id="headerLogo" src="img/icon/headerLogo.png">
+        <img id="headerLogo" src="img/icon/headerLogo.gif">
         <p>Party Favors | Souvenirs | Gifts 💕</p>
         <div class="cart">
             🛒 <span id="cart-count">0</span> items - $<span id="cart-total">0</span>
@@ -20,21 +22,23 @@
     <h2 onclick="window.scrollTo({top: 0, behavior: 'smooth'});" style="cursor: pointer;">Best Selling Products</h2>
     <div id="bestSelling" class="bestSelling"></div>
 
-    <!-- Category search -->
-    <section class="controls">
-        <input type="text" id="search" placeholder="Search cute things...">
-        <div id="filters" class="filters"></div>
-    </section>
-
     <!-- Price filter -->
-    <section class="priceSearch">
+    <section class="priceSearch" onclick="window.scrollTo({top: 580, behavior: 'smooth'});" style="cursor: pointer;">
         <label for="minPrice">Min Price: </label>
         <input type="number" id="minPrice" min="0" placeholder="0" style="width:80px;">
         <label for="maxPrice">Max Price: </label>
         <input type="number" id="maxPrice" min="0" placeholder="Any" style="width:80px;">
         <button id="priceFilterBtn">Filter</button>
     </section>
-    
+
+    <!-- Category search -->
+    <section class="controls" onclick="window.scrollTo({top: 580, behavior: 'smooth'});" style="cursor: pointer;">
+        <input type="text" id="search" placeholder="Search cute things...">
+        <div id="filters" class="filters"></div>
+    </section>
+
+
+
     <!-- prducts section -->
     <section id="products" class="products"></section>
 
@@ -45,4 +49,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>

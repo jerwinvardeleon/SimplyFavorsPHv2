@@ -1,23 +1,24 @@
 :root {
-  --pink: #f3ebde;
-  --peach: #ffc6a8;
-  --cream: #fff5ec;
-  --brown: #5a3e36;
+    --pink: #f3ebde;
+    --peach: #ffc6a8;
+    --cream: #fff5ec;
+    --brown: #5a3e36;
 }
 
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #f3ebde, #ffc6a8, #c3f0ff);
+    background: linear-gradient(135deg, #ffc6a8, #ffc6a8, #c3f0ff);
     min-height: 100vh;
-    padding-top: 110px; /* Adjust if header height changes */
+    padding-top: 100px;
+    /* Adjust if header height changes */
 }
 
 .bestSelling {
     background: rgba(255, 255, 255, 0.2);
     border-radius: 20px;
     padding: 40px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease;
     max-width: 353px;
 }
@@ -46,9 +47,9 @@ header {
 
 
 header p {
-  font-size: 1 rem;
-  color: #fff5ec;
-  font-style: italic;
+    font-size: 1 rem;
+    color: #fff5ec;
+    font-style: italic;
 }
 
 
@@ -58,26 +59,43 @@ h1 {
 
 h2 {
     position: sticky;
-    top: 95px;
-    background: linear-gradient(135deg, #ffc6a8, #f3ebde, #ffc6a8);
+    top: 104px;
+    background: linear-gradient(35deg, #5a3e36, #777, #ffc6a8);
     padding: 10px 40px 6px;
     margin: 0;
     z-index: 999;
-    color: #5a3e36;
+    color: #f3ebde;
 }
 
 .cart {
     background: #f3ebde;
     padding: 10px 20px;
     border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.priceSearch {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 10px 40px;
+    position: sticky;
+    top: 150px;
+    background: linear-gradient(45deg, #f3ebde, #ffc6a8, #c3f0ff);
+    z-index: 998;
+    cursor: pointer;
 }
 
 .controls {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 10px;
     padding: 20px 40px;
+    position: sticky;
+    top: 207px;
+    background: linear-gradient(135deg, #f3ebde, #ffc6a8, #c3f0ff);
+    z-index: 998;
+    cursor: pointer;
 }
 
 
@@ -86,7 +104,7 @@ h2 {
     margin: 20px 40px 0 40px;
     padding: 10px 20px;
     border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 
@@ -124,7 +142,7 @@ input {
     background: rgba(255, 255, 255, 0.85);
     border-radius: 20px;
     padding: 15px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease;
 }
 
