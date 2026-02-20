@@ -70,7 +70,7 @@ function renderProducts() {
     card.className = "card";
 
     card.innerHTML = `
-      <div style="height:246px;background-image: url(${product.bimg});background-size: cover;background-repeat: no-repeat;border-radius:15px; max-width=246px" ; >
+      <div style="height:353px;background-image: url(${product.bimg});background-size: cover;background-repeat: no-repeat;border-radius:15px; max-width=353px" ; >
       </div>
       <h3>${product.name}</h3>
       <p>${product.category}</p>

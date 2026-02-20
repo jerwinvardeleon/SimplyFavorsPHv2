@@ -86,9 +86,9 @@ input {
     display: grid;
     /* grid-template-columns: auto auto auto; */
     /* grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); */
-    grid-template-columns: repeat(auto-fit, 246px);
+    grid-template-columns: repeat(auto-fit, 380px);
     gap: 20px;
-    padding: 20px 40px;
+    padding: 20px 20px;
 }
 
 .card {
