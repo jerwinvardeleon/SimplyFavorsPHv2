@@ -7,7 +7,7 @@ const products = [
   { id: 6, name: "Spray Bottle (alcohol)", price: 40, category: "alcohol", bimg: "img/products/spry_alc.png" },
   { id: 7, name: "Spray Bottle (perfume)", price: 65, category: "perfume", bimg: "img/products/spry_per.png" },
   { id: 8, name: "Keychain (bear)", price: 50, category: "keychain", bimg: "img/products/spry_per.png" },
-  { id: 9, name: "Omni Hand Sanitizer", price: 55, category: "sanitizer", bimg: "img/products/sani.jpg" },
+  { id: 9, name: "Omni Hand Sanitizer", price: 55, category: "sanitizer" , bimg: "img/products/sani.jpg"},
   { id: 10, name: "Omni Hand Sanitizer (Organza Pouch)", price: 65, category: "sanitizer", bimg: "img/products/sani_org.jpg" },
   { id: 11, name: "Omni Hand Sanitizer (Burlap Pouch)", price: 70, category: "sanitizer", bimg: "img/products/sani_bur.jpg" },
   { id: 12, name: "Wet wipes in can", price: 65, category: "keychain", bimg: "img/products/wipe.jpg" },
@@ -38,8 +38,8 @@ const filtersContainer = document.getElementById("filters");
 const cartCount = document.getElementById("cart-count");
 const cartTotal = document.getElementById("cart-total");
 
+// Setting up filter per category..............
 const categories = ["All", ...new Set(products.map(p => p.category))];
-// const categories = ["All", "Bags","Toys"];
 
 function renderFilters() {
   filtersContainer.innerHTML = "";
@@ -81,6 +81,17 @@ function renderProducts() {
     productsContainer.appendChild(card);
   });
 }
+
+// Setting up filter per amount..............
+
+
+
+
+
+
+
+
+
 
 function addToCart(id) {
   const product = products.find(p => p.id === id);
