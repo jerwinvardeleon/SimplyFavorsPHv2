@@ -16,12 +16,14 @@
         <div class="cart">
             🛒 <span id="cart-count">0</span> items - $<span id="cart-total">0</span>
         </div>
+        <button id="toggleViewBtn" class="view-toggle">Mobile View</button>
     </header>
 
     <!-- BEST selling section -->
     <h2 onclick="window.scrollTo({top: 0, behavior: 'smooth'});" style="cursor: pointer;">Best Selling Products</h2>
     <div id="bestSelling" class="bestSelling"></div>
 
+    
     <!-- Price filter -->
     <section class="priceSearch" onclick="window.scrollTo({top: 580, behavior: 'smooth'});" style="cursor: pointer;">
         <label for="minPrice">Min Price: </label>
@@ -45,9 +47,13 @@
     <footer>
         <div>Made with 💖 for cute souvenir lovers</div>
         <!-- <div><img class="fb_logo" src="img/icon/fblogo.png" alt="fblogo"><a href="https://www.facebook.com/Simplyfavorsph">Simplyfavorsph</a></div> -->
+        
+    <button onclick="showPopup('<h3>Best Selling Product</h3><p>Wet wipes in can</p><p>₱65</p>')">YESSSS</button>
+
     </footer>
 
     <script src="script.js"></script>
+
 </body>
 
 </html>

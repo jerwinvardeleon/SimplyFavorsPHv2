@@ -130,8 +130,61 @@ document.addEventListener("DOMContentLoaded", () => {
       <h3>${product.name}</h3>
       <p>${product.category}</p>
       <strong>₱ ${product.price}</strong><br><br>
-      <button onclick="addToCart(${product.id})">Add</button>
+      <button onclick="showPopup('popup-best-selling.html')">Add</button>
     `;
     bestSelling.appendChild(card);
   }
 });
+
+// Creates a centered popup overlay (300x300) with provided HTML content or file path.
+// If htmlOrFilePath ends with .html, it's treated as a file path and fetched.
+async function createPopup(htmlOrFilePath = "") {
+  // Prevent multiple overlays
+  if (document.querySelector('.overlay')) return;
+
+  let htmlContent = htmlOrFilePath;
+  
+  // If it looks like a file path (ends with .html), fetch it
+  if (htmlOrFilePath.endsWith('.html')) {
+    try {
+      const response = await fetch(htmlOrFilePath);
+      if (!response.ok) throw new Error(`Failed to load ${htmlOrFilePath}`);
+      htmlContent = await response.text();
+    } catch (error) {
+      console.error('Error loading popup file:', error);
+      htmlContent = '<p>Error loading content</p>';
+    }
+  }
+
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+
+  const popup = document.createElement('div');
+  popup.className = 'popup';
+
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'popup-close';
+  closeBtn.innerText = '×';
+  closeBtn.onclick = () => document.body.removeChild(overlay);
+
+  const content = document.createElement('div');
+  content.className = 'popup-content';
+  content.innerHTML = htmlContent;
+
+  popup.appendChild(closeBtn);
+  popup.appendChild(content);
+  overlay.appendChild(popup);
+
+  // clicking outside popup closes
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      document.body.removeChild(overlay);
+    }
+  });
+
+  document.body.appendChild(overlay);
+  return { overlay, popup };
+}
+
+// Expose a simple helper for console or other code
+window.showPopup = (htmlOrPath) => createPopup(htmlOrPath);

@@ -10,8 +10,7 @@ body {
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, #ffc6a8, #ffc6a8, #c3f0ff);
     min-height: 100vh;
-    padding-top: 100px;
-    /* Adjust if header height changes */
+    padding-top: 100px;/* Adjust if header height changes */
 }
 
 .bestSelling {
@@ -57,11 +56,11 @@ h1 {
     color: #5a3e36;
 }
 
-h2 {
+#bestSellingHeader {
     position: sticky;
     top: 104px;
-    background: linear-gradient(35deg, #5a3e36, #777, #ffc6a8);
-    padding: 10px 40px 6px;
+    background: linear-gradient(35deg, #c3f0ff, #777, #ffc6a8);
+    padding: 2px 10px 2px;
     margin: 0;
     z-index: 999;
     color: #f3ebde;
@@ -169,8 +168,87 @@ input {
     cursor: pointer;
 }
 
+/* Mobile-mode simulator: constrains layout to a narrow viewport */
+body.mobile-mode {
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+body.mobile-mode header {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 420px;
+}
+
+body.mobile-mode .products {
+    grid-template-columns: 1fr;
+}
+
+body.mobile-mode .bestSelling,
+body.mobile-mode .controls,
+body.mobile-mode .priceSearch,
+body.mobile-mode .products,
+body.mobile-mode footer {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+}
+
+.view-toggle {
+    margin-left: 12px;
+    padding: 6px 10px;
+    border-radius: 12px;
+    border: none;
+    background: #5a3e36;
+    color: var(--cream);
+    cursor: pointer;
+}
+
 footer {
     text-align: center;
     padding: 20px;
     color: #777;
+}
+
+/* Overlay + popup styles */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.popup {
+    width: 300px;
+    height: 300px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    padding: 16px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.popup .popup-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 6px;
+    background: #5a3e36;
+    color: var(--cream);
+    cursor: pointer;
+}
+
+.popup .popup-content {
+    margin-top: 36px;
+    flex: 1 1 auto;
+    overflow: auto;
 }
