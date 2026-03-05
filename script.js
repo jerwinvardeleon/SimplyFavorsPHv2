@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <h3>${product.name}</h3>
       <p>${product.category}</p>
       <strong>₱ ${product.price}</strong><br><br>
-      <button onclick="showPopup('popup-best-selling.html')">Add</button>
+      <button onclick="showPopup('popup-best-selling.html', {name: '${product.name}', price: '${product.price}', category: '${product.category}', bimg: '${product.bimg}'})">Add</button>
     `;
     bestSelling.appendChild(card);
   }
@@ -138,7 +138,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Creates a centered popup overlay (300x300) with provided HTML content or file path.
 // If htmlOrFilePath ends with .html, it's treated as a file path and fetched.
-async function createPopup(htmlOrFilePath = "") {
+// Optional data object for template variable replacement (${variable}).
+async function createPopup(htmlOrFilePath = "", data = {}) {
   // Prevent multiple overlays
   if (document.querySelector('.overlay')) return;
 
@@ -154,6 +155,13 @@ async function createPopup(htmlOrFilePath = "") {
       console.error('Error loading popup file:', error);
       htmlContent = '<p>Error loading content</p>';
     }
+  }
+
+  // Replace template variables like ${property} with values from data object
+  if (Object.keys(data).length > 0) {
+    htmlContent = htmlContent.replace(/\$\{(\w+)\}/g, (match, key) => {
+      return data[key] !== undefined ? data[key] : match;
+    });
   }
 
   const overlay = document.createElement('div');
@@ -187,4 +195,4 @@ async function createPopup(htmlOrFilePath = "") {
 }
 
 // Expose a simple helper for console or other code
-window.showPopup = (htmlOrPath) => createPopup(htmlOrPath);
+window.showPopup = (htmlOrPath, data) => createPopup(htmlOrPath, data);
