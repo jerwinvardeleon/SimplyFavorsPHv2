@@ -2,46 +2,75 @@
 <html lang="en">
 <div style="display: flex; align-items: center; margin-bottom: 12px;">
     <div
-        style="width: 150px; height: 150px; background-image: url(${bimg}); background-size: contain; background-repeat: no-repeat; border-radius: 8px;">
+        style="width: 100px; height: 100px; background-image: url(${bimg}); background-size: contain; background-repeat: no-repeat; border-radius: 8px;">
     </div>
-    <h3 style="margin-left: 12px;">${name}</h3>
+    <div style="margin-left: 12px; display: flex; flex-direction: column;">
+        <h3 style="margin: 0 0 30px 0;">${name}</h3>
+        <p style="margin: 0; font-weight: bold;">Price: ₱${price} each</p>
+    </div>
 </div>
-<h4>-------- Estimated Computation ---------</h4>
+
+<!-- <h5>-------- Estimated Computation ---------</h5> -->
 
 <input type="text" placeholder="Enter quantity" id="qty"
     style="width: 280px; padding: 8px; margin-bottom: 2px; border: 1px solid #ccc; border-radius: 4px;">
 
-<p>Price: ₱${price}</p>
-<p>Total: ₱<span id="total">0</span></p>
-
-<!-- <button onclick="addToCart(12); document.querySelector('.overlay').parentNode.removeChild(document.querySelector('.overlay'));" style="margin-top: 12px; width: 100%; padding: 10px; background: #ffc6a8; border: none; border-radius: 8px; color: white; cursor: pointer;">Add to Cart</button> -->
-
-<label>Number 1: <input type="number" id="num1" value="0"></label>
-<label>Number 2: <input type="number" id="num2" value="0"></label>
-
-<!-- Display result -->
-<p>Result: <span class="result" id="result">0</span></p>
+<select id="loc" style="width: 300px; padding: 8px; margin-bottom: 2px; border: 1px solid #ccc; border-radius: 4px;">
+    <option value="">Select Delivery Area</option>
+    <option value="NCR / Metro Manila">NCR / Metro Manila</option>
+    <option value="Luzon">Luzon</option>
+    <option value="Visayas">Visayas</option>
+    <option value="Mindanao">Mindanao</option>
+</select>
 
 <script>
-// Function to compute sum
-function computeSum() {
-    // Get values and convert to numbers
-    const val1 = parseFloat(document.getElementById('num1').value) || 0;
-    const val2 = parseFloat(document.getElementById('num2').value) || 0;
+    // Delivery days mapping for each area
+    const deliveryDays = {
+        "": 0,
+        "NCR / Metro Manila": "Same Day (Lalamove / GrabExpress)",
+        "Luzon": "Same Day (Lalamove / GrabExpress) or 3-5 days (LBC / J&T)",
+        "Visayas": "3-14 days (LBC / J&T)",
+        "Mindanao": "3-14 days (LBC / J&T)",
+    };
 
-    // Calculate sum
-    const sum = val1 + val2;
+    function computeTotal() {
+        const qty = parseInt(document.getElementById('qty').value) || 0;
+        const price = parseFloat('${price}');
+        const ttl = qty * price;
 
-    // Display result
-    document.getElementById('result').textContent = sum;
-}
+        document.getElementById('total').textContent = ttl;
+    }
 
-// Attach event listeners for real-time calculation
-document.getElementById('num1').addEventListener('input', computeSum);
-document.getElementById('num2').addEventListener('input', computeSum);
+    function updateDeliveryDays() {
+        const location = document.getElementById('loc').value;
+        const days = deliveryDays[location] || 0;
+        document.getElementById('days').textContent = days;
+    }
 
-// Initial calculation
-computeSum();
+    document.getElementById('qty').addEventListener('input', computeTotal);
+    document.getElementById('loc').addEventListener('change', updateDeliveryDays);
+
+    ;
 </script>
+
+<div style="background-color: #f3ebde; border-radius: 10px; padding: 0 0 10px 0;">
+    <div style="padding: 0 0 0 78px ;">
+        <h5 style="font-style: italic;">Estimated Computation</h5>
+    </div>
+    <!-- <button onclick="computeTotal();" style="margin-top: 12px; width: 300px; padding: 8px; background: #5a3e36; border: none; border-radius: 8px; color: white; cursor: pointer;">Check Total</button> -->
+    <div style="padding: 0 0 0 20px ;">
+        <p style="margin: 0 0 5px 0;"> Total Amount: ₱ <span id="total" style="font-weight: bolder;">0</span> + Delivery Fee</p>
+        <p style="margin: 0;"> Estimated Delivery: </p>
+        <span id="days" style="font-weight: bolder; margin: 0 10px 10px 0;">0</span>
+    </div>
+</div>
+
+<h4>--------- How to Place an order ----------</h4>
+<p> 50% down payment required: </p>
+
+<img src="img/icon/pic2.png" alt="logo" style="width: 100%; border-radius: 8px;">
+
+
+
 
 </html>

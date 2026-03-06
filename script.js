@@ -94,7 +94,7 @@ function renderProducts() {
       <h3>${product.name}</h3>
       <p>${product.category}</p>
       <strong>₱ ${product.price}</strong><br><br>
-      <button onclick="addToCart(${product.id})">Add</button>
+      <button onclick="showPopup('popup-best-selling.html', {name: '${product.name}', price: '${product.price}', category: '${product.category}', bimg: '${product.bimg}'})">Get an estimate</button>
     `;
 
     productsContainer.appendChild(card);
@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <h3>${product.name}</h3>
       <p>${product.category}</p>
       <strong>₱ ${product.price}</strong><br><br>
-      <button onclick="showPopup('popup-best-selling.html', {name: '${product.name}', price: '${product.price}', category: '${product.category}', bimg: '${product.bimg}'})">Add</button>
+      <button onclick="showPopup('popup-best-selling.html', {name: '${product.name}', price: '${product.price}', category: '${product.category}', bimg: '${product.bimg}'})">Get an estimate</button>
     `;
     bestSelling.appendChild(card);
   }
@@ -173,11 +173,24 @@ async function createPopup(htmlOrFilePath = "", data = {}) {
   const closeBtn = document.createElement('button');
   closeBtn.className = 'popup-close';
   closeBtn.innerText = '×';
-  closeBtn.onclick = () => document.body.removeChild(overlay);
+  closeBtn.onclick = () => confirmClose(overlay);
 
   const content = document.createElement('div');
   content.className = 'popup-content';
   content.innerHTML = htmlContent;
+
+  // execute any inline scripts found in the fetched HTML
+  const scripts = content.querySelectorAll('script');
+  scripts.forEach(oldScript => {
+    const newScript = document.createElement('script');
+    if (oldScript.src) {
+      newScript.src = oldScript.src;
+    } else {
+      newScript.textContent = oldScript.textContent;
+    }
+    // replace old script with new one so it executes
+    oldScript.parentNode.replaceChild(newScript, oldScript);
+  });
 
   popup.appendChild(closeBtn);
   popup.appendChild(content);
@@ -186,7 +199,7 @@ async function createPopup(htmlOrFilePath = "", data = {}) {
   // clicking outside popup closes
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) {
-      document.body.removeChild(overlay);
+      confirmClose(overlay);
     }
   });
 
@@ -196,3 +209,48 @@ async function createPopup(htmlOrFilePath = "", data = {}) {
 
 // Expose a simple helper for console or other code
 window.showPopup = (htmlOrPath, data) => createPopup(htmlOrPath, data);
+
+// Function to show confirmation before closing popup
+function confirmClose(overlay) {
+  // Create confirmation popup
+  const confirmOverlay = document.createElement('div');
+  confirmOverlay.className = 'confirm-overlay';
+  confirmOverlay.style.cssText = `
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+  `;
+
+  const confirmBox = document.createElement('div');
+  confirmBox.style.cssText = `
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    max-width: 300px;
+  `;
+
+  confirmBox.innerHTML = `
+    <p style="margin: 0 0 20px 0; font-weight: bold;">Are you sure you want to exit?</p>
+    <button id="confirm-yes" style="margin-right: 10px; padding: 8px 16px; background: #5a3e36; color: white; border: none; border-radius: 4px; cursor: pointer;">Yes</button>
+    <button id="confirm-no" style="padding: 8px 16px; background: #ccc; color: black; border: none; border-radius: 4px; cursor: pointer;">No</button>
+  `;
+
+  confirmOverlay.appendChild(confirmBox);
+  document.body.appendChild(confirmOverlay);
+
+  // Handle confirmation buttons
+  document.getElementById('confirm-yes').onclick = () => {
+    document.body.removeChild(confirmOverlay);
+    document.body.removeChild(overlay);
+  };
+
+  document.getElementById('confirm-no').onclick = () => {
+    document.body.removeChild(confirmOverlay);
+  };
+}
