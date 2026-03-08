@@ -23,22 +23,22 @@
     </header>
 
     <!-- BEST selling section -->
-    <h2 onclick="window.scrollTo({top: 0, behavior: 'smooth'});" style="cursor: pointer;">Best Selling Products</h2>
+    <p id="bs_prod" onclick="window.scrollTo({top: 0, behavior: 'smooth'});" >Best Selling Products</p>
     <div id="bestSelling" class="bestSelling"></div>
 
     
     <!-- Price filter -->
     <section class="priceSearch" onclick="window.scrollTo({top: 580, behavior: 'smooth'});" style="cursor: pointer;">
         <label for="minPrice">Min Price: </label>
-        <input type="number" id="minPrice" min="0" placeholder="0" style="width:80px;">
+        <input type="number" id="minPrice" min="0" placeholder="0" style="width:210px; height: 5px;">
         <label for="maxPrice">Max Price: </label>
-        <input type="number" id="maxPrice" min="0" placeholder="Any" style="width:80px;">
-        <button id="priceFilterBtn">Filter</button>
+        <input type="number" id="maxPrice" min="0" placeholder="Any" style="width:150px; height: 5px;">
+        <button id="priceFilterBtn" style="border-radius:10px;">Filter</button>
     </section>
 
     <!-- Category search -->
     <section class="controls" onclick="window.scrollTo({top: 580, behavior: 'smooth'});" style="cursor: pointer;">
-        <input type="text" id="search" placeholder="Search cute things...">
+        <input type="text" id="search" placeholder="Search cute things..." style="height: 5px;">
         <div id="filters" class="filters"></div>
     </section>
 

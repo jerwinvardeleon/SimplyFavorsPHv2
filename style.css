@@ -9,27 +9,52 @@ html {
     display: flex;
     justify-content: center;
     align-items: center;
+    /* background-image: url('img/icon/bodybg.png');
+    background-repeat: repeat;
+    background-size: f; */
 }
+
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, #ffc6a8, #ffc6a8, #c3f0ff);
     min-height: 100vh;
     max-width: 400px;
-    /* padding-top: 100px;Adjust if header height changes */
+    padding-top: 100px;
+    /* Adjust if header height changes */
 }
 
 .bestSelling {
     background: rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    padding: 40px;
+    border-radius: 10px;
+    padding: 20px;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease;
-    max-width: 353px;
+    max-width: 400px;
+    margin-top: 0px;
+    height: 368px
 }
 
-.bestSelling:hover {
+/* .bestSelling:hover {
     transform: scale(1.05);
+} */
+
+#bs_prod {
+    cursor: pointer;
+    font-size: larger;
+    font-weight: bolder;
+    margin: 0px 0 5px 0;
+    text-align: center;
+    font-style: oblique;
+    background-color: #f3ebde;
+    border-radius: 10px;
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 400px;
+    z-index: 999;
 }
 
 header {
@@ -43,13 +68,13 @@ header {
     background-position: center;
     backdrop-filter: blur(10px);
     max-width: 400px;
-    /* position: fixed; */
+    position: fixed;
     top: 0;
-    left: 0;
-    width: 100vw;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
     z-index: 1000;
 }
-
 
 header p#header_cap {
     color: var(--brown);
@@ -63,6 +88,7 @@ div #header_box {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
 
 header p #header_cap {
@@ -71,6 +97,7 @@ header p #header_cap {
     font-style: italic;
     margin: 0;
 }
+
 h1 {
     color: #5a3e36;
 }
@@ -96,24 +123,26 @@ h1 {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    padding: 10px 40px;
+    padding: 10px 40px 10px 40px;
     position: sticky;
-    top: 150px;
+    top: 120px;
     background: linear-gradient(45deg, #f3ebde, #ffc6a8, #c3f0ff);
     z-index: 998;
     cursor: pointer;
+    border-radius: 10px;
 }
 
 .controls {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    padding: 20px 40px;
+    padding: 10px 40px;
     position: sticky;
-    top: 207px;
+    top: 208px;
     background: linear-gradient(135deg, #f3ebde, #ffc6a8, #c3f0ff);
     z-index: 998;
     cursor: pointer;
+    border-radius: 10px;
 }
 
 
@@ -134,7 +163,7 @@ input {
 }
 
 .filters button {
-    padding: 8px 15px;
+    padding: 3px 15px;
     border: none;
     border-radius: 20px;
     cursor: pointer;
@@ -233,7 +262,7 @@ footer {
 .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -245,7 +274,7 @@ footer {
     height: 600px;
     background: #fff;
     border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     padding: 16px;
     position: relative;
     display: flex;
