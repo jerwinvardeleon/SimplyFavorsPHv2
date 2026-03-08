@@ -5,12 +5,18 @@
     --brown: #5a3e36;
 }
 
+html {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, #ffc6a8, #ffc6a8, #c3f0ff);
     min-height: 100vh;
-    padding-top: 100px;/* Adjust if header height changes */
+    max-width: 400px;
+    /* padding-top: 100px;Adjust if header height changes */
 }
 
 .bestSelling {
@@ -28,16 +34,16 @@ body {
 
 header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 20px 40px;
+    /* padding: 20px 40px; */
     background: rgba(255, 255, 255, 0.8);
-    background-image: url('img/icon/bgHeader.png');
+    background-image: url('img/icon/bgHeader2.png');
     background-repeat: no-repeat;
     background-position: center;
     backdrop-filter: blur(10px);
-    min-width: 800px;
-    position: fixed;
+    max-width: 400px;
+    /* position: fixed; */
     top: 0;
     left: 0;
     width: 100vw;
@@ -45,13 +51,26 @@ header {
 }
 
 
-header p {
-    font-size: 1 rem;
-    color: #fff5ec;
+header p#header_cap {
+    color: var(--brown);
     font-style: italic;
+    font-size: small;
+    margin: 10px 0 0 0;
+    text-align: center;
 }
 
+div #header_box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
+header p #header_cap {
+    font-size: 0.8rem;
+    color: #fff5ec;
+    font-style: italic;
+    margin: 0;
+}
 h1 {
     color: #5a3e36;
 }

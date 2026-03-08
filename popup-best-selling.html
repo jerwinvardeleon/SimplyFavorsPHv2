@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<div style="display: flex; align-items: center; margin-bottom: 12px;">
-    <div
+<head>
+    <link rel="stylesheet" href="style_popup.css">
+</head>
+<body>
+<div id="pu_header">
+    <div id="pu_img"
         style="width: 100px; height: 100px; background-image: url(${bimg}); background-size: contain; background-repeat: no-repeat; border-radius: 8px;">
     </div>
-    <div style="margin-left: 12px; display: flex; flex-direction: column;">
+    <div id="pu_imgdsc">
         <h3 style="margin: 0 0 30px 0;">${name}</h3>
         <p style="margin: 0; font-weight: bold;">Price: ₱${price} each</p>
     </div>
@@ -12,16 +16,17 @@
 
 <!-- <h5>-------- Estimated Computation ---------</h5> -->
 
-<input type="text" placeholder="Enter quantity" id="qty"
-    style="width: 280px; padding: 8px; margin-bottom: 2px; border: 1px solid #ccc; border-radius: 4px;">
+<input id="pu_ttl_amt" type="text" placeholder="Enter quantity">
 
-<select id="loc" style="width: 300px; padding: 8px; margin-bottom: 2px; border: 1px solid #ccc; border-radius: 4px;">
+<select id="pu_delivery_area">
     <option value="">Select Delivery Area</option>
     <option value="NCR / Metro Manila">NCR / Metro Manila</option>
     <option value="Luzon">Luzon</option>
     <option value="Visayas">Visayas</option>
     <option value="Mindanao">Mindanao</option>
 </select>
+
+<script src="script.js"></script>
 
 <script>
     // Delivery days mapping for each area
@@ -34,7 +39,7 @@
     };
 
     function computeTotal() {
-        const qty = parseInt(document.getElementById('qty').value) || 0;
+        const qty = parseInt(document.getElementById('pu_ttl_amt').value) || 0;
         const price = parseFloat('${price}');
         const ttl = qty * price;
 
@@ -42,18 +47,18 @@
     }
 
     function updateDeliveryDays() {
-        const location = document.getElementById('loc').value;
+        const location = document.getElementById('pu_delivery_area').value;
         const days = deliveryDays[location] || 0;
         document.getElementById('days').textContent = days;
     }
 
-    document.getElementById('qty').addEventListener('input', computeTotal);
-    document.getElementById('loc').addEventListener('change', updateDeliveryDays);
+    document.getElementById('pu_ttl_amt').addEventListener('input', computeTotal);
+    document.getElementById('pu_delivery_area').addEventListener('change', updateDeliveryDays);
 
     ;
 </script>
 
-<div style="background-color: #f3ebde; border-radius: 10px; padding: 0 0 10px 0;">
+<div id="pu_est_comp">
     <div style="padding: 0 0 0 78px ;">
         <h5 style="font-style: italic;">Estimated Computation</h5>
     </div>
@@ -73,4 +78,5 @@
 
 
 
+</body>
 </html>
