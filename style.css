@@ -32,7 +32,8 @@ body {
     transition: transform 0.2s ease;
     max-width: 400px;
     margin-top: 0px;
-    height: 370px;
+    height: 365px;
+    animation: highlight 3s infinite;
 }
 
 /* .bestSelling:hover {
@@ -40,6 +41,10 @@ body {
 } */
 
 #bs_prod {
+    background-image: url('img/icon/BestSelling.gif');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
     cursor: pointer;
     font-size: larger;
     font-weight: bolder;
@@ -53,14 +58,15 @@ body {
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
+    height: 40px;
     max-width: 400px;
     z-index: 999;    animation: highlight 3s infinite;
 }
 
 @keyframes highlight {
-    0%, 100% { background-color: var(--peach); }
-    25%, 75% { background-color: var(--pink); }
-    50% { background-color: var(--brown); color: var(--cream);}}
+    0%, 100% { background-color: var(--peach); color: var(--cream);}
+    25%, 75% { background-color: var(--pink); color: var(--brown)}
+    50% { background-color: #c3f0ff; color: var(--peach);}}
 
 header {
     display: flex;

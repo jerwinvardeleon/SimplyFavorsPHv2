@@ -1,105 +1,115 @@
 <!DOCTYPE html>
 <html lang="en" img id="bodybg" src="img/icon/bodybg.png">
+
 <head>
     <link rel="stylesheet" href="style_popup.css">
 </head>
+
 <body>
-<div id="pu_header">
-    <div id="pu_img"
-        style="width: 100px; height: 100px; background-image: url(${bimg}); background-size: contain; background-repeat: no-repeat; border-radius: 8px;">
+    <div id="pu_header">
+        <div id="pu_img"
+            style="width: 100px; height: 100px; background-image: url(${bimg}); background-size: contain; background-repeat: no-repeat; border-radius: 8px;">
+        </div>
+        <div id="pu_imgdsc">
+            <h3 style="margin: 0 0 8px 0;">${name}</h3>
+            <p style="margin: 0; font-weight: bold;">Price: ₱${price} each</p>
+        </div>
     </div>
-    <div id="pu_imgdsc">
-        <h3 style="margin: 0 0 8px 0;">${name}</h3>
-        <p style="margin: 0; font-weight: bold;">Price: ₱${price} each</p>
+
+    <!-- <h5>-------- Estimated Computation ---------</h5> -->
+
+    <input id="pu_ttl_amt" type="text" placeholder="Enter quantity">
+
+    <select id="pu_delivery_area">
+        <option value="" disabled selected>Select Delivery Area</option>
+        <option value="NCR / Metro Manila">NCR / Metro Manila</option>
+        <option value="Luzon">Luzon</option>
+        <option value="Visayas">Visayas</option>
+        <option value="Mindanao">Mindanao</option>
+    </select>
+
+    <script src="script.js"></script>
+
+    <script>
+        // Delivery days mapping for each area
+        const deliveryDays = {
+            "": 0,
+            "NCR / Metro Manila": "Same Day (Lalamove / GrabExpress)",
+            "Luzon": "Same Day (Lalamove / GrabExpress) or 3-5 days (LBC / J&T)",
+            "Visayas": "3-14 days (LBC / J&T)",
+            "Mindanao": "3-14 days (LBC / J&T)",
+        };
+
+        function computeTotal() {
+            const qty = parseInt(document.getElementById('pu_ttl_amt').value) || 0;
+            const price = parseFloat('${price}');
+            let addOnTotal = 0;
+
+            // Calculate add-on costs
+            const addOnCheckboxes = document.querySelectorAll('#add_ons input[type="checkbox"]:checked');
+            addOnCheckboxes.forEach(checkbox => {
+                const amount = parseFloat(checkbox.getAttribute('data-amount')) || 0;
+                const isFixed = checkbox.hasAttribute('data-fixed');
+                if (isFixed) {
+                    addOnTotal += amount;
+                } else {
+                    addOnTotal += amount * qty;
+                }
+            });
+
+            const ttl = (qty * price) + addOnTotal;
+            document.getElementById('total').textContent = ttl;
+        }
+
+        function updateDeliveryDays() {
+            const location = document.getElementById('pu_delivery_area').value;
+            const days = deliveryDays[location] || 0;
+            document.getElementById('days').textContent = days;
+        }
+
+        document.getElementById('pu_ttl_amt').addEventListener('input', computeTotal);
+        document.getElementById('pu_delivery_area').addEventListener('change', updateDeliveryDays);
+
+        ;
+
+    </script>
+
+    <div id="pu_est_comp">
+        <div style="padding: 0 0 0 78px ;">
+            <h5 style="font-style: italic; padding: 8px; margin: 5px 0 8px 0;">Estimated Computation</h5>
+        </div>
+        <div style="padding: 0 0 0 20px ;">
+            <p style="margin: 0 0 5px 0;"> Total Amount: ₱ <span id="total" style="font-weight: bolder;">0</span> +
+                Delivery Fee</p>
+            <p style="margin: 0;"> Estimated Delivery: </p>
+            <span id="days" style="font-weight: bolder; margin: 0 10px 10px 0;">0</span>
+        </div>
     </div>
-</div>
 
-<!-- <h5>-------- Estimated Computation ---------</h5> -->
-
-<input id="pu_ttl_amt" type="text" placeholder="Enter quantity">
-
-<select id="pu_delivery_area">
-    <option value="" disabled selected>Select Delivery Area</option>
-    <option value="NCR / Metro Manila">NCR / Metro Manila</option>
-    <option value="Luzon">Luzon</option>
-    <option value="Visayas">Visayas</option>
-    <option value="Mindanao">Mindanao</option>
-</select>
-
-<script src="script.js"></script>
-
-<script>
-    // Delivery days mapping for each area
-    const deliveryDays = {
-        "": 0,
-        "NCR / Metro Manila": "Same Day (Lalamove / GrabExpress)",
-        "Luzon": "Same Day (Lalamove / GrabExpress) or 3-5 days (LBC / J&T)",
-        "Visayas": "3-14 days (LBC / J&T)",
-        "Mindanao": "3-14 days (LBC / J&T)",
-    };
-
-    function computeTotal() {
-        const qty = parseInt(document.getElementById('pu_ttl_amt').value) || 0;
-        const price = parseFloat('${price}');
-        let addOnTotal = 0;
-
-        // Calculate add-on costs
-        const addOnCheckboxes = document.querySelectorAll('#add_ons input[type="checkbox"]:checked');
-        addOnCheckboxes.forEach(checkbox => {
-            const amount = parseFloat(checkbox.getAttribute('data-amount')) || 0;
-            const isFixed = checkbox.hasAttribute('data-fixed');
-            if (isFixed) {
-                addOnTotal += amount;
-            } else {
-                addOnTotal += amount * qty;
-            }
-        });
-
-        const ttl = (qty * price) + addOnTotal;
-        document.getElementById('total').textContent = ttl;
-    }
-
-    function updateDeliveryDays() {
-        const location = document.getElementById('pu_delivery_area').value;
-        const days = deliveryDays[location] || 0;
-        document.getElementById('days').textContent = days;
-    }
-
-    document.getElementById('pu_ttl_amt').addEventListener('input', computeTotal);
-    document.getElementById('pu_delivery_area').addEventListener('change', updateDeliveryDays);
-
-    ;
-
-</script>
-
-<div id="pu_est_comp">
-    <div style="padding: 0 0 0 78px ;">
-        <h5 style="font-style: italic; padding: 8px; margin: 5px 0 8px 0;">Estimated Computation</h5>
+    <div id="add_ons">
+        <h5>Add-ons:</h5>
+        <div class="columns">
+            <div class="left-column">
+                <label class="label"><input class="input" type="checkbox" data-amount="2" onchange="computeTotal()"> Tag (₱2 each)</label><br>
+                <label class="label"><input class="input" type="checkbox" data-amount="15" onchange="computeTotal()"> Acetate (₱15 each)</label><br>
+            </div>
+            <div class="right-column">
+                <label class="label"><input class="input" type="checkbox" data-amount="150" data-fixed="true" onchange="computeTotal()"> Layout (₱ 150)</label><br>
+                <label class="label"><input class="input" type="checkbox" data-amount="300" data-fixed="true" onchange="computeTotal()"> Rush Fee (₱ 300)</label><br>
+            </div>
+        </div>
     </div>
-    <div style="padding: 0 0 0 20px ;">
-        <p style="margin: 0 0 5px 0;"> Total Amount: ₱ <span id="total" style="font-weight: bolder;">0</span> + Delivery Fee</p>
-        <p style="margin: 0;"> Estimated Delivery: </p>
-        <span id="days" style="font-weight: bolder; margin: 0 10px 10px 0;">0</span>
-    </div>
-</div>
 
-<div id="add_ons">
-    <h5>Add-ons:</h5>
-    <label><input type="checkbox" data-amount="2" onchange="computeTotal()"> Tag/Label (₱2 each)</label><br>
-    <label><input type="checkbox" data-amount="150" data-fixed="true" onchange="computeTotal()"> Layout (₱ 150)</label><br>
-    <label><input type="checkbox" data-amount="300" data-fixed="true" onchange="computeTotal()"> Rush Fee (₱ 300)</label><br>
-    <label><input type="checkbox" data-amount="15" onchange="computeTotal()"> Acetate (₱15 each)</label><br>
-</div>
+    <button id="refresh_btn" onclick="computeTotal();">CALCULATE</button>
 
-<button id="refresh_btn" onclick="computeTotal();">REFRESH</button>
+    <h4>--------- How to Place an order ----------</h4>
+    <p> 50% down payment required: </p>
 
-<h4>--------- How to Place an order ----------</h4>
-<p> 50% down payment required: </p>
-
-<img src="img/icon/pic2.png" alt="logo" style="width: 100%; border-radius: 8px;">
+    <img src="img/icon/pic2.png" alt="logo" style="width: 100%; border-radius: 8px;">
 
 
 
 
 </body>
+
 </html>
