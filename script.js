@@ -127,9 +127,9 @@ document.addEventListener("DOMContentLoaded", () => {
     card.className = "bestSelling";
     card.innerHTML = `
       <div style="height:320px;background-image: url(${product.bimg});background-size: cover;background-repeat: no-repeat;border-radius:15px; max-width=353px";></div>
-      <h3 style="position: absolute; top: 410px; left: 205px; font-style: oblique; color: #5a3e36;">${product.name}</h3>
-      <h2 style="position: absolute; top: 380px; left: 205px; font-style: oblique; color: #5a3e36;" >₱ ${product.price}</h2><br><br>
-      <button style="width: 315px; height: 25px; position: absolute; top: 470px; left: 200px;" onclick="showPopup('popup-best-selling.html', {name: '${product.name}', price: '${product.price}', category: '${product.category}', bimg: '${product.bimg}'})">Get an estimate</button>
+      <h3 style="position: relative; top: -60px; left: 20px; font-style: oblique; color: #5a3e36;">${product.name}</h3>
+      <h2 style="position: relative; top: -140px; left: 20px; font-style: oblique; color: #5a3e36;" >₱ ${product.price}</h2><br><br>
+      <button style="position: relative; top: -150px; left: 0px; width: 315px; height: 25px;" onclick="showPopup('popup-best-selling.html', {name: '${product.name}', price: '${product.price}', category: '${product.category}', bimg: '${product.bimg}'})">Get an estimate</button>
     `;
     bestSelling.appendChild(card);
   }

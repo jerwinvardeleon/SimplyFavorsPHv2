@@ -5,52 +5,90 @@
     --brown: #5a3e36;
 }
 
-div #pu_header {
+#pu_header {
     display: flex;
     align-items: center;
     margin-bottom: 12px;
 }
 
-div #pu_img {
+#pu_img {
     width: 100px;
     height: 100px;
-    background-image: url(${bimg}); 
-    background-size: contain; 
+    background-image: url(${bimg});
+    background-size: contain;
     background-repeat: no-repeat;
     border-radius: 8px;
 }
 
-div #pu_imgdsc {
-        margin-left: 12px; 
-        display: flex; 
-        flex-direction: column;
+#pu_imgdsc {
+    margin-left: 12px;
+    display: flex;
+    flex-direction: column;
 }
 
-input #pu_ttl_amt {
-    width: 280px; 
-    padding: 8px; 
-    margin-bottom: 2px; 
-    border: 1px solid #ccc; 
-    border-radius: 4px;
+#pu_ttl_amt {
+    width: 290px;
+    height: 15px;
+    padding: 8px;
+    margin-bottom: 2px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
 }
 
-select #pu_delivery_area {
-    width: 300px; 
-    padding: 8px; 
-    margin-bottom: 2px; 
-    border: 1px solid #ccc; 
-    border-radius: 4px;
+#pu_delivery_area {
+    width: 310px;
+    height: 35px;
+    padding: 8px;
+    margin-bottom: 2px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
 }
 
-div #pu_est_comp {
-    background-color: var(--pink); 
-    border-radius: 10px; 
+#pu_est_comp {
+    background-color: var(--pink);
+    border-radius: 10px;
     padding: 0 0 10px 0;
 }
 
-p #pu_est_header {
-    font-style: italic; 
-    font-weight:bolder;
+#pu_est_header {
+    font-style: italic;
+    font-weight: bolder;
     text-align: center;
     margin: 20px;
+}
+
+#refresh_btn {
+    margin: 10px 0 0 0px;
+    padding: 8px;
+    width: 320px;
+    height: 30px;
+    background: #5c4e4a;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+#refresh_btn:active {
+    transform: translateY(4px);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#add_ons {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: var(--cream);
+    border-radius: 8px;
+}
+
+#add_ons h5 {
+    margin: 0 0 10px 0;
+    font-style: italic;
+}
+
+#add_ons label {
+    display: block;
+    margin-bottom: 5px;
+    cursor: pointer;
 }
