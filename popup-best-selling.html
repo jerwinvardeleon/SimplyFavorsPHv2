@@ -70,6 +70,41 @@
         document.getElementById('pu_ttl_amt').addEventListener('input', computeTotal);
         document.getElementById('pu_delivery_area').addEventListener('change', updateDeliveryDays);
 
+        function openCheckoutPopup() {
+            const qty = parseInt(document.getElementById('pu_ttl_amt').value) || 0;
+            const deliveryArea = document.getElementById('pu_delivery_area').value;
+            const deliveryDays = document.getElementById('days').textContent;
+            const total = document.getElementById('total').textContent;
+
+            // Collect add-ons
+            const addons = [];
+            const addOnCheckboxes = document.querySelectorAll('#add_ons input[type="checkbox"]:checked');
+            addOnCheckboxes.forEach(checkbox => {
+                const label = checkbox.parentElement.textContent.trim();
+                const amount = checkbox.getAttribute('data-amount');
+                const isFixed = checkbox.hasAttribute('data-fixed');
+                addons.push({ name: label, amount: amount, fixed: isFixed });
+            });
+
+            // Prepare data to pass to checkout popup
+            const checkoutData = {
+                bimg: '${bimg}',
+                name: '${name}',
+                price: '${price}',
+                qty: qty,
+                deliveryArea: deliveryArea,
+                deliveryDays: deliveryDays,
+                total: total,
+                addons: addons
+            };
+
+            // Store data in localStorage
+            localStorage.setItem('checkoutData', JSON.stringify(checkoutData));
+
+            // Open checkout popup
+            window.open('checkout-popup.html', 'checkoutPopup', 'width=450,height=600');
+        }
+
         ;
 
     </script>
@@ -100,12 +135,10 @@
         </div>
     </div>
 
-    <button id="refresh_btn" onclick="computeTotal();">CALCULATE</button>
+    <button id="refresh_btn" onclick="computeTotal();">REFRESH CALCULATE</button>
+    <button id="checkout_btn" onclick="openCheckoutPopup()">CHECKOUT ORDER</button>
 
-    <h4>--------- How to Place an order ----------</h4>
-    <p> 50% down payment required: </p>
-
-    <img src="img/icon/pic2.png" alt="logo" style="width: 100%; border-radius: 8px;">
+     <img src="img/icon/pic2.png" alt="logo" style="width: 100%; border-radius: 8px;">
 
 
 

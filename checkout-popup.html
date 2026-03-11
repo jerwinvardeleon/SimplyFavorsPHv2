@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Summary</title>
+    <link rel="stylesheet" href="style_checkout.css">
+</head>
+
+<body>
+    <div id="checkout_header">
+        <h2>Checkout Summary</h2>
+    </div>
+
+    <div id="product_info">
+        <div id="prod_img" style="width: 100px; height: 100px; background-size: contain; background-repeat: no-repeat; border-radius: 8px;"></div>
+        <div id="prod_details">
+            <h3 id="prod_name"></h3>
+            <p id="prod_price"></p>
+        </div>
+    </div>
+
+    <div id="order_details">
+        <h4>Order Details</h4>
+        <p>Quantity: <span id="qty"></span></p>
+        <p>Delivery Area: <span id="delivery_area"></span></p>
+        <p>Estimated Delivery: <span id="delivery_days"></span></p>
+    </div>
+
+    <div id="addons_summary">
+        <h4>Add-ons:</h4>
+        <ul id="addons_list"></ul>
+    </div>
+
+    <div id="total_summary">
+        <h4>Total: ₱<span id="total_amount"></span> + Delivery Fee</h4>
+    </div>
+
+    <button id="confirm_btn">Confirm Order</button>
+    <button id="back_btn" onclick="window.close()">Back</button>
+
+    <script>
+        // Load data from localStorage
+        const checkoutData = JSON.parse(localStorage.getItem('checkoutData'));
+
+        if (checkoutData) {
+            document.getElementById('prod_img').style.backgroundImage = `url(${checkoutData.bimg})`;
+            document.getElementById('prod_name').textContent = checkoutData.name;
+            document.getElementById('prod_price').textContent = `Price: ₱${checkoutData.price} each`;
+            document.getElementById('qty').textContent = checkoutData.qty;
+            document.getElementById('delivery_area').textContent = checkoutData.deliveryArea;
+            document.getElementById('delivery_days').textContent = checkoutData.deliveryDays;
+            document.getElementById('total_amount').textContent = checkoutData.total;
+
+            const addonsList = document.getElementById('addons_list');
+            checkoutData.addons.forEach(addon => {
+                const li = document.createElement('li');
+                li.textContent = `${addon.name} - ₱${addon.amount}${addon.fixed ? '' : ' each'}`;
+                addonsList.appendChild(li);
+            });
+        }
+    </script>
+</body>
+
+</html>

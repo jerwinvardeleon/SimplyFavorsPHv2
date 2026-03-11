@@ -27,19 +27,21 @@
 }
 
 #pu_ttl_amt {
-    width: 280px;
+    width: 298px;
     height: 15px;
     padding: 10px;
     margin-bottom: 2px;
     border-radius: 10px;
+    font-size: 16px;
 }
 
 #pu_delivery_area {
-    width: 305px;
+    width: 320px;
     height: 35px;
     padding: 8px;
     margin-bottom: 2px;
     border-radius: 10px;
+    font-size: 16px;
 }
 
 #pu_est_comp {
