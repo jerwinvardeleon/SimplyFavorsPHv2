@@ -56,7 +56,9 @@ function renderFilters() {
   });
 }
 
-// Price filter variables
+// PRICE FILTER SECTION
+// PRICE FILTER SECTION
+// PRICE FILTER SECTION
 const minPriceInput = document.getElementById("minPrice");
 const maxPriceInput = document.getElementById("maxPrice");
 const priceFilterBtn = document.getElementById("priceFilterBtn");
@@ -72,6 +74,10 @@ if (priceFilterBtn) {
   });
 }
 
+
+// PRODUCT RENDERING SECTION
+// PRODUCT RENDERING SECTION
+// PRODUCT RENDERING SECTION
 function renderProducts() {
   productsContainer.innerHTML = "";
   const searchText = searchInput.value.toLowerCase();
@@ -89,7 +95,12 @@ function renderProducts() {
     card.className = "card";
 
     card.innerHTML = `
-      <div style="height:353px;background-image: url(${product.bimg});background-size: cover;background-repeat: no-repeat;border-radius:15px; max-width=353px" ; >
+      <div style="
+        height:353px;
+        background-image: url(${product.bimg});
+        background-size: cover;
+        background-repeat: no-repeat;
+        border-radius:15px; max-width=353px" ; >
       </div>
       <h3>${product.name}</h3>
       <p>${product.category}</p>
@@ -101,23 +112,13 @@ function renderProducts() {
   });
 }
 
-function addToCart(id) {
-  const product = products.find(p => p.id === id);
-  cart.push(product);
-  updateCart();
-}
-
-function updateCart() {
-  cartCount.textContent = cart.length;
-  const total = cart.reduce((sum, item) => sum + item.price, 0);
-  cartTotal.textContent = total;
-}
-
 searchInput.addEventListener("input", renderProducts);
 
 renderFilters();
 renderProducts();
 
+// BEST SELLING PRODUCT DISPLAY
+// BEST SELLING PRODUCT DISPLAY
 // BEST SELLING PRODUCT DISPLAY
 document.addEventListener("DOMContentLoaded", () => {
   const bestSelling = document.getElementById("bestSelling");

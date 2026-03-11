@@ -28,7 +28,7 @@
         <option value="Mindanao">Mindanao</option>
     </select>
 
-    <script src="script.js"></script>
+    <!-- <script src="script.js"></script> -->
 
     <script>
         // Delivery days mapping for each area
@@ -110,8 +110,8 @@
     </script>
 
     <div id="pu_est_comp">
-        <div style="padding: 0 0 0 78px ;">
-            <h5 style="font-style: italic; padding: 8px; margin: 5px 0 8px 0;">Estimated Computation</h5>
+        <div>
+            <h5 style="font-style: italic; padding: 8px; margin: 5px 0 8px 0;text-align: center;">Estimated Computation</h5>
         </div>
         <div style="padding: 0 0 0 20px ;">
             <p style="margin: 0 0 5px 0;"> Total Amount: ₱ <span id="total" style="font-weight: bolder;">0</span> +
@@ -122,7 +122,7 @@
     </div>
 
     <div id="add_ons">
-        <h5>Add-ons:</h5>
+        <h5 style="font-style: italic; padding: 8px; margin: 5px 0 8px 0; text-align: center;"> Add-Ons:</h5>
         <div class="columns">
             <div class="left-column">
                 <label class="label"><input class="input" type="checkbox" data-amount="2" onchange="computeTotal()"> Tag (₱2 each)</label><br>
@@ -135,10 +135,21 @@
         </div>
     </div>
 
-    <button id="refresh_btn" onclick="computeTotal();">REFRESH CALCULATE</button>
+    <div id="pu_discount">
+        <div class="columns">
+            <div class="left-column2">
+                <h5 style="font-style: italic; margin: 10px 10px 0px 20px; text-align: left; width: 100px;">Discount Code:</h5>
+            </div>
+            <div class="right-column2">
+                <input id="disc_code" type="text" placeholder="Enter code">
+            </div>
+        </div>
+    </div>
+
+    <button id="refresh_btn" onclick="computeTotal();updateDeliveryDays()">REFRESH CALCULATE</button>
     <button id="checkout_btn" onclick="openCheckoutPopup()">CHECKOUT ORDER</button>
 
-     <img src="img/icon/pic2.png" alt="logo" style="width: 100%; border-radius: 8px;">
+     <!-- <img src="img/icon/pic2.png" alt="logo" style="width: 100%; border-radius: 8px;"> -->
 
 
 
