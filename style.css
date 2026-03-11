@@ -17,7 +17,7 @@ html {
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #ffc6a8, #ffc6a8, #c3f0ff);
+    background: linear-gradient(135deg, #f3ebde, #ffc6a8, #c3f0ff);
     min-height: 100vh;
     max-width: 400px;
     padding-top: 100px;
@@ -31,9 +31,9 @@ body {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease;
     max-width: 400px;
-    margin-top: 0px;
-    height: 365px;
-    animation: highlight 3s infinite;
+    margin-top: 5px;
+    height: 335px;
+    /* animation: highlight 3s infinite; */
 }
 
 /* .bestSelling:hover {
@@ -133,11 +133,11 @@ h1 {
 .priceSearch {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 5px;
     padding: 10px 40px 10px 40px;
     position: sticky;
     top: 120px;
-    background: linear-gradient(45deg, #f3ebde, #ffc6a8, #c3f0ff);
+    background: linear-gradient(100deg, #f3ebde, #ffc6a8, #c3f0ff);
     z-index: 998;
     cursor: pointer;
     border-radius: 10px;
@@ -150,7 +150,7 @@ h1 {
     padding: 10px 40px;
     position: sticky;
     top: 208px;
-    background: linear-gradient(135deg, #f3ebde, #ffc6a8, #c3f0ff);
+    background: linear-gradient(35deg, #ffc6a8, #f3ebde, #c3f0ff);
     z-index: 998;
     cursor: pointer;
     border-radius: 10px;
@@ -223,7 +223,7 @@ input {
     border: none;
     border-radius: 15px;
     background: #ffc6a8;
-    color: white;
+    color: var(--brown);
     cursor: pointer;
 }
 
@@ -310,4 +310,17 @@ footer {
     margin-top: 36px;
     flex: 1 1 auto;
     overflow: auto;
+}
+
+#fb_link,
+#ig_link,
+#tik_link {
+    margin-top: 2px;
+    margin-bottom: 0;
+    width: 30px;
+    height: 30px;
+}
+
+a {
+    text-decoration: none;
 }

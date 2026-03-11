@@ -1,13 +1,13 @@
 const products = [
   { id: 1, name: "Keychain (bottle)", price: 35, category: "keychain", bimg: "img/products/KC_bottle.jpg" },
-  { id: 2, name: "Keychain (acrylic)", price: 35, category: "keychain" , bimg: "img/products/KC_acrylic.jpg"},
+  { id: 2, name: "Keychain (acrylic)", price: 35, category: "keychain", bimg: "img/products/KC_acrylic.jpg" },
   { id: 3, name: "Pin (badge)", price: 35, category: "pins", bimg: "img/products/pin.jpg" },
   { id: 4, name: "Baptismal candle", price: 40, category: "candle", bimg: "img/products/bapt.jpg" },
   { id: 5, name: "Card type (alcohol)", price: 45, category: "alcohol", bimg: "img/products/card_alc.jpg" },
   { id: 6, name: "Spray Bottle (alcohol)", price: 40, category: "alcohol", bimg: "img/products/spry_alc.png" },
   { id: 7, name: "Spray Bottle (perfume)", price: 65, category: "perfume", bimg: "img/products/spry_per.png" },
   { id: 8, name: "Keychain (bear)", price: 50, category: "keychain", bimg: "img/products/spry_per.png" },
-  { id: 9, name: "Omni Hand Sanitizer", price: 55, category: "sanitizer" , bimg: "img/products/sani.jpg"},
+  { id: 9, name: "Omni Hand Sanitizer", price: 55, category: "sanitizer", bimg: "img/products/sani.jpg" },
   { id: 10, name: "Omni Hand Sanitizer (Organza Pouch)", price: 65, category: "sanitizer", bimg: "img/products/sani_org.jpg" },
   { id: 11, name: "Omni Hand Sanitizer (Burlap Pouch)", price: 70, category: "sanitizer", bimg: "img/products/sani_bur.jpg" },
   { id: 12, name: "Wet wipes in can", price: 65, category: "keychain", bimg: "img/products/wipe.jpg" },
@@ -29,16 +29,16 @@ const products = [
   { id: 211, name: "Spray Bottle - Gold (perfume)", price: 55, category: "spray bottle", bimg: "img/products/perfg.jpg" }
 ];
 
-let cart = [];
 let currentFilter = "All";
 
 const productsContainer = document.getElementById("products");
 const searchInput = document.getElementById("search");
 const filtersContainer = document.getElementById("filters");
-const cartCount = document.getElementById("cart-count");
-const cartTotal = document.getElementById("cart-total");
 
-// Setting up filter per category..............
+
+// FILTER PER CATEGORY SECTION
+// FILTER PER CATEGORY SECTION
+// FILTER PER CATEGORY SECTION
 const categories = ["All", ...new Set(products.map(p => p.category))];
 
 function renderFilters() {
@@ -129,7 +129,25 @@ document.addEventListener("DOMContentLoaded", () => {
       <div style="height:320px;background-image: url(${product.bimg});background-size: cover;background-repeat: no-repeat;border-radius:15px; max-width=353px";></div>
       <h3 style="position: relative; top: -60px; left: 20px; font-style: oblique; color: #5a3e36;">${product.name}</h3>
       <h2 style="position: relative; top: -140px; left: 20px; font-style: oblique; color: #5a3e36;" >₱ ${product.price}</h2><br><br>
-      <button style="position: relative; top: -150px; left: 0px; width: 315px; height: 25px;" onclick="showPopup('popup-best-selling.html', {name: '${product.name}', price: '${product.price}', category: '${product.category}', bimg: '${product.bimg}'})">Get an estimate</button>
+      <button 
+        onmouseover="this.style.color='#f3ebde';this.style.backgroundColor='#5a3e36'; this.style.transform='scale(1.05)';"
+        onmouseout="this.style.color='#5a3e36';this.style.backgroundColor='#f3ebde'; this.style.transform='scale(1)';"
+        style="
+          transition: background-color 0.3s ease, transform 0.3s ease;
+          background-color: transparent;
+          border-color: transparent;
+          border-width: 2px;
+          border-style: solid;
+          font-size: 18px;
+          position: relative;
+          top: -465px;
+          left: 0px;
+          width: 100%;
+          height: 25px;
+          "
+        onclick="showPopup('popup-best-selling.html', {name: '${product.name}', price: '${product.price}', category: '${product.category}', bimg: '${product.bimg}'})">
+        Click here to order !!!
+      </button>
     `;
     bestSelling.appendChild(card);
   }
@@ -143,7 +161,7 @@ async function createPopup(htmlOrFilePath = "", data = {}) {
   if (document.querySelector('.overlay')) return;
 
   let htmlContent = htmlOrFilePath;
-  
+
   // If it looks like a file path (ends with .html), fetch it
   if (htmlOrFilePath.endsWith('.html')) {
     try {
