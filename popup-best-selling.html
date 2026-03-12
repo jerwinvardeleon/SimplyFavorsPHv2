@@ -109,6 +109,10 @@
 
     </script>
 
+
+<!-- POPUP ESTIMATED COMPUTATION -->
+<!-- POPUP ESTIMATED COMPUTATION -->
+<!-- POPUP ESTIMATED COMPUTATION -->
     <div id="pu_est_comp">
         <div>
             <h5 style="font-style: italic; padding: 8px; margin: 5px 0 8px 0;text-align: center;">Estimated Computation</h5>
@@ -121,20 +125,30 @@
         </div>
     </div>
 
+
+<!-- POPUP ADD ONS COMPUTATION -->
+<!-- POPUP ADD ONS COMPUTATION -->
+<!-- POPUP ADD ONS COMPUTATION -->
     <div id="add_ons">
         <h5 style="font-style: italic; padding: 8px; margin: 5px 0 8px 0; text-align: center;"> Add-Ons:</h5>
         <div class="columns">
             <div class="left-column">
                 <label class="label"><input class="input" type="checkbox" data-amount="2" onchange="computeTotal()"> Tag (₱2 each)</label><br>
-                <label class="label"><input class="input" type="checkbox" data-amount="15" onchange="computeTotal()"> Acetate (₱15 each)</label><br>
+                <!-- <label class="label"><input class="input" type="checkbox" data-amount="15" onchange="computeTotal()"> Acetate (₱15 each)</label><br> -->
             </div>
             <div class="right-column">
                 <label class="label"><input class="input" type="checkbox" data-amount="150" data-fixed="true" onchange="computeTotal()"> Layout (₱ 150)</label><br>
-                <label class="label"><input class="input" type="checkbox" data-amount="300" data-fixed="true" onchange="computeTotal()"> Rush Fee (₱ 300)</label><br>
+                <p id="labeldesc"> For personalized layout requests</p>
+                <!-- <label class="label"><input class="input" type="checkbox" data-amount="300" data-fixed="true" onchange="computeTotal()"> Rush Fee (₱ 300)</label><br> -->
+                <!-- <p id="labeldesc"> For request of less than 14 days</p> -->
             </div>
         </div>
     </div>
 
+  
+<!-- POPUP DISCOUNT COMPUTATION -->
+<!-- POPUP DISCOUNT COMPUTATION -->
+<!-- POPUP DISCOUNT COMPUTATION -->
     <div id="pu_discount">
         <div class="columns">
             <div class="left-column2">
@@ -148,11 +162,6 @@
 
     <button id="refresh_btn" onclick="computeTotal();updateDeliveryDays()">REFRESH CALCULATE</button>
     <button id="checkout_btn" onclick="openCheckoutPopup()">CHECKOUT ORDER</button>
-
-     
-
-
-
 
 </body>
 

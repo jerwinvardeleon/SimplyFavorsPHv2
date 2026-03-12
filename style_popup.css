@@ -113,7 +113,7 @@
 
 .columns {
     display: flex;
-    gap: 5px;
+    gap: 0px;
 }
 
 .left-column,
@@ -168,4 +168,11 @@
 
 .input {
     width: 20px;
+}
+
+#labeldesc {
+    font-size: x-small;
+    font-style: italic;
+    color: #615f5f;
+    margin: -7px 0 0 33px;
 }
