@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Form</title>
+    <style>
+        :root {
+            --pink: #f3ebde;
+            --peach: #ffc6a8;
+            --cream: #fff5ec;
+            --brown: #5a3e36;
+        }
+
+        body {
+            margin: 0;
+            padding: 16px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(100deg, var(--pink), var(--peach));
+            color: var(--brown);
+        }
+
+        #form_card {
+            background: var(--cream);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            margin: 0 0 6px 0;
+            font-size: 22px;
+        }
+
+        #subtext {
+            margin: 0 0 16px 0;
+            font-size: 14px;
+        }
+
+        .field {
+            margin-bottom: 12px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .field input,
+        .field textarea {
+            width: 100%;
+            border: 1px solid #d7c9bf;
+            border-radius: 8px;
+            padding: 10px;
+            box-sizing: border-box;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .field textarea {
+            min-height: 72px;
+            resize: vertical;
+        }
+
+        #actions {
+            margin-top: 8px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            border: none;
+            border-radius: 8px;
+            padding: 10px 12px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #proceed_btn {
+            flex: 1;
+            background: #ebbd41;
+            color: #2f231f;
+        }
+
+        #back_btn {
+            width: 100px;
+            background: #5c4e4a9a;
+            color: #fff;
+        }
+
+        #footer_img {
+            margin-top: 16px;
+            width: 100%;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="form_card">
+        <h2>Thank you for choosing Simply Favors!</h2>
+        <p id="subtext">Kindly fill up the form below to complete your order</p>
+
+        <form id="order_form">
+            <div class="field">
+                <label for="customer_name">Customer Name:</label>
+                <input id="customer_name" type="text" required>
+            </div>
+
+            <div class="field">
+                <label for="celebrant_name">Celebrant's Name:</label>
+                <input id="celebrant_name" type="text" required>
+            </div>
+
+            <div class="field">
+                <label for="event_date">Date of Event:</label>
+                <input id="event_date" type="date" required>
+            </div>
+
+            <div class="field">
+                <label for="event_theme">Event Theme / Layout instruction (ex: Safari theme / Kahel's 1st Birthday)</label>
+                <textarea id="event_theme" required></textarea>
+            </div>
+
+            <div class="field">
+                <label for="contact_number">Contact Number:</label>
+                <input id="contact_number" type="text" required>
+            </div>
+
+            <div class="field">
+                <label for="delivery_address">Delivery Address:</label>
+                <textarea id="delivery_address" required></textarea>
+            </div>
+
+            <div id="actions">
+                <button id="proceed_btn" type="submit">Proceed to Summary</button>
+                <button id="back_btn" type="button" onclick="window.close()">Back</button>
+            </div>
+        </form>
+    </div>
+
+    <img id="footer_img" src="img/icon/pic2.png" alt="Simply Favors footer image">
+
+    <script>
+        const orderForm = document.getElementById('order_form');
+
+        orderForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const orderFormData = {
+                customerName: document.getElementById('customer_name').value.trim(),
+                celebrantName: document.getElementById('celebrant_name').value.trim(),
+                eventDate: document.getElementById('event_date').value,
+                eventTheme: document.getElementById('event_theme').value.trim(),
+                contactNumber: document.getElementById('contact_number').value.trim(),
+                deliveryAddress: document.getElementById('delivery_address').value.trim()
+            };
+
+            localStorage.setItem('orderFormData', JSON.stringify(orderFormData));
+            window.location.href = 'checkout-popup.html';
+        });
+    </script>
+</body>
+
+</html>

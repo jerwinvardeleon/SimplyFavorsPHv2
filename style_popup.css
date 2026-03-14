@@ -39,7 +39,7 @@
 #pu_delivery_area {
     width: 100%;
     height: 35px;
-    padding: 8px;
+    padding: 3px 0 0 10px;
     margin-bottom: 10px;
     border-radius: 10px;
     font-size: 16px;
@@ -76,9 +76,11 @@
 }
 
 #pu_est_comp {
-    background-color: var(--pink);
+    background: linear-gradient(180deg, #f3ebde, #ffc6a8);
     border-radius: 10px;
     padding: 0 0 10px 0;
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 #pu_est_header {
@@ -111,7 +113,7 @@
     padding: 8px;
     width: 100%;
     height: 30px;
-    background: #ebbd41;
+    background: #ffc6a8;
     border: none;
     border-radius: 10px;
     margin-bottom: 10px;
@@ -126,7 +128,7 @@
 }
 
 #add_ons {
-    margin: 10px 0;
+    margin: 20px 0 0 0;
     padding: 0px;
     background-color: var(--cream);
     border-radius: 8px;
@@ -185,7 +187,7 @@
 #disc_code {
     width: 100%;
     font-size: 16px;
-    padding: 2px;
+    padding: 2px 0 5;
     border: none;
     border-radius: 10px;
 }

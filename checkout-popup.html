@@ -10,32 +10,58 @@
 
 <body>
     <div id="checkout_header">
-        
-        <h3>Invoice Summary</h3>
+        <img src="img/icon/pic1.png" alt="logo" style="width: 200px; border-radius: 8px; margin-bottom: 10px;">
+        <h3 style="margin: 5px; color: var(--brown);">Invoice Summary</h3>
+        <p id="greetings">Hi <span id="greeting_customer_name"></span></p>
+        <p id="greetings">Thank you for providing the order details!</p>
     </div>
 
-    <div id="product_info">
-        <div id="prod_img" style="width: 100px; height: 100px; background-size: contain; background-repeat: no-repeat; border-radius: 8px;"></div>
-        <div id="prod_details">
-            <h3 id="prod_name"></h3>
-            <p id="prod_price"></p>
+
+    <!-- <h5 id="order_ref" style="margin: 5px;">Order Reference: <span id="order_ref_num"></span></h5><br> -->
+    <p hidden id="prod_price"></p>
+    
+            
+    <div id="top_row">
+        <div id="product_info">
+            <div id="prod_img" style="width: 100px; height: 100px; background-size: contain; background-repeat: no-repeat; border-radius: 8px;"></div>
+            <div id="prod_details">
+                
+            </div>
+        </div>
+
+        <div id="order_details">
+            <h4>Order Details</h4>
+            <p>Product Name: <span id="prod_name"></span></p>
+            <p>Quantity: <span id="qty"></span></p>
+            <!-- <p>Delivery Area: <span id="delivery_area"></span></p> -->
+            <!-- <p>Estimated Delivery: <span id="delivery_days"></span></p> -->
+            <p>Requested Delivery Date: <span id="delivery_date"></span></p>
         </div>
     </div>
 
-    <div id="order_details">
-        <h4>Order Details</h4>
-        <p>Quantity: <span id="qty"></span></p>
-        <p>Delivery Area: <span id="delivery_area"></span></p>
-        <p>Estimated Delivery: <span id="delivery_days"></span></p>
+    <div id="customer_details">
+        <h4>Customer Details</h4>
+        <p>Customer Name: <span id="customer_name"></span></p>
+        <p>Celebrant's Name: <span id="celebrant_name"></span></p>
+        <p>Date of Event: <span id="event_date"></span></p>
+        <p>Event Theme / Layout Instruction: <span id="event_theme"></span></p>
+        <p>Contact Number: <span id="contact_number"></span></p>
+        <p>Delivery Address: <span id="delivery_address"></span></p>
     </div>
 
-    <div id="addons_summary">
-        <h4>Add-ons:</h4>
-        <ul id="addons_list"></ul>
+    <div id="price_details_summary">
+        <h4>Price Details</h4>
+        <ul id="price_details_list"></ul>
     </div>
 
     <div id="total_summary">
-        <h4>Total: ₱<span id="total_amount"></span> + Delivery Fee</h4>
+        <h5>Total: ₱<span id="total_amount"></span> + Delivery Fee</h5>
+        <h5>Downpayment: ₱<span id="downpayment_amount"></span></h5>
+        <p id="downcap">- Production will start once the 50% downpayment is received.</p>
+        <p id="downcap">- Revisions may be requested before final production.</p>
+        <p id="downcap">- Photos of the finished items will be sent prior to delivery.</p>
+
+    
     </div>
 
     <button id="confirm_btn">Confirm Order</button>
@@ -44,25 +70,57 @@
     <script>
         // Load data from localStorage
         const checkoutData = JSON.parse(localStorage.getItem('checkoutData'));
+        const orderFormData = JSON.parse(localStorage.getItem('orderFormData'));
 
         if (checkoutData) {
             document.getElementById('prod_img').style.backgroundImage = `url(${checkoutData.bimg})`;
             document.getElementById('prod_name').textContent = checkoutData.name;
             document.getElementById('prod_price').textContent = `Price: ₱${checkoutData.price} each`;
             document.getElementById('qty').textContent = checkoutData.qty;
-            document.getElementById('delivery_area').textContent = checkoutData.deliveryArea;
-            document.getElementById('delivery_days').textContent = checkoutData.deliveryDays;
+            document.getElementById('delivery_date').textContent = checkoutData.deliveryDate || '-';
             document.getElementById('total_amount').textContent = checkoutData.total;
 
-            const addonsList = document.getElementById('addons_list');
-            checkoutData.addons.forEach(addon => {
+            const priceDetailsList = document.getElementById('price_details_list');
+
+            const priceBreakdownLi = document.createElement('li');
+            priceBreakdownLi.textContent = `Price Breakdown: ${checkoutData.priceBreakdownText || '-'}`;
+            priceDetailsList.appendChild(priceBreakdownLi);
+
+            if (checkoutData.hasDiscountInput) {
                 const li = document.createElement('li');
-                li.textContent = `${addon.name} - ₱${addon.amount}${addon.fixed ? '' : ' each'}`;
-                addonsList.appendChild(li);
-            });
+                li.textContent = checkoutData.discountAmount > 0
+                    ? `Discount: - ₱${checkoutData.discountAmount} (${checkoutData.discountCode})`
+                    : 'Discount: ₱0';
+                priceDetailsList.appendChild(li);
+            }
+
+            if ((checkoutData.addOnAmount || 0) > 0) {
+                const li = document.createElement('li');
+                li.textContent = `Add-Ons: + ₱${checkoutData.addOnAmount}`;
+                priceDetailsList.appendChild(li);
+            }
+
+            if ((checkoutData.rushFeeAmount || 0) > 0) {
+                const li = document.createElement('li');
+                li.textContent = `Rush Fee: ${checkoutData.rushFeeText}`;
+                priceDetailsList.appendChild(li);
+            }
+        }
+
+        if (orderFormData) {
+            document.getElementById('greeting_customer_name').textContent = orderFormData.customerName || 'Customer';
+            document.getElementById('customer_name').textContent = orderFormData.customerName || '-';
+            document.getElementById('celebrant_name').textContent = orderFormData.celebrantName || '-';
+            document.getElementById('event_date').textContent = orderFormData.eventDate || '-';
+            document.getElementById('event_theme').textContent = orderFormData.eventTheme || '-';
+            document.getElementById('contact_number').textContent = orderFormData.contactNumber || '-';
+            document.getElementById('delivery_address').textContent = orderFormData.deliveryAddress || '-';
+        } else {
+            document.getElementById('greeting_customer_name').textContent = 'Customer';
+            document.getElementById('customer_details').style.display = 'none';
         }
     </script>
-    <img src="img/icon/pic2.png" alt="logo" style="width: 100%; border-radius: 8px;">
+    
 </body>
 
 </html>

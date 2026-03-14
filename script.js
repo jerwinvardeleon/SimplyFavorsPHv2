@@ -127,7 +127,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const card = document.createElement("div");
     card.className = "bestSelling";
     card.innerHTML = `
-      <div style="height:320px;background-image: url(${product.bimg});background-size: cover;background-repeat: no-repeat;border-radius:15px; max-width=353px";></div>
+      <div style="
+          height:320px;
+          background-image: url(${product.bimg});
+          background-size: cover;
+          background-repeat: no-repeat;
+          border-radius:15px; 
+          max-width=353px";
+          >
+      </div>
       <h3 style="position: relative; top: -60px; left: 20px; font-style: oblique; color: #5a3e36;">${product.name}</h3>
       <h2 style="position: relative; top: -140px; left: 20px; font-style: oblique; color: #5a3e36;" >₱ ${product.price}</h2><br><br>
       <button 

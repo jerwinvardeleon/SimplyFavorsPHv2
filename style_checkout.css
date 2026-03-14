@@ -9,8 +9,24 @@ body {
     font-family: Arial, sans-serif;
     background-color: var(--cream);
     padding: 20px;
-    max-width: 400px;
+    max-width: 520px;
     margin: 0 auto;
+}
+
+p {
+    font-style: italic;
+    font-size: small;
+}
+
+#greetings {
+    text-align: center;
+    margin-bottom: 10px;
+
+}
+
+#customer_name{
+    font-weight: bold;
+    font-size: 14px;
 }
 
 #checkout_header {
@@ -23,13 +39,28 @@ body {
     margin: 0;
 }
 
+#greeting_customer_name{
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#top_row {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    margin-bottom: 5px;
+}
+
 #product_info {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 0;
     background-color: var(--pink);
-    padding: 10px;
+    padding: 15px;
     border-radius: 10px;
+    flex: 1;
+    max-width: fit-content;
 }
 
 #prod_img {
@@ -51,33 +82,42 @@ body {
     font-weight: bold;
 }
 
-#order_details, #addons_summary, #total_summary {
+#order_details, #customer_details, #price_details_summary, #total_summary {
     background-color: var(--pink);
     border-radius: 10px;
     padding: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
-#order_details h4, #addons_summary h4, #total_summary h4 {
+#order_details {
+    flex: 1;
+    min-width: 0;
+    margin-bottom: 0;
+}
+
+#order_details h4, #customer_details h4, #price_details_summary h4, #total_summary h4 {
     margin: 0 0 10px 0;
     color: var(--brown);
 }
 
-#order_details p {
+#order_details p, #customer_details p {
     margin: 5px 0;
 }
 
-#addons_list {
+#price_details_list {
     padding-left: 20px;
 }
 
-#addons_list li {
-    margin-bottom: 5px;
+#price_details_list li {
+    margin-bottom: 0px;
+    font-size: small;
+    font-style: italic;
 }
 
-#total_summary h4 {
-    font-size: 18px;
+#total_summary h5 {
+    font-size: 14px;
     text-align: center;
+    margin: 15px;
 }
 
 button {
@@ -98,4 +138,21 @@ button {
 #back_btn {
     background-color: var(--brown);
     color: white;
+}
+
+@media (max-width: 420px) {
+    #top_row {
+        flex-direction: column;
+    }
+
+    #product_info,
+    #order_details {
+        margin-bottom: 5px;
+    }
+}
+
+#downcap {
+    font-size: 14px;
+    text-align: left;
+    margin-bottom: 0;
 }
