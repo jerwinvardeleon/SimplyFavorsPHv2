@@ -41,7 +41,7 @@ body {
 } */
 
 #bs_prod {
-    background-image: url('img/icon/BestSellingv2.gif');
+    background-image: url('img/icon/BestSellingv3.gif');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -167,10 +167,12 @@ h1 {
 
 
 input {
-    padding: 10px;
-    border-radius: 20px;
+    padding: 5px;
+    border-radius: 0px;
     border: 1px solid #ddd;
-    width: 295px;
+    width: 343px;
+    font-size: 16px;
+    padding-left: 10px;
 }
 
 .filters button {

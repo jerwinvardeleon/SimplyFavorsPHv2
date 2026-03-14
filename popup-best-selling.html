@@ -16,17 +16,36 @@
         </div>
     </div>
 
-    <!-- <h5>-------- Estimated Computation ---------</h5> -->
+    <!-- USER INPUT SECTION -->
+    <!-- USER INPUT SECTION -->
+    <!-- USER INPUT SECTION -->
 
-    <input id="pu_ttl_amt" type="text" placeholder="Enter quantity">
+    <h5 style="font-style: italic; padding: 8px; margin: 5px 0 1px 0; text-align: center;"> Order Details:</h5>
 
-    <select id="pu_delivery_area">
-        <option value="" disabled selected>Select Delivery Area</option>
-        <option value="NCR / Metro Manila">NCR / Metro Manila</option>
-        <option value="Luzon">Luzon</option>
-        <option value="Visayas">Visayas</option>
-        <option value="Mindanao">Mindanao</option>
-    </select>
+    <div id="pu_user_input ">
+        <div class="columns">
+            <div class="left-column3">
+                <input id="pu_ttl_amt" type="text" placeholder="Enter quantity">
+            </div>
+            <div class="right-column3">
+                <select id="pu_delivery_area">
+                    <option value="" disabled selected>Select Delivery Region</option>
+                    <option value="NCR / Metro Manila">NCR / Metro Manila</option>
+                    <option value="Luzon">Luzon</option>
+                    <option value="Visayas">Visayas</option>
+                    <option value="Mindanao">Mindanao</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+
+    <h5 style="font-style: italic; padding: 8px; margin: 5px 0 1px 0; text-align: center;"> Customer Details:</h5>
+    
+    <input id="pu_name" type="text" placeholder="Enter Full Name">
+    <input id="pu_address" type="text" placeholder="Enter Exact Delivery Address">
+    <input id="pu_number" type="text" placeholder="Enter Contact Number">
+    <input id="pu_email" type="text" placeholder="Enter Email Address">
 
     <!-- <script src="script.js"></script> -->
 
@@ -44,7 +63,6 @@
             const qty = parseInt(document.getElementById('pu_ttl_amt').value) || 0;
             const price = parseFloat('${price}');
             let addOnTotal = 0;
-
             // Calculate add-on costs
             const addOnCheckboxes = document.querySelectorAll('#add_ons input[type="checkbox"]:checked');
             addOnCheckboxes.forEach(checkbox => {
@@ -104,18 +122,59 @@
             // Open checkout popup
             window.open('checkout-popup.html', 'checkoutPopup', 'width=450,height=600');
         }
-
         ;
 
     </script>
 
 
-<!-- POPUP ESTIMATED COMPUTATION -->
-<!-- POPUP ESTIMATED COMPUTATION -->
-<!-- POPUP ESTIMATED COMPUTATION -->
+
+    <!-- POPUP ADD ONS COMPUTATION -->
+    <!-- POPUP ADD ONS COMPUTATION -->
+    <!-- POPUP ADD ONS COMPUTATION -->
+    <div id="add_ons">
+        <h5 style="font-style: italic; padding: 8px; margin: 5px 0 8px 0; text-align: center;"> Add-Ons:</h5>
+        <div class="columns">
+            <div class="left-column">
+                <label class="label"><input class="input" type="checkbox" data-amount="2" onchange="computeTotal()"> Tag
+                    (₱2 each)</label><br>
+                <!-- <label class="label"><input class="input" type="checkbox" data-amount="15" onchange="computeTotal()"> Acetate (₱15 each)</label><br> -->
+            </div>
+            <div class="right-column">
+                <label class="label"><input class="input" type="checkbox" data-amount="150" data-fixed="true"
+                        onchange="computeTotal()"> Layout (₱ 150)</label><br>
+                <p id="labeldesc"> For personalized layout requests</p>
+                <!-- <label class="label"><input class="input" type="checkbox" data-amount="300" data-fixed="true" onchange="computeTotal()"> Rush Fee (₱ 300)</label><br> -->
+                <!-- <p id="labeldesc"> For request of less than 14 days</p> -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- POPUP DISCOUNT COMPUTATION -->
+    <!-- POPUP DISCOUNT COMPUTATION -->
+    <!-- POPUP DISCOUNT COMPUTATION -->
+    <div id="pu_discount">
+        <div class="columns">
+            <div class="left-column2">
+                <h5 style="font-style: italic; margin: 10px 10px 0px 20px; text-align: left; width: 100px;">Discount
+                    Code:</h5>
+            </div>
+            <div class="right-column2">
+                <input id="disc_code" type="text" placeholder="Enter code">
+            </div>
+        </div>
+    </div>
+
+    
+    
+
+    <!-- POPUP ESTIMATED COMPUTATION -->
+    <!-- POPUP ESTIMATED COMPUTATION -->
+    <!-- POPUP ESTIMATED COMPUTATION -->
     <div id="pu_est_comp">
         <div>
-            <h5 style="font-style: italic; padding: 8px; margin: 5px 0 8px 0;text-align: center;">Estimated Computation</h5>
+            <h5 style="font-style: italic; padding: 8px; margin: 5px 0 8px 0;text-align: center;">Estimated Computation
+            </h5>
         </div>
         <div style="padding: 0 0 0 20px ;">
             <p style="margin: 0 0 5px 0;"> Total Amount: ₱ <span id="total" style="font-weight: bolder;">0</span> +
@@ -125,43 +184,10 @@
         </div>
     </div>
 
-
-<!-- POPUP ADD ONS COMPUTATION -->
-<!-- POPUP ADD ONS COMPUTATION -->
-<!-- POPUP ADD ONS COMPUTATION -->
-    <div id="add_ons">
-        <h5 style="font-style: italic; padding: 8px; margin: 5px 0 8px 0; text-align: center;"> Add-Ons:</h5>
-        <div class="columns">
-            <div class="left-column">
-                <label class="label"><input class="input" type="checkbox" data-amount="2" onchange="computeTotal()"> Tag (₱2 each)</label><br>
-                <!-- <label class="label"><input class="input" type="checkbox" data-amount="15" onchange="computeTotal()"> Acetate (₱15 each)</label><br> -->
-            </div>
-            <div class="right-column">
-                <label class="label"><input class="input" type="checkbox" data-amount="150" data-fixed="true" onchange="computeTotal()"> Layout (₱ 150)</label><br>
-                <p id="labeldesc"> For personalized layout requests</p>
-                <!-- <label class="label"><input class="input" type="checkbox" data-amount="300" data-fixed="true" onchange="computeTotal()"> Rush Fee (₱ 300)</label><br> -->
-                <!-- <p id="labeldesc"> For request of less than 14 days</p> -->
-            </div>
-        </div>
-    </div>
-
-  
-<!-- POPUP DISCOUNT COMPUTATION -->
-<!-- POPUP DISCOUNT COMPUTATION -->
-<!-- POPUP DISCOUNT COMPUTATION -->
-    <div id="pu_discount">
-        <div class="columns">
-            <div class="left-column2">
-                <h5 style="font-style: italic; margin: 10px 10px 0px 20px; text-align: left; width: 100px;">Discount Code:</h5>
-            </div>
-            <div class="right-column2">
-                <input id="disc_code" type="text" placeholder="Enter code">
-            </div>
-        </div>
-    </div>
-
     <button id="refresh_btn" onclick="computeTotal();updateDeliveryDays()">REFRESH CALCULATE</button>
+   
     <button id="checkout_btn" onclick="openCheckoutPopup()">CHECKOUT ORDER</button>
+
 
 </body>
 
