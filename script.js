@@ -153,6 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
           left: 0px;
           width: 100%;
           height: 25px;
+          color: #5a3e36;
           "
         onclick="showPopup('popup-best-selling.html', {name: '${product.name}', price: '${product.price}', category: '${product.category}', bimg: '${product.bimg}'})">
         Click here to order !!!

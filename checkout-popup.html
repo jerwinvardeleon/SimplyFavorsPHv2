@@ -75,13 +75,13 @@
         <div id="order_confirm_box">
             <div id="order_confirm_icon">🎉</div>
             <h3 id="order_confirm_title">Order Placed!</h3>
-            <p id="order_confirm_msg">Your order has been successfully submitted.<br>We'll review it and get back to you soon!</p>
+            <p id="order_confirm_msg">Your order has been successfully submitted.<br>Thank you for choosing Simply Favors PH!</p>
             <div id="order_ref_display">
                 <span>Order Reference No.</span>
                 <strong id="modal_order_ref"></strong>
             </div>
-            <p id="order_confirm_note">Please save your order reference number for tracking.</p>
-            <button id="modal_messenger_btn" onclick="window.open('https://m.me/Simplyfavorsph','_blank')">💬 Message Us on Facebook</button>
+            <p id="order_confirm_note">Please SEND US A MESSAGE with your Reference No. to finalize your order.</p>
+            <button id="modal_messenger_btn" onclick="window.open('https://m.me/Simplyfavorsph','_blank')">💬 Send Us a Message on Facebook</button>
             <button id="modal_close_btn" onclick="document.getElementById('order_confirm_modal').style.display='none'">Close</button>
         </div>
     </div>
@@ -200,7 +200,7 @@
             emailjs.init(EMAILJS_PUBLIC_KEY);
             emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
                 order_ref : orderRef,
-                to_email  : 'jerwin.vardeleon@gmail.com',
+                to_email  : 'katvardeleon@gmail.com',
                 message   : message,
             })
             .then(() => console.log('Order notification email sent.'))

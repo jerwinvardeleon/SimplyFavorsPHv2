@@ -270,7 +270,7 @@ body.mobile-mode footer {
 
 footer {
     text-align: center;
-    padding: 20px;
+    padding: 0 0 10px 0;
     color: #777;
 }
 
