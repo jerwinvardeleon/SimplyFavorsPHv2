@@ -10,10 +10,14 @@
 
 <body>
     <div id="checkout_header">
-        <img src="img/icon/pic1.png" alt="logo" style="width: 200px; border-radius: 8px; margin-bottom: 10px;">
-        <h3 style="margin: 5px; color: var(--brown);">Invoice Summary</h3>
-        <p id="greetings">Hi <span id="greeting_customer_name"></span></p>
-        <p id="greetings">Thank you for providing the order details!</p>
+        <div id="checkout_header_text">
+            <h3 style="margin: 5px; color: var(--brown);">Invoice Summary</h3>
+            <div id="checkout_greetings">
+                <p id="greetings">Hi <span id="greeting_customer_name"></span></p>
+                <p id="greetings">Thank you for providing the order details!</p>
+            </div>
+        </div>
+        <img src="img/icon/pic1.png" alt="logo" style="width: 150px; border-radius: 8px; margin-bottom: 2px;">
     </div>
 
 
@@ -52,11 +56,12 @@
     <div id="price_details_summary">
         <h4>Price Details</h4>
         <ul id="price_details_list"></ul>
+        <h5 style="margin: 0; text-align: right;">Total: ₱<span id="total_amount"></span> + Delivery Fee</h5>
     </div>
 
     <div id="total_summary">
-        <h5>Total: ₱<span id="total_amount"></span> + Delivery Fee</h5>
-        <h5>Downpayment: ₱<span id="downpayment_amount"></span></h5>
+        
+        <p id="downpay"> Downpayment: ₱<span id="downpayment_amount"></span>     (50% of Total amount)</p>
         <p id="downcap">- Production will start once the 50% downpayment is received.</p>
         <p id="downcap">- Revisions may be requested before final production.</p>
         <p id="downcap">- Photos of the finished items will be sent prior to delivery.</p>
@@ -64,7 +69,7 @@
     
     </div>
 
-    <button id="confirm_btn">Confirm Order</button>
+    <button id="confirm_btn" onclick="window.open('https://m.me/Simplyfavorsph', '_blank')">Confirm Order</button>
     <button id="back_btn" onclick="window.close()">Back</button>
 
     <script>
@@ -79,6 +84,7 @@
             document.getElementById('qty').textContent = checkoutData.qty;
             document.getElementById('delivery_date').textContent = checkoutData.deliveryDate || '-';
             document.getElementById('total_amount').textContent = checkoutData.total;
+            document.getElementById('downpayment_amount').textContent = (checkoutData.total * 0.5).toFixed(2);
 
             const priceDetailsList = document.getElementById('price_details_list');
 
