@@ -195,3 +195,95 @@ button {
     padding: 0;
     font-style: normal;
 }
+
+/* ── Order Confirmation Modal ──────────────────────────────── */
+#order_confirm_modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+#order_confirm_box {
+    background: var(--cream);
+    border-radius: 16px;
+    padding: 30px 24px 24px;
+    max-width: 380px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+
+#order_confirm_icon {
+    font-size: 48px;
+    margin-bottom: 8px;
+}
+
+#order_confirm_title {
+    color: var(--brown);
+    margin: 0 0 10px;
+    font-size: 22px;
+}
+
+#order_confirm_msg {
+    font-style: normal;
+    font-size: 14px;
+    margin: 0 0 16px;
+    color: #333;
+}
+
+#order_ref_display {
+    background: var(--pink);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+#order_ref_display span {
+    font-size: 12px;
+    color: #777;
+    font-style: normal;
+}
+
+#order_ref_display strong {
+    font-size: 18px;
+    color: var(--brown);
+    letter-spacing: 1px;
+}
+
+#order_confirm_note {
+    font-size: 12px;
+    font-style: italic;
+    color: #888;
+    margin: 0 0 20px;
+}
+
+#modal_messenger_btn {
+    width: 100%;
+    padding: 11px;
+    margin-bottom: 10px;
+    background-color: #1877f2;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+#modal_close_btn {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--brown);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+}

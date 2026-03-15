@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice Summary</title>
     <link rel="stylesheet" href="style_checkout.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 
 <body>
@@ -69,8 +70,24 @@
     
     </div>
 
-    <button id="confirm_btn" onclick="window.open('https://m.me/Simplyfavorsph', '_blank')">Confirm Order</button>
-    <button id="back_btn" onclick="window.close()">Back</button>
+    <!-- Order Confirmation Modal -->
+    <div id="order_confirm_modal">
+        <div id="order_confirm_box">
+            <div id="order_confirm_icon">🎉</div>
+            <h3 id="order_confirm_title">Order Placed!</h3>
+            <p id="order_confirm_msg">Your order has been successfully submitted.<br>We'll review it and get back to you soon!</p>
+            <div id="order_ref_display">
+                <span>Order Reference No.</span>
+                <strong id="modal_order_ref"></strong>
+            </div>
+            <p id="order_confirm_note">Please save your order reference number for tracking.</p>
+            <button id="modal_messenger_btn" onclick="window.open('https://m.me/Simplyfavorsph','_blank')">💬 Message Us on Facebook</button>
+            <button id="modal_close_btn" onclick="document.getElementById('order_confirm_modal').style.display='none'">Close</button>
+        </div>
+    </div>
+
+    <button id="confirm_btn">Confirm Order</button>
+    <button id="back_btn" onclick="window.close()">Cancel Booking</button>
 
     <script>
         // Load data from localStorage
@@ -125,6 +142,70 @@
             document.getElementById('greeting_customer_name').textContent = 'Customer';
             document.getElementById('customer_details').style.display = 'none';
         }
+
+        // ── Confirm Order button ──────────────────────────────────────────────
+        document.getElementById('confirm_btn').addEventListener('click', function () {
+            // 1. Generate unique order reference: SF-YYYYMMDD-XXXXX
+            const now = new Date();
+            const pad = n => String(n).padStart(2, '0');
+            const datePart = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}`;
+            const randPart = Math.floor(10000 + Math.random() * 90000);
+            const orderRef = `SF-${datePart}-${randPart}`;
+
+            // 2. Show confirmation popup
+            document.getElementById('modal_order_ref').textContent = orderRef;
+            document.getElementById('order_confirm_modal').style.display = 'flex';
+
+            // 3. Send order notification email via EmailJS
+            // ── EmailJS Setup ────────────────────────────────────────────────
+            // Create a free account at https://www.emailjs.com, then:
+            //   a) Add an Email Service (Gmail recommended) → copy Service ID
+            //   b) Create a Template with variables below → copy Template ID
+            //   c) Go to Account > API Keys → copy Public Key
+            // Replace the three placeholder strings below with your values.
+            const EMAILJS_PUBLIC_KEY  = 'SnJ1lf5qCoX26OoFR';
+            const EMAILJS_SERVICE_ID  = 'service_4u79xm4';
+            const EMAILJS_TEMPLATE_ID = 'template_qf4cfh4';
+
+            const cd = checkoutData  || {};
+            const od = orderFormData || {};
+
+            const message = [
+                `Order Reference No.: ${orderRef}`,
+                ``,
+                `── Order Details ──────────────────`,
+                `Product Name     : ${cd.name          || '-'}`,
+                `Quantity         : ${cd.qty           || '-'}`,
+                `Delivery Date    : ${cd.deliveryDate  || '-'}`,
+                ``,
+                `── Customer Details ───────────────`,
+                `Customer Name    : ${od.customerName     || '-'}`,
+                `Celebrant's Name : ${od.celebrantName    || '-'}`,
+                `Date of Event    : ${od.eventDate        || '-'}`,
+                `Event Theme      : ${od.eventTheme       || '-'}`,
+                `Contact Number   : ${od.contactNumber    || '-'}`,
+                `Delivery Address : ${od.deliveryAddress  || '-'}`,
+                ``,
+                `── Price Details ──────────────────`,
+                `Price Breakdown  : ${cd.priceBreakdownText || '-'}`,
+                cd.hasDiscountInput
+                    ? `Discount         : ${cd.discountAmount > 0 ? `- ₱${cd.discountAmount} (${cd.discountCode})` : '₱0'}`
+                    : null,
+                (cd.addOnAmount  || 0) > 0 ? `Add-Ons          : + ₱${cd.addOnAmount}`          : null,
+                (cd.rushFeeAmount|| 0) > 0 ? `Rush Fee         : ${cd.rushFeeText}`               : null,
+                `Total Amount     : ₱${cd.total || '-'} + Delivery Fee`,
+                `Downpayment (50%): ₱${cd.total ? (cd.total * 0.5).toFixed(2) : '-'}`,
+            ].filter(line => line !== null).join('\n');
+
+            emailjs.init(EMAILJS_PUBLIC_KEY);
+            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                order_ref : orderRef,
+                to_email  : 'jerwin.vardeleon@gmail.com',
+                message   : message,
+            })
+            .then(() => console.log('Order notification email sent.'))
+            .catch(err => console.error('EmailJS error:', err));
+        });
     </script>
     
 </body>
