@@ -146,14 +146,44 @@
 
     <script>
         const orderForm = document.getElementById('order_form');
+        const eventDateInput = document.getElementById('event_date');
+
+        function getTomorrowDateString() {
+            const tomorrow = new Date();
+            tomorrow.setHours(0, 0, 0, 0);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const year = tomorrow.getFullYear();
+            const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+            const day = String(tomorrow.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function enforceEventDateMinimum() {
+            const minDate = getTomorrowDateString();
+            eventDateInput.min = minDate;
+
+            if (eventDateInput.value && eventDateInput.value < minDate) {
+                eventDateInput.value = '';
+            }
+        }
+
+        eventDateInput.addEventListener('focus', enforceEventDateMinimum);
+        eventDateInput.addEventListener('input', enforceEventDateMinimum);
+        enforceEventDateMinimum();
 
         orderForm.addEventListener('submit', function (event) {
             event.preventDefault();
+            enforceEventDateMinimum();
+
+            if (!eventDateInput.value) {
+                eventDateInput.reportValidity();
+                return;
+            }
 
             const orderFormData = {
                 customerName: document.getElementById('customer_name').value.trim(),
                 celebrantName: document.getElementById('celebrant_name').value.trim(),
-                eventDate: document.getElementById('event_date').value,
+                eventDate: eventDateInput.value,
                 eventTheme: document.getElementById('event_theme').value.trim(),
                 contactNumber: document.getElementById('contact_number').value.trim(),
                 deliveryAddress: document.getElementById('delivery_address').value.trim()
