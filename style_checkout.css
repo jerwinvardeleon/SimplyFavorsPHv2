@@ -260,8 +260,8 @@ button {
 
 #order_confirm_note {
     font-size: 12px;
-    font-weight: bold;
-    color:  red;
+    font-style: italic;
+    color: #888;
     margin: 0 0 20px;
 }
 
