@@ -54,6 +54,7 @@
     <!-- <script src="script.js"></script> -->
 
     <script>
+        (function () {
         // Delivery days mapping for each area
         const deliveryDays = {
             "": 0,
@@ -66,17 +67,17 @@
         // Rush fee table (14 to 3 days): shorter lead time means higher fee.
         const rushFeeTable = [
             { days: 14, amount: 300 },
-            { days: 13, amount: 350 },
-            { days: 12, amount: 400 },
-            { days: 11, amount: 450 },
-            { days: 10, amount: 500 },
-            { days: 9, amount: 550 },
-            { days: 8, amount: 600 },
-            { days: 7, amount: 650 },
-            { days: 6, amount: 700 },
-            { days: 5, amount: 750 },
-            { days: 4, amount: 800 },
-            { days: 3, amount: 850 }
+            { days: 13, amount: 320 },
+            { days: 12, amount: 320 },
+            { days: 11, amount: 350 },
+            { days: 10, amount: 350 },
+            { days: 9, amount: 400 },
+            { days: 8, amount: 450 },
+            { days: 7, amount: 500 },
+            // { days: 6, amount: 700 },
+            // { days: 5, amount: 750 },
+            // { days: 4, amount: 800 },
+            // { days: 3, amount: 850 }
         ];
 
         // Discount table: add/update codes here when needed.
@@ -120,11 +121,6 @@
 
             if (daysFromToday > 14) {
                 return { amount: 0, label: `₱0 (${daysFromToday} days)` };
-            }
-
-            if (daysFromToday < 3) {
-                const minRule = rushFeeTable.find(rule => rule.days === 3);
-                return { amount: minRule.amount, label: `₱${minRule.amount} (3 days min)` };
             }
 
             const matchedRule = rushFeeTable.find(rule => rule.days === daysFromToday);
@@ -251,7 +247,12 @@
             // Open order form page first before checkout summary.
             window.open('order-form.html', 'checkoutPopup', 'width=500,height=760');
         }
-        ;
+
+        // Expose handlers used by inline onclick/onchange attributes.
+        window.computeTotal = computeTotal;
+        window.updateDeliveryDays = updateDeliveryDays;
+        window.openCheckoutPopup = openCheckoutPopup;
+    })();
 
     </script>
 
