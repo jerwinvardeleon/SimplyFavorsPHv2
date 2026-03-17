@@ -136,8 +136,8 @@ document.addEventListener("DOMContentLoaded", () => {
           max-width=353px";
           >
       </div>
-      <h3 style="position: relative; top: -60px; left: 20px; font-style: oblique; color: #5a3e36;">${product.name}</h3>
-      <h2 style="position: relative; top: -140px; left: 20px; font-style: oblique; color: #5a3e36;" >₱ ${product.price}</h2><br><br>
+      <h3 style="position: relative; top: -320px; left: 20px; font-style: oblique; color: #5a3e36;">${product.name}</h3>
+      <h2 style="position: relative; top: -345px; left: 20px; font-style: oblique; color: #5a3e36;" >₱ ${product.price}</h2><br><br>
       <button 
         onmouseover="this.style.color='#f3ebde';this.style.backgroundColor='#5a3e36'; this.style.transform='scale(1.05)';"
         onmouseout="this.style.color='#5a3e36';this.style.backgroundColor='#f3ebde'; this.style.transform='scale(1)';"
@@ -147,12 +147,13 @@ document.addEventListener("DOMContentLoaded", () => {
           border-color: transparent;
           border-width: 2px;
           border-style: solid;
-          font-size: 18px;
+          font-size: 22px;
+          font-family: fantasy;
           position: relative;
-          top: -465px;
+          top: -200px;
           left: 0px;
           width: 100%;
-          height: 25px;
+          height: 35px;
           "
         onclick="showPopup('popup-best-selling.html', {name: '${product.name}', price: '${product.price}', category: '${product.category}', bimg: '${product.bimg}'})">
         Click here to order !!!
