@@ -96,7 +96,15 @@ p {
     font-weight: bold;
 }
 
-#order_details, #customer_details, #price_details_summary, #total_summary {
+#total_summary {
+    background-color: var(--pink);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 20px 0;
+}
+
+
+#order_details, #customer_details, #price_details_summary {
     background-color: var(--pink);
     border-radius: 10px;
     padding: 10px;
@@ -112,6 +120,23 @@ p {
 #order_details h4, #customer_details h4, #price_details_summary h4, #total_summary h4 {
     margin: 0 0 10px 0;
     color: var(--brown);
+}
+
+.collapsible-header {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+}
+
+.toggle_icon {
+    font-size: 12px;
+    line-height: 1;
+}
+
+.collapsed .collapsible-content {
+    display: none;
 }
 
 #order_details p, #customer_details p {
@@ -147,6 +172,9 @@ button {
 #confirm_btn {
     background-color: var(--peach);
     color: var(--brown);
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: bold;
 }
 
 #back_btn {
@@ -186,14 +214,25 @@ button {
 }
 
 #downpay {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
+    text-align: left;
+    margin: 0 0 5px 0;
+    text-align: center;
+    color: red;
+    padding: 0;
+    font-style: normal;
+}
+
+#downpay2 {
+    font-size: 12px;
+    font-weight:normal;
     text-align: left;
     margin: 0 0 10px 0;
     text-align: center;
     color: red;
     padding: 0;
-    font-style: normal;
+    font-style:italic;
 }
 
 /* ── Order Confirmation Modal ──────────────────────────────── */
