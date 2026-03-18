@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simply Favors PH Reviews</title>
+    <link rel="stylesheet" href="style_gallery.css">
+</head>
+
+<body>
+    <header>
+        <div id="header_box">
+            
+            <img id="headerLogo" src="img/icon/headerLogo2.gif" alt="Simply Favors PH">
+        </div>
+    </header>
+
+    <main class="gallery_main">
+        <section class="gallery_intro">
+            <a class="back_link" href="landing.html">Back to Home Page</a>
+            <h1>Reviews</h1>
+            <p>All images from the reviews gallery will appear here.</p>
+        </section>
+
+        <section id="gallery_grid" class="gallery_grid" aria-live="polite"></section>
+    </main>
+
+    <script>
+        const imageFiles = [];
+        const imageBasePath = 'img/reviews/';
+        const galleryGrid = document.getElementById('gallery_grid');
+
+        if (imageFiles.length === 0) {
+            galleryGrid.innerHTML = '<div class="empty_state">No photos found in img/reviews yet.</div>';
+        } else {
+            imageFiles.forEach(fileName => {
+                const card = document.createElement('figure');
+                card.className = 'gallery_card';
+
+                const image = document.createElement('img');
+                image.src = `${imageBasePath}${fileName}`;
+                image.alt = fileName;
+                image.loading = 'lazy';
+
+                card.appendChild(image);
+                galleryGrid.appendChild(card);
+            });
+        }
+    </script>
+    <p id="header_cap">All rights reserved © 2026</p>
+</body>
+
+</html>
