@@ -111,6 +111,9 @@ header p#header_cap {
 
 .gallery_intro {
     background: rgba(255, 245, 236, 0.82);
+    background-image: url('img/icon/bgHeader2.png');
+    background-repeat: no-repeat;
+    background-position: cover;
     border-radius: 22px;
     padding: 20px;
     box-shadow: 0 10px 24px rgba(90, 62, 54, 0.12);
@@ -124,8 +127,8 @@ header p#header_cap {
     align-items: center;
     padding: 8px 12px;
     border-radius: 999px;
-    background: rgba(90, 62, 54, 0.12);
-    color: var(--brown);
+    background: var(--brown);
+    color: var(--cream);
     text-decoration: none;
     font-size: 13px;
     font-weight: 600;

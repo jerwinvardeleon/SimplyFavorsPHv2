@@ -27,13 +27,19 @@
     </main>
 
     <script>
-        const imageFiles = [];
         const imageBasePath = 'img/gallery/';
+        const imageManifestPath = `${imageBasePath}manifest.json`;
         const galleryGrid = document.getElementById('gallery_grid');
+        const imageExtPattern = /\.(jpg|jpeg|png|gif|webp|avif|bmp)$/i;
 
-        if (imageFiles.length === 0) {
-            galleryGrid.innerHTML = '<div class="empty_state">No photos found in img/gallery yet.</div>';
-        } else {
+        function renderGallery(imageFiles) {
+            galleryGrid.innerHTML = '';
+
+            if (imageFiles.length === 0) {
+                galleryGrid.innerHTML = '<div class="empty_state">No photos found in img/gallery yet.</div>';
+                return;
+            }
+
             imageFiles.forEach(fileName => {
                 const card = document.createElement('figure');
                 card.className = 'gallery_card';
@@ -47,6 +53,60 @@
                 galleryGrid.appendChild(card);
             });
         }
+
+        async function loadImageFiles() {
+            try {
+                const response = await fetch(imageBasePath, { cache: 'no-store' });
+                if (!response.ok) {
+                    throw new Error('Gallery folder is not listable by this server.');
+                }
+
+                const directoryHtml = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(directoryHtml, 'text/html');
+
+                const imageFiles = [...doc.querySelectorAll('a[href]')]
+                    .map(link => link.getAttribute('href') || '')
+                    .map(href => href.split('?')[0].split('#')[0])
+                    .map(href => href.replace(/\\/g, '/'))
+                    .map(href => decodeURIComponent(href))
+                    .map(href => href.endsWith('/') ? '' : href)
+                    .filter(Boolean)
+                    .map(href => href.split('/').pop())
+                    .filter(name => imageExtPattern.test(name));
+
+                const uniqueSorted = [...new Set(imageFiles)].sort((a, b) => a.localeCompare(b));
+                renderGallery(uniqueSorted);
+            } catch (error) {
+                console.warn('Directory listing unavailable. Trying manifest fallback...', error);
+
+                try {
+                    const manifestResponse = await fetch(imageManifestPath, { cache: 'no-store' });
+                    if (!manifestResponse.ok) {
+                        throw new Error('manifest.json not found.');
+                    }
+
+                    const manifest = await manifestResponse.json();
+                    const fromManifest = Array.isArray(manifest)
+                        ? manifest
+                        : Array.isArray(manifest.images)
+                            ? manifest.images
+                            : [];
+
+                    const imageFiles = fromManifest
+                        .map(name => String(name || '').trim())
+                        .filter(name => name && imageExtPattern.test(name));
+
+                    const uniqueSorted = [...new Set(imageFiles)].sort((a, b) => a.localeCompare(b));
+                    renderGallery(uniqueSorted);
+                } catch (manifestError) {
+                    galleryGrid.innerHTML = '<div class="empty_state">Unable to load gallery automatically. Add image names to img/gallery/manifest.json or enable directory listing.</div>';
+                    console.error(manifestError);
+                }
+            }
+        }
+
+        loadImageFiles();
     </script>
     <p id="header_cap">All rights reserved © 2026</p>
 </body>

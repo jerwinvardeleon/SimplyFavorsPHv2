@@ -88,7 +88,7 @@ header {
     font-size: 12px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: rgba(90, 62, 54, 0.8);
+    color: var(--brown);
 }
 
 .hero_block h1 {
@@ -212,6 +212,7 @@ header {
 .card_label {
     font-size: 28px;
     font-weight: 700;
+    
 }
 
 .card_copy p {
