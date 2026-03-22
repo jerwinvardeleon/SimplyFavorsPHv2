@@ -16,7 +16,7 @@ html {
 
 body {
     margin: 0;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
     background: linear-gradient(135deg, #f3ebde, #ffc6a8, #c3f0ff);
     min-height: 100vh;
     max-width: 400px;

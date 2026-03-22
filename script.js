@@ -144,12 +144,13 @@ document.addEventListener("DOMContentLoaded", () => {
         onmouseout="this.style.color='#5a3e36';this.style.backgroundColor='#f3ebde'; this.style.transform='scale(1)';"
         style="
           transition: background-color 0.3s ease, transform 0.3s ease;
-          background-color: transparent;
+          background-color: var(--cream);
           border-color: transparent;
           border-width: 2px;
           border-style: solid;
           font-size: 22px;
-          font-family: fantasy;
+          font-weight: lighter;
+          font-family: inherit;
           position: relative;
           top: -200px;
           left: 0px;

@@ -31,6 +31,36 @@
         const imageManifestPath = `${imageBasePath}manifest.json`;
         const galleryGrid = document.getElementById('gallery_grid');
         const imageExtPattern = /\.(jpg|jpeg|png|gif|webp|avif|bmp)$/i;
+        let currentLightbox = null;
+
+        function closeLightbox() {
+            if (!currentLightbox) return;
+            currentLightbox.remove();
+            currentLightbox = null;
+        }
+
+        function toggleLightbox(src, alt) {
+            if (currentLightbox) {
+                closeLightbox();
+                return;
+            }
+
+            const overlay = document.createElement('div');
+            overlay.className = 'image_lightbox';
+
+            const expanded = document.createElement('img');
+            expanded.src = src;
+            expanded.alt = alt;
+
+            expanded.addEventListener('click', closeLightbox);
+            overlay.addEventListener('click', (event) => {
+                if (event.target === overlay) closeLightbox();
+            });
+
+            overlay.appendChild(expanded);
+            document.body.appendChild(overlay);
+            currentLightbox = overlay;
+        }
 
         function renderGallery(imageFiles) {
             galleryGrid.innerHTML = '';
@@ -48,6 +78,7 @@
                 image.src = `${imageBasePath}${fileName}`;
                 image.alt = fileName;
                 image.loading = 'lazy';
+                image.addEventListener('click', () => toggleLightbox(image.src, image.alt));
 
                 card.appendChild(image);
                 galleryGrid.appendChild(card);
