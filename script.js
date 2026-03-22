@@ -96,11 +96,12 @@ function renderProducts() {
 
     card.innerHTML = `
       <div style="
-        height:353px;
+        height:154px;
         background-image: url(${product.bimg});
         background-size: cover;
         background-repeat: no-repeat;
-        border-radius:15px; max-width=353px" ; >
+        border-radius:15px;
+        max-width=154px" ; >
       </div>
       <h3>${product.name}</h3>
       <p>${product.category}</p>
