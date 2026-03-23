@@ -1,6 +1,7 @@
 let products = [];
 let categories = ["All"];
 const productsDataPath = "products.csv";
+const BESTSELLER_RIBBON = "img/icon/BestSellingv3.gif";
 
 let currentFilter = "All";
 
@@ -65,7 +66,8 @@ function parseProductsCsv(csvText) {
       name: row.name,
       price: Number(row.price),
       category: row.category,
-      bimg: row.bimg
+      bimg: row.bimg,
+      bestseller: String(row.bestseller || "").trim().toLowerCase() === "yes"
     };
   });
 }
@@ -84,6 +86,9 @@ function renderFilters() {
   categories.forEach(cat => {
     const btn = document.createElement("button");
     btn.textContent = cat;
+    if (cat.toLowerCase() === "wipes") {
+      btn.classList.add("wipes-highlight");
+    }
     if (cat === currentFilter) btn.classList.add("active");
     btn.onclick = () => {
       currentFilter = cat;
@@ -131,10 +136,15 @@ function renderProducts() {
 
   filtered.forEach(product => {
     const card = document.createElement("div");
-    card.className = "card";
+    card.className = product.bestseller ? "card bestseller-card" : "card";
+    const ribbonHtml = product.bestseller
+      ? `<img class="bestseller-ribbon" src="${BESTSELLER_RIBBON}" alt="Best Selling">`
+      : "";
 
     card.innerHTML = `
-      <div style="
+      ${ribbonHtml}
+      <div class="card-image" style="
+        position: relative;
         height:154px;
         background-image: url(${product.bimg});
         background-size: cover;

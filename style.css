@@ -231,6 +231,20 @@ input {
     transition: 0.3s;
 }
 
+.filters button.wipes-highlight {
+    background: linear-gradient(120deg, #ffc6a8 0%, #fff5ec 50%, #ffc6a8 100%);
+    background-size: 260% 260%;
+    color: #5a3e36;
+    font-weight: 700;
+    box-shadow: 0 0 0 1px rgba(90, 62, 54, 0.18), 0 5px 12px rgba(255, 198, 168, 0.45);
+    animation: wipesPulse 4.4s ease-in-out infinite;
+}
+
+.filters button.wipes-highlight.active {
+    background: linear-gradient(120deg, #ffc6a8 0%, #fff5ec 50%, #ffc6a8 100%);
+    background-size: 260% 260%;
+}
+
 .filters button.active,
 .filters button:hover {
     background: #f3ebde;
@@ -239,7 +253,7 @@ input {
 .products {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 7px;
     padding: 10px;
     margin-top: 195px;
 }
@@ -252,6 +266,34 @@ input {
     transition: transform 0.2s ease;
 }
 
+.card.bestseller-card {
+    background: linear-gradient(145deg, #ffc6a8 0%, #fff5ec 50%, #ffc6a8 100%);
+    background-size: 200% 200%;
+    border: 1px solid rgba(255, 175, 95, 0.55);
+    animation: bestsellerCardShimmer 4.5s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+    padding-top: 25px;
+}
+
+.card-image {
+    position: relative;
+    overflow: hidden;
+    background-position: center;
+}
+
+.bestseller-ribbon {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    pointer-events: none;
+    z-index: 3;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.25));
+}
+
 .card:hover {
     transform: scale(1.05);
 }
@@ -259,11 +301,14 @@ input {
 .card h3 {
     margin: 10px 0 5px;
     color: #5a3e36;
+    font-size: 14px;
 }
 
 .card p {
     margin: 0 0 10px;
     color: #777;
+    font-size: 12px;
+    margin-bottom: 3px;
 }
 
 .card button {
@@ -273,6 +318,18 @@ input {
     background: #ffc6a8;
     color: var(--brown);
     cursor: pointer;
+}
+
+@keyframes wipesPulse {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes bestsellerCardShimmer {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 /* Mobile-mode simulator: constrains layout to a narrow viewport */
