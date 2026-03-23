@@ -24,29 +24,31 @@
     <!-- BEST SELLING SECTION -->
     <!-- BEST SELLING SECTION -->
     <!-- BEST SELLING SECTION -->
-    <p id="bs_prod" onclick="window.scrollTo({top: 0, behavior: 'smooth'});"></p>
-    <div id="bestSelling" class="bestSelling"></div>
+    <!-- <p id="bs_prod" onclick="window.scrollTo({top: 0, behavior: 'smooth'});"></p> -->
+    <!-- <div id="bestSelling" class="bestSelling"></div> -->
 
 
     <!-- PRICE FILTER SECTION -->
     <!-- PRICE FILTER SECTION -->
     <!-- PRICE FILTER SECTION -->
-    <section class="priceSearch" onclick="window.scrollTo({top: 355, behavior: 'smooth'});" style="cursor: pointer;">
-        <label for="minPrice">Min Price: </label>
-        <input type="number" id="minPrice" min="0" placeholder="0" style="width:210px; height: 5px; font-size: 16px;">
-        <label for="maxPrice">Max Price: </label>
-        <input type="number" id="maxPrice" min="0" placeholder="Any" style="width:150px; height: 5px; font-size: 16px;">
-        <button id="priceFilterBtn" style="border-radius:10px;">Filter</button>
-    </section>
+    <div id="shop_filters_group">
+        <section class="priceSearch" onclick="window.scrollTo({top: 0, behavior: 'smooth'});" style="cursor: pointer;">
+            <label for="minPrice">Min Price: </label>
+            <input type="number" id="minPrice" min="0" placeholder="0" style="width:210px; height: 5px; font-size: 16px;">
+            <label for="maxPrice">Max Price: </label>
+            <input type="number" id="maxPrice" min="0" placeholder="Any" style="width:150px; height: 5px; font-size: 16px;">
+            <button id="priceFilterBtn" style="border-radius:10px;">Filter</button>
+        </section>
 
 
-    <!-- CATEGORY FILTER SECTION -->
-    <!-- CATEGORY FILTER SECTION -->
-    <!-- CATEGORY FILTER SECTION -->
-    <section class="controls" onclick="window.scrollTo({top: 355, behavior: 'smooth'});" style="cursor: pointer;">
-        <input type="text" id="search" placeholder="Search cute things..." style="height: 5px; font-size: 16px;">
-        <div id="filters" class="filters"></div>
-    </section>
+        <!-- CATEGORY FILTER SECTION -->
+        <!-- CATEGORY FILTER SECTION -->
+        <!-- CATEGORY FILTER SECTION -->
+        <section class="controls" onclick="window.scrollTo({top: 0, behavior: 'smooth'});" style="cursor: pointer;">
+            <input type="text" id="search" placeholder="Search cute things..." style="height: 5px; font-size: 16px;">
+            <div id="filters" class="filters"></div>
+        </section>
+    </div>
 
 
     <!-- PRODUCTS SECTION -->
@@ -77,7 +79,7 @@
 
         <a href="https://www.tiktok.com/@simplyfavorsph" target="_blank">
             <img id="tik_link" src="img/icon/tiklogo.png">
-        </a>
+        </a>                                                       
         <br>
         <img src="img/icon/pic2.png" alt="logo" style="width: 110px; border-radius: 10px; margin-top: 10px;">
         <p style="font-size:xx-small; margin-top: 0px;">version 3.2617</p>

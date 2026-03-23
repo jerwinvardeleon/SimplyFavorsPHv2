@@ -162,6 +162,16 @@ h1 {
     color: #f3ebde;
 }
 
+#shop_filters_group {
+    position: fixed;
+    top: 185px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 400px;
+    z-index: 998;
+}
+
 .cart {
     background: #f3ebde;
     padding: 10px 20px;
@@ -174,10 +184,9 @@ h1 {
     flex-wrap: wrap;
     gap: 5px;
     padding: 10px 40px 10px 40px;
-    position: sticky;
-    top: 185px;
+    position: static;
     background: linear-gradient(90deg, #ffc6a8, #f3ebde, #c3f0ff);
-    z-index: 998;
+    z-index: auto;
     cursor: pointer;
     border-radius: 10px;
 }
@@ -187,10 +196,9 @@ h1 {
     flex-wrap: wrap;
     gap: 10px;
     padding: 10px 40px;
-    position: sticky;
-    top: 208px;
+    position: static;
     background: linear-gradient(90deg, #ffc6a8, #f3ebde, #c3f0ff);
-    z-index: 998;
+    z-index: auto;
     cursor: pointer;
     border-radius: 10px;
 }
@@ -233,6 +241,7 @@ input {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
     padding: 10px;
+    margin-top: 195px;
 }
 
 .card {
@@ -304,7 +313,7 @@ body.mobile-mode footer {
 
 footer {
     text-align: center;
-    padding: 20px;
+    padding: 2px;
     color: #777;
 }
 

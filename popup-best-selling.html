@@ -7,18 +7,23 @@
 
 <body>
     <div id="pu_header">
-        <div id="pu_img"
-            style="width: 100px; height: 100px; background-image: url(${bimg}); background-size: contain; background-repeat: no-repeat; border-radius: 8px;">
-        </div>
+        <div id="pu_img"></div>
         <div id="pu_imgdsc">
-            <h3 style="margin: 0 0 8px 0;">${name}</h3>
-            <p style="margin: 0; font-weight: bold;">Price: ₱${price} each</p>
+            <h3 id="pu_product_name" style="margin: 0 0 8px 0;">${name}</h3>
+            <p id="pu_product_price" style="margin: 0; font-weight: bold;">Price: ₱${price} each</p>
         </div>
+    </div>
+
+    <div id="variation_section">
+        <h5 id="variation_caption">Choose variation</h5>
+        <div id="variation_row" aria-live="polite"></div>
     </div>
 
     <!-- USER INPUT SECTION -->
     <!-- USER INPUT SECTION -->
     <!-- USER INPUT SECTION -->
+
+    <div id="pu_order_comp">
 
     <h5 style="font-style: italic; padding: 8px; margin: 5px 0 1px 0; text-align: center;"> Order Details:</h5>
 
@@ -47,17 +52,211 @@
     <!-- <input id="pu_number" type="text" placeholder="Enter Contact Number"> -->
     <!-- <input id="pu_email" type="text" placeholder="Enter Email Address"> -->
     <div style="display: flex; align-items: center; gap: 10px; margin: 8px 0;">
-        <label for="pu_deldate" style="font-size: 14px; padding-left: 5px;">Do you want these delivered when?</label>
+        <label for="pu_deldate" style="font-size: 14px; padding-left: 5px;">When do you want these delivered?</label>
         <input id="pu_deldate" type="date" placeholder="Enter Delivery Date" required>
     </div>
     <p id="delivery_warning" style="display: none; margin: 4px 0 0 5px; color: #c62828; font-size: 12px;">
-        For orders that require delivery within 7 days from today, please contact us from the links below in advance to confirm availability.
+        For orders that require delivery within 7 days from today, please send us a message to confirm availability.
     </p>
 
     <!-- <script src="script.js"></script> -->
 
     <script>
         (function () {
+        const initialProduct = {
+            name: '${name}',
+            price: parseFloat('${price}'),
+            category: '${category}',
+            bimg: '${bimg}'
+        };
+        let selectedProduct = { ...initialProduct };
+        let categoryProducts = [{ ...initialProduct }];
+        let imageZoomOverlay = null;
+
+        function closeImageZoom() {
+            if (!imageZoomOverlay) {
+                return;
+            }
+
+            imageZoomOverlay.remove();
+            imageZoomOverlay = null;
+        }
+
+        function toggleImageZoom() {
+            if (imageZoomOverlay) {
+                closeImageZoom();
+                return;
+            }
+
+            const overlay = document.createElement('div');
+            overlay.className = 'pu_image_zoom_overlay';
+
+            const zoomView = document.createElement('div');
+            zoomView.className = 'pu_image_zoom_view';
+            zoomView.style.backgroundImage = `url(${selectedProduct.bimg})`;
+
+            zoomView.addEventListener('click', closeImageZoom);
+            overlay.addEventListener('click', (event) => {
+                if (event.target === overlay) {
+                    closeImageZoom();
+                }
+            });
+
+            overlay.appendChild(zoomView);
+            document.body.appendChild(overlay);
+            imageZoomOverlay = overlay;
+        }
+
+        function parseCsvLine(line) {
+            const values = [];
+            let current = '';
+            let insideQuotes = false;
+
+            for (let index = 0; index < line.length; index += 1) {
+                const character = line[index];
+
+                if (character === '"') {
+                    const nextCharacter = line[index + 1];
+                    if (insideQuotes && nextCharacter === '"') {
+                        current += '"';
+                        index += 1;
+                    } else {
+                        insideQuotes = !insideQuotes;
+                    }
+                    continue;
+                }
+
+                if (character === ',' && !insideQuotes) {
+                    values.push(current);
+                    current = '';
+                    continue;
+                }
+
+                current += character;
+            }
+
+            values.push(current);
+            return values;
+        }
+
+        function parseProductsCsv(csvText) {
+            const lines = csvText
+                .split(/\r?\n/)
+                .map(line => line.trim())
+                .filter(Boolean);
+
+            if (lines.length <= 1) {
+                return [];
+            }
+
+            const headers = parseCsvLine(lines[0]);
+
+            return lines.slice(1).map(line => {
+                const values = parseCsvLine(line);
+                const row = Object.fromEntries(headers.map((header, index) => [header, values[index] ?? '']));
+
+                return {
+                    id: Number(row.id),
+                    name: row.name,
+                    price: Number(row.price),
+                    category: row.category,
+                    bimg: row.bimg
+                };
+            });
+        }
+
+        function isSameProduct(productA, productB) {
+            return productA.name === productB.name
+                && productA.category === productB.category
+                && productA.bimg === productB.bimg
+                && Number(productA.price) === Number(productB.price);
+        }
+
+        function updateSelectedProductUI() {
+            const imageEl = document.getElementById('pu_img');
+            const nameEl = document.getElementById('pu_product_name');
+            const priceEl = document.getElementById('pu_product_price');
+
+            if (imageEl) {
+                imageEl.style.backgroundImage = `url(${selectedProduct.bimg})`;
+            }
+
+            if (nameEl) {
+                nameEl.textContent = selectedProduct.name;
+            }
+
+            if (priceEl) {
+                priceEl.textContent = `Price: ₱${selectedProduct.price} each`;
+            }
+
+            if (imageZoomOverlay) {
+                const zoomView = imageZoomOverlay.querySelector('.pu_image_zoom_view');
+                if (zoomView) {
+                    zoomView.style.backgroundImage = `url(${selectedProduct.bimg})`;
+                }
+            }
+        }
+
+        function renderVariationRow() {
+            const row = document.getElementById('variation_row');
+            if (!row) {
+                return;
+            }
+
+            row.innerHTML = '';
+
+            categoryProducts.forEach(product => {
+                const option = document.createElement('button');
+                option.type = 'button';
+                option.className = 'variation_card';
+
+                if (isSameProduct(product, selectedProduct)) {
+                    option.classList.add('is-selected');
+                }
+
+                option.innerHTML = `
+                    <span class="variation_check" aria-hidden="true">✓</span>
+                    <span class="variation_thumb" style="background-image: url(${product.bimg});"></span>
+                    <span class="variation_name">${product.name}</span>
+                    <span class="variation_price">₱${product.price}</span>
+                `;
+
+                option.addEventListener('click', () => {
+                    selectedProduct = { ...product };
+                    updateSelectedProductUI();
+                    renderVariationRow();
+                    computeTotal();
+                });
+
+                row.appendChild(option);
+            });
+        }
+
+        async function loadCategoryVariations() {
+            try {
+                const response = await fetch('products.csv', { cache: 'no-store' });
+                if (!response.ok) {
+                    throw new Error('Unable to load products.csv');
+                }
+
+                const csvText = await response.text();
+                const products = parseProductsCsv(csvText);
+                const sameCategory = products.filter(product => product.category === initialProduct.category);
+                categoryProducts = sameCategory.length > 0 ? sameCategory : [{ ...initialProduct }];
+
+                const matchingInitial = categoryProducts.find(product => isSameProduct(product, initialProduct));
+                selectedProduct = matchingInitial ? { ...matchingInitial } : { ...initialProduct };
+            } catch (error) {
+                console.error(error);
+                categoryProducts = [{ ...initialProduct }];
+                selectedProduct = { ...initialProduct };
+            }
+
+            updateSelectedProductUI();
+            renderVariationRow();
+            computeTotal();
+        }
+
         // Delivery days mapping for each area
         const deliveryDays = {
             "": 0,
@@ -191,7 +390,7 @@
             enforceWholeNumberQuantity();
             enforceDeliveryDateMinimum();
             const qty = parseInt(document.getElementById('pu_ttl_amt').value) || 0;
-            const price = parseFloat('${price}');
+            const price = selectedProduct.price;
             const deliveryDateValue = document.getElementById('pu_deldate').value;
             const discountCode = document.getElementById('disc_code').value;
             let addOnTotal = 0;
@@ -248,9 +447,14 @@
             updateDeliveryDays();
             computeTotal();
         });
+        const puImage = document.getElementById('pu_img');
+        if (puImage) {
+            puImage.addEventListener('click', toggleImageZoom);
+        }
         enforceWholeNumberQuantity();
         enforceDeliveryDateMinimum();
-        computeTotal();
+        updateSelectedProductUI();
+        loadCategoryVariations();
 
         function openCheckoutPopup() {
             if (document.getElementById('checkout_btn').disabled) {
@@ -262,7 +466,7 @@
                 return;
             }
 
-            const price = parseFloat('${price}');
+            const price = selectedProduct.price;
             const deliveryArea = document.getElementById('pu_delivery_area').value;
             const deliveryDays = document.getElementById('days').textContent;
             const total = document.getElementById('total').textContent;
@@ -295,9 +499,9 @@
 
             // Prepare data to pass to checkout popup
             const checkoutData = {
-                bimg: '${bimg}',
-                name: '${name}',
-                price: '${price}',
+                bimg: selectedProduct.bimg,
+                name: selectedProduct.name,
+                price: String(selectedProduct.price),
                 qty: qty,
                 deliveryArea: deliveryArea,
                 deliveryDays: deliveryDays,
@@ -333,23 +537,23 @@
     <!-- POPUP ADD ONS COMPUTATION -->
     <!-- POPUP ADD ONS COMPUTATION -->
     <!-- POPUP ADD ONS COMPUTATION -->
-    <div id="add_ons">
-        <h5 style="font-style: italic; padding: 8px; margin: 5px 0 8px 0; text-align: center;"> Add-Ons:</h5>
-        <div class="columns">
-            <div class="left-column">
-                <label class="label"><input class="input" type="checkbox" data-amount="2" onchange="computeTotal()"> Tag
-                    (₱2 each)</label><br>
+    <!-- <div id="add_ons"> -->
+        <!-- <h5 style="font-style: italic; padding: 8px; margin: 5px 0 8px 0; text-align: center;"> Add-Ons:</h5> -->
+        <!-- <div class="columns"> -->
+            <!-- <div class="left-column"> -->
+                <!-- <label class="label"><input class="input" type="checkbox" data-amount="2" onchange="computeTotal()"> Tag -->
+                    <!-- (₱2 each)</label><br> -->
                 <!-- <label class="label"><input class="input" type="checkbox" data-amount="15" onchange="computeTotal()"> Acetate (₱15 each)</label><br> -->
-            </div>
-            <div class="right-column">
-                <label class="label"><input class="input" type="checkbox" data-amount="150" data-fixed="true"
-                        onchange="computeTotal()"> Layout (₱ 150)</label><br>
-                <p id="labeldesc"> For personalized layout requests</p>
+            <!-- </div> -->
+            <!-- <div class="right-column"> -->
+                <!-- <label class="label"><input class="input" type="checkbox" data-amount="150" data-fixed="true" -->
+                        <!-- onchange="computeTotal()"> Layout (₱ 150)</label><br> -->
+                <!-- <p id="labeldesc"> For personalized layout requests</p> -->
                 <!-- <label class="label"><input class="input" type="checkbox" data-amount="300" data-fixed="true" onchange="computeTotal()"> Rush Fee (₱ 300)</label><br> -->
                 <!-- <p id="labeldesc"> For request of less than 14 days</p> -->
-            </div>
-        </div>
-    </div>
+            <!-- </div> -->
+        <!-- </div> -->
+    <!-- </div> -->
 
 
     <!-- POPUP DISCOUNT COMPUTATION -->
@@ -365,6 +569,8 @@
                 <input id="disc_code" type="text" placeholder="Enter code">
             </div>
         </div>
+    </div>
+
     </div>
 
     
@@ -403,8 +609,8 @@
    
     <button id="checkout_btn" onclick="openCheckoutPopup()">CHECKOUT ORDER</button>
 
-    <footer>
-        <p style="font-size:medium; margin-bottom: 2px;">Contact Us: </p>
+    <!-- <footer>
+        <p style="font-size:medium; margin: 0 0 2px 0;">Contact Us: </p>
 
         <a href="https://www.facebook.com/Simplyfavorsph/" target="_blank">
             <img id="fb_link" src="img/icon/fblogo.png">
@@ -419,7 +625,7 @@
             <img id="tik_link" src="img/icon/tiklogo.png">
         </a>
  
-    </footer>
+    </footer> -->
 
 </body>
 

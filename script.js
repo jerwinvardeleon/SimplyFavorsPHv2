@@ -1,33 +1,6 @@
-const products = [
-  { id: 1, name: "Keychain (bottle)", price: 35, category: "keychain", bimg: "img/products/KC_bottle.jpg" },
-  { id: 2, name: "Keychain (acrylic)", price: 35, category: "keychain", bimg: "img/products/KC_acrylic.jpg" },
-  { id: 3, name: "Pin (badge)", price: 35, category: "pins", bimg: "img/products/pin.jpg" },
-  { id: 4, name: "Baptismal candle", price: 40, category: "candle", bimg: "img/products/bapt.jpg" },
-  { id: 5, name: "Card type (alcohol)", price: 45, category: "alcohol", bimg: "img/products/card_alc.jpg" },
-  { id: 6, name: "Spray Bottle (alcohol)", price: 40, category: "alcohol", bimg: "img/products/spry_alc.png" },
-  { id: 7, name: "Spray Bottle (perfume)", price: 65, category: "perfume", bimg: "img/products/spry_per.png" },
-  { id: 8, name: "Keychain (bear)", price: 50, category: "keychain", bimg: "img/products/spry_per.png" },
-  { id: 9, name: "Omni Hand Sanitizer", price: 55, category: "sanitizer", bimg: "img/products/sani.jpg" },
-  { id: 10, name: "Omni Hand Sanitizer (Organza Pouch)", price: 65, category: "sanitizer", bimg: "img/products/sani_org.jpg" },
-  { id: 11, name: "Omni Hand Sanitizer (Burlap Pouch)", price: 70, category: "sanitizer", bimg: "img/products/sani_bur.jpg" },
-  { id: 12, name: "Wet wipes in can", price: 65, category: "keychain", bimg: "img/products/wipe.jpg" },
-  { id: 13, name: "Bear (pouch)", price: 80, category: "bear", bimg: "img/products/bear.png" },
-  { id: 14, name: "Bear (bottle)", price: 100, category: "bear", bimg: "img/products/bearb.jpg" },
-  { id: 15, name: "Bear w/ Sanitizer", price: 150, category: "bear", bimg: "img/products/bearh.jpg" },
-  { id: 16, name: "Bear w/ Mug", price: 185, category: "bear", bimg: "img/products/bearm.jpg" },
-  { id: 17, name: "Safari Plush Toy", price: 100, category: "bear", bimg: "img/products/safari.jpg" },
-  { id: 17, name: "Safari Plush Toy (pouch)", price: 120, category: "bear", bimg: "img/products/safarip.png" },
-  { id: 18, name: "Safari Plush Toy (acetate box)", price: 150, category: "bear", bimg: "img/products/safaria.png" },
-  { id: 19, name: "Safari Plush Toy w/ Mug", price: 180, category: "bear", bimg: "img/products/safarim.png" },
-  { id: 20, name: "Mini Scented bubble candle", price: 50, category: "candle", bimg: "img/products/cand.jpeg" },
-  { id: 21, name: "Spray Bottle - Gold (perfume)", price: 55, category: "perfume", bimg: "img/products/perfg.jpg" },
-  { id: 22, name: "Scented Candle", price: 65, category: "candle", bimg: "img/products/scncand.jpeg" },
-  { id: 22, name: "Keychain (perfume)", price: 55, category: "keychain", bimg: "img/products/KC_ess.png" },
-  // additional category filter
-  { id: 71, name: "Spray Bottle (perfume)", price: 65, category: "spray bottle", bimg: "img/products/spry_per.png" },
-  { id: 61, name: "Spray Bottle (alcohol)", price: 40, category: "spray bottle", bimg: "img/products/spry_alc.png" },
-  { id: 211, name: "Spray Bottle - Gold (perfume)", price: 55, category: "spray bottle", bimg: "img/products/perfg.jpg" }
-];
+let products = [];
+let categories = ["All"];
+const productsDataPath = "products.csv";
 
 let currentFilter = "All";
 
@@ -39,9 +12,74 @@ const filtersContainer = document.getElementById("filters");
 // FILTER PER CATEGORY SECTION
 // FILTER PER CATEGORY SECTION
 // FILTER PER CATEGORY SECTION
-const categories = ["All", ...new Set(products.map(p => p.category))];
+function parseCsvLine(line) {
+  const values = [];
+  let current = "";
+  let insideQuotes = false;
+
+  for (let index = 0; index < line.length; index += 1) {
+    const character = line[index];
+
+    if (character === '"') {
+      const nextCharacter = line[index + 1];
+      if (insideQuotes && nextCharacter === '"') {
+        current += '"';
+        index += 1;
+      } else {
+        insideQuotes = !insideQuotes;
+      }
+      continue;
+    }
+
+    if (character === ',' && !insideQuotes) {
+      values.push(current);
+      current = "";
+      continue;
+    }
+
+    current += character;
+  }
+
+  values.push(current);
+  return values;
+}
+
+function parseProductsCsv(csvText) {
+  const lines = csvText
+    .split(/\r?\n/)
+    .map(line => line.trim())
+    .filter(Boolean);
+
+  if (lines.length <= 1) {
+    return [];
+  }
+
+  const headers = parseCsvLine(lines[0]);
+
+  return lines.slice(1).map(line => {
+    const values = parseCsvLine(line);
+    const row = Object.fromEntries(headers.map((header, index) => [header, values[index] ?? ""]));
+
+    return {
+      id: Number(row.id),
+      name: row.name,
+      price: Number(row.price),
+      category: row.category,
+      bimg: row.bimg
+    };
+  });
+}
+
+function updateCategories() {
+  categories = ["All", ...new Set(products.map(product => product.category))];
+}
+
+function ensureDefaultFilter() {
+  currentFilter = categories.includes("All") ? "All" : (categories[0] || "All");
+}
 
 function renderFilters() {
+  if (!filtersContainer) return;
   filtersContainer.innerHTML = "";
   categories.forEach(cat => {
     const btn = document.createElement("button");
@@ -79,6 +117,7 @@ if (priceFilterBtn) {
 // PRODUCT RENDERING SECTION
 // PRODUCT RENDERING SECTION
 function renderProducts() {
+  if (!productsContainer || !searchInput) return;
   productsContainer.innerHTML = "";
   const searchText = searchInput.value.toLowerCase();
 
@@ -113,57 +152,83 @@ function renderProducts() {
   });
 }
 
-searchInput.addEventListener("input", renderProducts);
+// function renderBestSelling() {
+//   const bestSelling = document.getElementById("bestSelling");
+//   if (!bestSelling) return;
 
-renderFilters();
-renderProducts();
+//   bestSelling.innerHTML = "";
+//   const product = products.find(p => p.id === 12);
+//   if (!product) return;
 
-// BEST SELLING PRODUCT DISPLAY
-// BEST SELLING PRODUCT DISPLAY
-// BEST SELLING PRODUCT DISPLAY
-document.addEventListener("DOMContentLoaded", () => {
-  const bestSelling = document.getElementById("bestSelling");
-  const product = products.find(p => p.id === 12);
-  if (product && bestSelling) {
-    const card = document.createElement("div");
-    card.className = "bestSelling";
-    card.innerHTML = `
-      <div style="
-          height:320px;
-          background-image: url(${product.bimg});
-          background-size: cover;
-          background-repeat: no-repeat;
-          border-radius:15px; 
-          max-width=353px";
-          >
-      </div>
-      <h3 style="position: relative; top: -320px; left: 20px; font-style: oblique; color: #5a3e36;">${product.name}</h3>
-      <h2 style="position: relative; top: -345px; left: 20px; font-style: oblique; color: #5a3e36;" >₱ ${product.price}</h2><br><br>
-      <button 
-        onmouseover="this.style.color='#f3ebde';this.style.backgroundColor='#5a3e36'; this.style.transform='scale(1.05)';"
-        onmouseout="this.style.color='#5a3e36';this.style.backgroundColor='#f3ebde'; this.style.transform='scale(1)';"
-        style="
-          transition: background-color 0.3s ease, transform 0.3s ease;
-          background-color: var(--cream);
-          border-color: transparent;
-          border-width: 2px;
-          border-style: solid;
-          font-size: 22px;
-          font-weight: lighter;
-          font-family: inherit;
-          position: relative;
-          top: -200px;
-          left: 0px;
-          width: 100%;
-          height: 35px;
-          "
-        onclick="showPopup('popup-best-selling.html', {name: '${product.name}', price: '${product.price}', category: '${product.category}', bimg: '${product.bimg}'})">
-        Click here to order !!!
-      </button>
-    `;
-    bestSelling.appendChild(card);
+//   const card = document.createElement("div");
+//   card.className = "bestSelling";
+//   card.innerHTML = `
+//       <div style="
+//           height:320px;
+//           background-image: url(${product.bimg});
+//           background-size: cover;
+//           background-repeat: no-repeat;
+//           border-radius:15px; 
+//           max-width=353px";
+//           >
+//       </div>
+//       <h3 style="position: relative; top: -320px; left: 20px; font-style: oblique; color: #5a3e36;">${product.name}</h3>
+//       <h2 style="position: relative; top: -345px; left: 20px; font-style: oblique; color: #5a3e36;" >₱ ${product.price}</h2><br><br>
+//       <button 
+//         onmouseover="this.style.color='#f3ebde';this.style.backgroundColor='#5a3e36'; this.style.transform='scale(1.05)';"
+//         onmouseout="this.style.color='#5a3e36';this.style.backgroundColor='var(--cream)'; this.style.transform='scale(1)';"
+//         style="
+//           transition: background-color 0.3s ease, transform 0.3s ease;
+//           background-color: var(--cream);
+//           border-color: transparent;
+//           border-width: 2px;
+//           border-style: solid;
+//           font-size: 22px;
+//           font-weight: lighter;
+//           font-family: inherit;
+//           position: relative;
+//           top: -200px;
+//           left: 0px;
+//           width: 100%;
+//           height: 35px;
+//           "
+//         onclick="showPopup('popup-best-selling.html', {name: '${product.name}', price: '${product.price}', category: '${product.category}', bimg: '${product.bimg}'})">
+//         Click here to order !!!
+//       </button>
+//     `;
+//   bestSelling.appendChild(card);
+// }
+
+async function loadProducts() {
+  try {
+    const response = await fetch(productsDataPath, { cache: "no-store" });
+    if (!response.ok) {
+      throw new Error(`Failed to load ${productsDataPath}`);
+    }
+
+    const csvText = await response.text();
+    products = parseProductsCsv(csvText);
+    updateCategories();
+    ensureDefaultFilter();
+    renderFilters();
+    renderProducts();
+  } catch (error) {
+    console.error("Error loading products:", error);
+    if (productsContainer) {
+      productsContainer.innerHTML = "<p>Unable to load products right now.</p>";
+    }
   }
-});
+}
+
+if (searchInput) {
+  searchInput.addEventListener("input", renderProducts);
+}
+
+loadProducts();
+
+// BEST SELLING PRODUCT DISPLAY
+// BEST SELLING PRODUCT DISPLAY
+// BEST SELLING PRODUCT DISPLAY
 
 // Creates a centered popup overlay (300x300) with provided HTML content or file path.
 // If htmlOrFilePath ends with .html, it's treated as a file path and fetched.

@@ -50,9 +50,9 @@ header {
 #tik_link {
     margin-top: 0px;
     margin-bottom: 0;
-    margin-left: 6px;
-    margin-right: 6px;
-    margin-top: 8px;
+    margin-left: 0px;
+    margin-right: 10                                                                                                                                                                            px;
+    margin-top: 5px;
     width: 30px;
     height: 30px;
 }
@@ -86,7 +86,7 @@ header {
 
 .hero_block {
     background: rgba(255, 255, 255, 0.8);
-    background-image: url('img/icon/bgHeader2.png');
+    background-image: url('img/icon/bgHeader3.png');
     background-repeat: no-repeat;
     background-size: cover;
     border-radius: 22px;
@@ -120,7 +120,7 @@ header {
 .social_row {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: right;
     flex-wrap: nowrap;
 }
 
