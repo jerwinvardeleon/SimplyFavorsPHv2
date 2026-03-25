@@ -2,6 +2,7 @@ let products = [];
 let categories = ["All"];
 const productsDataPath = "products.csv";
 const BESTSELLER_RIBBON = "img/icon/BestSellingv3.gif";
+const MAX_FILTER_BUTTONS = 9;
 
 let currentFilter = "All";
 
@@ -97,14 +98,19 @@ function updateCategories() {
   categories = ["All", ...new Set(products.map(product => product.category))];
 }
 
+function getVisibleCategories() {
+  return categories.slice(0, MAX_FILTER_BUTTONS);
+}
+
 function ensureDefaultFilter() {
-  currentFilter = categories.includes("All") ? "All" : (categories[0] || "All");
+  const visibleCategories = getVisibleCategories();
+  currentFilter = visibleCategories.includes("All") ? "All" : (visibleCategories[0] || "All");
 }
 
 function renderFilters() {
   if (!filtersContainer) return;
   filtersContainer.innerHTML = "";
-  categories.forEach(cat => {
+  getVisibleCategories().forEach(cat => {
     const btn = document.createElement("button");
     btn.textContent = cat;
     if (cat.toLowerCase() === "wipes") {
