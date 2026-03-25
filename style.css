@@ -8,7 +8,7 @@
 html {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     /* background-image: url('img/icon/bodybg.png');
     background-repeat: repeat;
     background-size: f; */
@@ -221,8 +221,6 @@ input {
     font-size: 16px;
     padding-left: 10px;
 }
-
-
 
 
 .shop-input {
