@@ -25,7 +25,12 @@
 
     <div id="pu_order_comp">
 
-    <h5 style="font-style: italic; padding: 8px; margin: 5px 0 1px 0; text-align: center;"> Order Details:</h5>
+    <h5 id="pu_order_header" class="pu_section_header" style="font-style: italic; padding: 8px; margin: 5px 0 1px 0; text-align: center;">
+        <span>Order Details:</span>
+        <span class="pu_toggle_icon" aria-hidden="true">▼</span>
+    </h5>
+
+    <div id="pu_order_body">
 
     <div id="pu_user_input ">
         <div class="columns">
@@ -437,6 +442,44 @@
             document.getElementById('days').textContent = days;
         }
 
+        function setSectionCollapsed(sectionEl, bodyEl, collapsed) {
+            if (!sectionEl || !bodyEl) {
+                return;
+            }
+
+            sectionEl.classList.toggle('is-collapsed', collapsed);
+            bodyEl.hidden = collapsed;
+        }
+
+        function setupCollapsibleSection(headerId, sectionId, bodyId) {
+            const header = document.getElementById(headerId);
+            const section = document.getElementById(sectionId);
+            const body = document.getElementById(bodyId);
+
+            if (!header || !section || !body) {
+                return;
+            }
+
+            header.setAttribute('role', 'button');
+            header.setAttribute('tabindex', '0');
+            header.setAttribute('aria-controls', bodyId);
+            header.setAttribute('aria-expanded', 'true');
+
+            const toggle = () => {
+                const willCollapse = !section.classList.contains('is-collapsed');
+                setSectionCollapsed(section, body, willCollapse);
+                header.setAttribute('aria-expanded', String(!willCollapse));
+            };
+
+            header.addEventListener('click', toggle);
+            header.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    toggle();
+                }
+            });
+        }
+
         document.getElementById('pu_ttl_amt').addEventListener('input', computeTotal);
         document.getElementById('pu_ttl_amt').addEventListener('blur', enforceWholeNumberQuantity);
         document.getElementById('pu_deldate').addEventListener('change', computeTotal);
@@ -451,6 +494,8 @@
         if (puImage) {
             puImage.addEventListener('click', toggleImageZoom);
         }
+        setupCollapsibleSection('pu_order_header', 'pu_order_comp', 'pu_order_body');
+        setupCollapsibleSection('pu_est_header', 'pu_est_comp', 'pu_est_body');
         enforceWholeNumberQuantity();
         enforceDeliveryDateMinimum();
         updateSelectedProductUI();
@@ -573,15 +618,20 @@
 
     </div>
 
+    </div>
+
     
     <!-- POPUP ESTIMATED COMPUTATION -->
     <!-- POPUP ESTIMATED COMPUTATION -->
     <!-- POPUP ESTIMATED COMPUTATION -->
     <div id="pu_est_comp" >
         <div>
-            <h5 style="font-style: italic; padding: 8px; margin: 5px 0 8px 0;text-align: center;">Estimated Computation</h5>
+            <h5 id="pu_est_header" class="pu_section_header" style="font-style: italic; padding: 8px; margin: 5px 0 8px 0;text-align: center;">
+                <span>Estimated Computation</span>
+                <span class="pu_toggle_icon" aria-hidden="true">▼</span>
+            </h5>
         </div>
-        <div style="padding: 0 0 0 20px ;">
+        <div id="pu_est_body" style="padding: 0 0 0 20px ;">
             <p id="amt_comp" style="display: flex; justify-content: space-between; margin: 0 20px 5px 0;">
                 <span>Price Breakdown:</span>
                 <span id="amt_comp_value">₱0 x 0 = ₱0</span>

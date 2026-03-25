@@ -15,9 +15,10 @@ function syncProductsOffset() {
   if (!productsContainer || !shopFiltersGroup) return;
 
   window.requestAnimationFrame(() => {
-    const panelBottom = shopFiltersGroup.getBoundingClientRect().bottom + window.scrollY;
+    const panelBottom = shopFiltersGroup.getBoundingClientRect().bottom;
     const currentInlineOffset = parseFloat(productsContainer.style.marginTop) || 0;
-    const productsTopWithoutInlineOffset = (productsContainer.getBoundingClientRect().top + window.scrollY) - currentInlineOffset;
+    // Keep all measurements in viewport coordinates so offset stays stable while scrolling.
+    const productsTopWithoutInlineOffset = productsContainer.getBoundingClientRect().top - currentInlineOffset;
     const desiredProductsTop = panelBottom + 8;
     const nextOffset = Math.max(desiredProductsTop - productsTopWithoutInlineOffset, 0);
 
@@ -181,7 +182,7 @@ function renderProducts() {
       <h3>${product.name}</h3>
       <p>${product.category}</p>
       <strong>₱ ${product.price}</strong><br><br>
-      <button onclick="showPopup('popup-best-selling.html', {name: '${product.name}', price: '${product.price}', category: '${product.category}', bimg: '${product.bimg}'})">Get an estimate</button>
+      <button onclick="showPopup('popup-best-selling.html', {name: '${product.name}', price: '${product.price}', category: '${product.category}', bimg: '${product.bimg}'})" style="top: -50px; right: -45px; position: relative;">Get an estimate</button>
     `;
 
     productsContainer.appendChild(card);

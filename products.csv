@@ -3,30 +3,28 @@ id,name,price,category,bimg,bestseller
 122,Wet wipes in can (acetate),80,wipes,img/products/wipes/wipe_acry.jpg,yes
 123,Wet wipes in can (acetate + omni),150,wipes,img/products/wipes/wipes_acry_omni.jpg,no
 124,Wet wipes in can (acetate + bear),170,wipes,img/products/wipes/wipe_acry_bear.jpg,no
-1,Keychain (bottle),35,keychain,img/products/KC_bottle.jpg,no
-2,Keychain (acrylic),35,keychain,img/products/KC_acrylic.jpg,no
-3,Pin (badge),35,pins,img/products/pin.jpg,no
-4,Baptismal candle,40,candle,img/products/bapt.jpg,no
-5,Card type (alcohol),45,alcohol,img/products/card_alc.jpg,no
-6,Spray Bottle (alcohol),40,alcohol,img/products/spry_alc.png,no
-7,Spray Bottle (perfume),65,perfume,img/products/spry_per.png,no
-8,Keychain (bear),50,keychain,img/products/spry_per.png,no
-9,Omni Hand Sanitizer,55,sanitizer,img/products/sani.jpg,no
-10,Omni Hand Sanitizer (Organza Pouch),65,sanitizer,img/products/sani_org.jpg,no
-11,Omni Hand Sanitizer (Burlap Pouch),70,sanitizer,img/products/sani_bur.jpg,no
-12,Wet wipes in can,65,keychain,img/products/wipe.jpg,no
-13,Bear (pouch),80,bear,img/products/bear.png,no
-14,Bear (bottle),100,bear,img/products/bearb.jpg,no
-15,Bear w/ Sanitizer,150,bear,img/products/bearh.jpg,no
-16,Bear w/ Mug,185,bear,img/products/bearm.jpg,no
-17,Safari Plush Toy,100,bear,img/products/safari.jpg,no
-17,Safari Plush Toy (pouch),120,bear,img/products/safarip.png,no
-18,Safari Plush Toy (acetate box),150,bear,img/products/safaria.png,no
-19,Safari Plush Toy w/ Mug,180,bear,img/products/safarim.png,no
-20,Mini Scented bubble candle,50,candle,img/products/cand.jpeg,no
-21,Spray Bottle - Gold (perfume),55,perfume,img/products/perfg.jpg,no
-22,Scented Candle,65,candle,img/products/scncand.jpeg,no
-22,Keychain (perfume),55,keychain,img/products/KC_ess.png,no
-71,Spray Bottle (perfume),65,spray bottle,img/products/spry_per.png,no
-61,Spray Bottle (alcohol),40,spray bottle,img/products/spry_alc.png,no
-211,Spray Bottle - Gold (perfume),55,spray bottle,img/products/perfg.jpg,no
+1,Keychain (bottle),35,keychain,img/products/keychain/KC_bottle.jpg,no
+2,Keychain (acrylic),35,keychain,img/products/keychain/KC_acrylic.jpg,no
+3,Pin (badge),35,pins,img/products/pins/pin.jpg,no
+4,Baptismal candle,40,candle,img/products/candles/bapt.jpg,no
+5,Card type (alcohol),45,alcohol,img/products/alcohol/card_alc.jpg,no
+6,Spray Bottle (alcohol),40,alcohol,img/products/alcohol/spry_alc.png,no
+7,Spray Bottle (perfume),65,perfume,img/products/perfume/spry_per.png,no
+9,Omni Hand Sanitizer,55,sanitizer,img/products/sanitizer/sani.jpg,no
+10,Omni Hand Sanitizer (Organza Pouch),65,sanitizer,img/products/sanitizer/sani_org.jpg,no
+11,Omni Hand Sanitizer (Burlap Pouch),70,sanitizer,img/products/sanitizer/sani_bur.jpg,no
+13,Bear (pouch),80,bear,img/products/bear/bear.png,no
+14,Bear (bottle),100,bear,img/products/bear/bearb.jpg,no
+15,Bear w/ Sanitizer,150,bear,img/products/bear/bearh.jpg,no
+16,Bear w/ Mug,185,bear,img/products/bear/bearm.jpg,no
+17,Safari Plush Toy,100,bear,img/products/bear/safari.jpg,no
+17,Safari Plush Toy (pouch),120,bear,img/products/bear/safarip.png,no
+18,Safari Plush Toy (acetate box),150,bear,img/products/bear/safaria.png,no
+19,Safari Plush Toy w/ Mug,180,bear,img/products/bear/safarim.png,no
+20,Mini Scented bubble candle,50,candle,img/products/candles/cand.jpeg,no
+21,Spray Bottle - Gold (perfume),55,perfume,img/products/perfume/perfg.jpg,no
+22,Scented Candle,65,candle,img/products/candles/scncand.jpg,no
+22,Keychain (perfume),55,keychain,img/products/keychain/KC_ess.png,no
+71,Spray Bottle (perfume),65,spray bottle,img/products/spray/spry_per.png,no
+61,Spray Bottle (alcohol),40,spray bottle,img/products/spray/spry_alc.png,no
+211,Spray Bottle - Gold (perfume),55,spray bottle,img/products/spray/perfg.jpg,no

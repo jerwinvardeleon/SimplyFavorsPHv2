@@ -195,6 +195,26 @@
     margin: 0;
 }
 
+.pu_section_header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.pu_toggle_icon {
+    display: inline-block;
+    font-size: 12px;
+    transition: transform 0.2s ease;
+}
+
+#pu_order_comp.is-collapsed .pu_toggle_icon,
+#pu_est_comp.is-collapsed .pu_toggle_icon {
+    transform: rotate(-90deg);
+}
+
 #pu_order_comp input,
 #pu_order_comp select {
     -webkit-appearance: none;
