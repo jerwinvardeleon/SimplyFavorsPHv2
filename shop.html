@@ -32,21 +32,27 @@
     <!-- PRICE FILTER SECTION -->
     <!-- PRICE FILTER SECTION -->
     <div id="shop_filters_group">
-        <section class="priceSearch" onclick="window.scrollTo({top: 0, behavior: 'smooth'});" style="cursor: pointer;">
-            <label for="minPrice">Min Price: </label>
-            <input type="number" id="minPrice" min="0" placeholder="0" style="width:210px; height: 5px; font-size: 16px;">
-            <label for="maxPrice">Max Price: </label>
-            <input type="number" id="maxPrice" min="0" placeholder="Any" style="width:150px; height: 5px; font-size: 16px;">
-            <button id="priceFilterBtn" style="border-radius:10px;">Filter</button>
-        </section>
+        <section class="shop-controls-panel" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
+            <div class="priceSearch">
+                <div class="price-field">
+                    <label for="minPrice">Min Price</label>
+                    <input class="shop-input" type="number" id="minPrice" min="0" placeholder="0">
+                </div>
+                <div class="price-field">
+                    <label for="maxPrice">Max Price</label>
+                    <input class="shop-input" type="number" id="maxPrice" min="0" placeholder="Any">
+                </div>
+                <button id="priceFilterBtn" class="price-filter-button">Filter</button>
+            </div>
 
 
-        <!-- CATEGORY FILTER SECTION -->
-        <!-- CATEGORY FILTER SECTION -->
-        <!-- CATEGORY FILTER SECTION -->
-        <section class="controls" onclick="window.scrollTo({top: 0, behavior: 'smooth'});" style="cursor: pointer;">
-            <input type="text" id="search" placeholder="Search cute things..." style="height: 5px; font-size: 16px;">
-            <div id="filters" class="filters"></div>
+            <!-- CATEGORY FILTER SECTION -->
+            <!-- CATEGORY FILTER SECTION -->
+            <!-- CATEGORY FILTER SECTION -->
+            <div class="controls">
+                <input class="shop-input" type="text" id="search" placeholder="Search cute things...">
+                <div id="filters" class="filters"></div>
+            </div>
         </section>
     </div>
 

@@ -8,6 +8,27 @@ let currentFilter = "All";
 const productsContainer = document.getElementById("products");
 const searchInput = document.getElementById("search");
 const filtersContainer = document.getElementById("filters");
+const shopFiltersGroup = document.getElementById("shop_filters_group");
+
+function syncProductsOffset() {
+  if (!productsContainer || !shopFiltersGroup) return;
+
+  window.requestAnimationFrame(() => {
+    const panelBottom = shopFiltersGroup.getBoundingClientRect().bottom + window.scrollY;
+    const currentInlineOffset = parseFloat(productsContainer.style.marginTop) || 0;
+    const productsTopWithoutInlineOffset = (productsContainer.getBoundingClientRect().top + window.scrollY) - currentInlineOffset;
+    const desiredProductsTop = panelBottom + 8;
+    const nextOffset = Math.max(desiredProductsTop - productsTopWithoutInlineOffset, 0);
+
+    productsContainer.style.marginTop = `${nextOffset}px`;
+  });
+}
+
+function scheduleProductsOffsetSync() {
+  syncProductsOffset();
+  window.setTimeout(syncProductsOffset, 0);
+  window.setTimeout(syncProductsOffset, 120);
+}
 
 
 // FILTER PER CATEGORY SECTION
@@ -97,6 +118,7 @@ function renderFilters() {
     };
     filtersContainer.appendChild(btn);
   });
+  syncProductsOffset();
 }
 
 // PRICE FILTER SECTION
@@ -145,12 +167,10 @@ function renderProducts() {
       ${ribbonHtml}
       <div class="card-image" style="
         position: relative;
-        height:154px;
         background-image: url(${product.bimg});
         background-size: cover;
         background-repeat: no-repeat;
-        border-radius:15px;
-        max-width=154px" ; >
+        border-radius:15px;" >
       </div>
       <h3>${product.name}</h3>
       <p>${product.category}</p>
@@ -222,6 +242,7 @@ async function loadProducts() {
     ensureDefaultFilter();
     renderFilters();
     renderProducts();
+    scheduleProductsOffsetSync();
   } catch (error) {
     console.error("Error loading products:", error);
     if (productsContainer) {
@@ -235,6 +256,10 @@ if (searchInput) {
 }
 
 loadProducts();
+
+window.addEventListener("resize", syncProductsOffset);
+window.addEventListener("load", scheduleProductsOffsetSync);
+window.addEventListener("pageshow", scheduleProductsOffsetSync);
 
 // BEST SELLING PRODUCT DISPLAY
 // BEST SELLING PRODUCT DISPLAY

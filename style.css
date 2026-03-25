@@ -167,9 +167,21 @@ h1 {
     top: 185px;
     left: 50%;
     transform: translateX(-50%);
-    width: 100%;
+    width: calc(100% - 20px);
     max-width: 400px;
     z-index: 998;
+}
+
+.shop-controls-panel {
+    display: grid;
+    grid-template-columns: 122px minmax(0, 1fr);
+    gap: 12px;
+    padding: 12px;
+    background: linear-gradient(90deg, #ffc6a8, #f3ebde, #c3f0ff);
+    border-radius: 12px;
+    box-shadow: 0 8px 18px rgba(90, 62, 54, 0.12);
+    cursor: pointer;
+    align-items: start;
 }
 
 .cart {
@@ -180,27 +192,15 @@ h1 {
 }
 
 .priceSearch {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    padding: 10px 40px 10px 40px;
-    position: static;
-    background: linear-gradient(90deg, #ffc6a8, #f3ebde, #c3f0ff);
-    z-index: auto;
-    cursor: pointer;
-    border-radius: 10px;
+    display: grid;
+    gap: 8px;
+    min-width: 0;
 }
 
 .controls {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
     gap: 10px;
-    padding: 10px 40px;
-    position: static;
-    background: linear-gradient(90deg, #ffc6a8, #f3ebde, #c3f0ff);
-    z-index: auto;
-    cursor: pointer;
-    border-radius: 10px;
+    min-width: 0;
 }
 
 
@@ -222,6 +222,63 @@ input {
     padding-left: 10px;
 }
 
+#search.shop-input {
+    width: 100%;
+    font-size: 16px;
+    min-width: 0;
+    box-sizing: border-box;
+    height: 36px;
+    padding: 3px 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(90, 62, 54, 0.18);
+    background: rgba(255, 255, 255, 0.92);
+}
+
+
+.shop-input {
+    width: 100%;
+    font-size: 16px;
+    min-width: 0;
+    box-sizing: border-box;
+    height: 36px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(90, 62, 54, 0.18);
+    background: rgba(255, 255, 255, 0.92);
+}
+
+.price-field {
+    display: grid;
+    gap: 4px;
+}
+
+.price-field label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--brown);
+}
+
+.price-filter-button {
+    width: 100%;
+    min-height: 36px;
+    padding: 3px 12px;
+    border: none;
+    border-radius: 10px;
+    background: var(--brown);
+    color: var(--cream);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-width: 0;
+    overflow: hidden;
+}
+
 .filters button {
     padding: 3px 15px;
     border: none;
@@ -229,6 +286,8 @@ input {
     cursor: pointer;
     background: #ffffff;
     transition: 0.3s;
+    max-width: 100%;
+    white-space: nowrap;
 }
 
 .filters button.wipes-highlight {
@@ -255,7 +314,6 @@ input {
     grid-template-columns: repeat(2, 1fr);
     gap: 7px;
     padding: 10px;
-    margin-top: 195px;
 }
 
 .card {
@@ -278,6 +336,8 @@ input {
 
 .card-image {
     position: relative;
+    width: 154px;
+    height: 154px;
     overflow: hidden;
     background-position: center;
 }
@@ -350,12 +410,26 @@ body.mobile-mode .products {
 
 body.mobile-mode .bestSelling,
 body.mobile-mode .controls,
+body.mobile-mode .shop-controls-panel,
 body.mobile-mode .priceSearch,
 body.mobile-mode .products,
 body.mobile-mode footer {
     margin-left: 0;
     margin-right: 0;
     width: 100%;
+}
+
+@media (max-width: 360px) {
+    .shop-controls-panel {
+        grid-template-columns: 112px minmax(0, 1fr);
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .filters button {
+        padding: 3px 10px;
+        font-size: 13px;
+    }
 }
 
 .view-toggle {
