@@ -310,6 +310,8 @@ input {
     padding: 15px;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease;
+    align-self: start;
+    height: 245px;
 }
 
 .card.bestseller-card {
@@ -320,6 +322,8 @@ input {
     position: relative;
     overflow: hidden;
     padding-top: 25px;
+    align-self: start;
+    height: 245px;
 }
 
 .card-image {
@@ -360,7 +364,7 @@ input {
 }
 
 .card button {
-    padding: 6px 12px;
+    padding: 6px 6px;
     border: none;
     border-radius: 15px;
     background: #ffc6a8;

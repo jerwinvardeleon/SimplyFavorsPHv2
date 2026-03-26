@@ -49,12 +49,12 @@ header {
 #ig_link,
 #tik_link {
     margin-top: 0px;
-    margin-bottom: 0;
+    margin-bottom: 10px;
     margin-left: 0px;
-    margin-right: 10                                                                                                                                                                            px;
+    margin-right: 18px;                                                                                                                                                                           px;
     margin-top: 5px;
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
 }
 
 #header_box {
@@ -86,13 +86,13 @@ header {
 
 .hero_block {
     background: rgba(255, 255, 255, 0.8);
-    background-image: url('img/icon/bgHeader3.png');
+    background-image: url('img/icon/bgHeader4.png');
     background-repeat: no-repeat;
     background-size: cover;
     border-radius: 22px;
-    padding: 10px 20px;
+    padding: 5px 20px 17px 20px;
     box-shadow: 0 10px 24px rgba(90, 62, 54, 0.12);
-    text-align: center;
+    /* text-align: center; */
 }
 
 .hero_cap {
