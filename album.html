@@ -106,7 +106,7 @@
                     .map(href => href.split('/').pop())
                     .filter(name => imageExtPattern.test(name));
 
-                const uniqueSorted = [...new Set(imageFiles)].sort((a, b) => a.localeCompare(b));
+                const uniqueSorted = [...new Set(imageFiles)].sort((a, b) => b.localeCompare(a));
                 renderGallery(uniqueSorted);
             } catch (error) {
                 console.warn('Directory listing unavailable. Trying manifest fallback...', error);
@@ -128,7 +128,7 @@
                         .map(name => String(name || '').trim())
                         .filter(name => name && imageExtPattern.test(name));
 
-                    const uniqueSorted = [...new Set(imageFiles)].sort((a, b) => a.localeCompare(b));
+                    const uniqueSorted = [...new Set(imageFiles)].sort((a, b) => b.localeCompare(a));
                     renderGallery(uniqueSorted);
                 } catch (manifestError) {
                     galleryGrid.innerHTML = '<div class="empty_state">Unable to load gallery automatically. Add image names to img/gallery/manifest.json or enable directory listing.</div>';
