@@ -208,7 +208,7 @@ button {
 }
 
 #downcap {
-    font-size: 14px;
+    font-size: 12px;
     text-align: left;
     margin: 0;
 }
@@ -217,9 +217,9 @@ button {
     font-size: 18px;
     font-weight: bold;
     text-align: left;
-    margin: 0 0 5px 0;
+    margin: 0 0 18px 0;
     text-align: center;
-    color: red;
+    color: green;
     padding: 0;
     font-style: normal;
 }

@@ -13,6 +13,7 @@
     <div id="checkout_header">
         <div id="checkout_header_text">
             <h3 style="margin: 5px; color: var(--brown);">Invoice Summary</h3>
+            <h5 style="margin: 0 5px 10px 5px; color: var(--brown);">Date: <span id="invoice_date"></span></h5>
             <div id="checkout_greetings">
                 <p id="greetings">Hi <span id="greeting_customer_name"></span></p>
                 <p id="greetings">Thank you for providing the order details!</p>
@@ -27,11 +28,17 @@
 
     <div id="total_summary">
 
-        <p id="downpay"> Downpayment: ₱<span id="downpayment_amount"></span></p>
-        <p id="downpay2">(50% of Total amount)</p>
+        <p id="downpay"> Required Downpayment: ₱<span id="downpayment_amount"></span></p>
+        <!-- <p id="downpay2">(50% of Total amount)</p> -->
+        <p id="downcap">IMPORTANT NOTES:</p>
         <p id="downcap">- Production will start once the 50% downpayment is received.</p>
-        <p id="downcap">- Revisions may be requested before final production.</p>
-        <p id="downcap">- Photos of the finished items will be sent prior to delivery.</p>
+        <p id="downcap">- Shipping fee is shouldered by client.</p>
+        <p id="downcap">- Downpayment is non refundable.</p> <br>
+        <p id="downcap">LAYOUT & PRODUCTION:</p>
+        <p id="downcap">- Layout / design will be sent once ready for review.</p>
+        <p id="downcap">- Revisions may be requested before final production (extra layout charges apply if for more than one revision is requested).</p>
+        <p id="downcap">- Photos of finished items will be sent prior to delivery.</p>
+
 
 
     </div>
@@ -104,6 +111,16 @@
         // Load data from localStorage
         const checkoutData = JSON.parse(localStorage.getItem('checkoutData'));
         const orderFormData = JSON.parse(localStorage.getItem('orderFormData'));
+
+        const invoiceDateEl = document.getElementById('invoice_date');
+        if (invoiceDateEl) {
+            const today = new Date();
+            invoiceDateEl.textContent = today.toLocaleDateString('en-PH', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
 
         if (checkoutData) {
             document.getElementById('prod_img').style.backgroundImage = `url(${checkoutData.bimg})`;

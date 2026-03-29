@@ -200,6 +200,26 @@
                     zoomView.style.backgroundImage = `url(${selectedProduct.bimg})`;
                 }
             }
+
+            updateAmountComputation();
+        }
+
+        function getQuantityValue() {
+            const qtyInput = document.getElementById('pu_ttl_amt');
+            return parseInt(qtyInput?.value, 10) || 0;
+        }
+
+        function updateAmountComputation() {
+            const amountComputationEl = document.getElementById('amt_comp_value');
+            if (!amountComputationEl) {
+                return;
+            }
+
+            const qty = getQuantityValue();
+            const unitPrice = Number(selectedProduct.price) || 0;
+            const baseTotal = qty * unitPrice;
+
+            amountComputationEl.textContent = `₱${unitPrice} x ${qty} = ₱${baseTotal}`;
         }
 
         function renderVariationRow() {
@@ -394,12 +414,12 @@
         function computeTotal() {
             enforceWholeNumberQuantity();
             enforceDeliveryDateMinimum();
-            const qty = parseInt(document.getElementById('pu_ttl_amt').value) || 0;
-            const price = selectedProduct.price;
+            const qty = getQuantityValue();
+            const unitPrice = Number(selectedProduct.price) || 0;
             const deliveryDateValue = document.getElementById('pu_deldate').value;
             const discountCode = document.getElementById('disc_code').value;
             let addOnTotal = 0;
-            const baseTotal = qty * price;
+            const baseTotal = qty * unitPrice;
             const daysFromToday = getDaysFromToday(deliveryDateValue);
             const rushFee = getRushFee(daysFromToday);
             updateDeliveryUrgencyUI(daysFromToday);
@@ -409,7 +429,7 @@
             const addOnRow = document.getElementById('add_on_comp');
             const hasDiscountInput = discountCode.trim().length > 0;
 
-            document.getElementById('amt_comp_value').textContent = `₱${price} x ${qty} = ₱${baseTotal}`;
+            updateAmountComputation();
             document.getElementById('discount_value').textContent = discount.amount > 0
                 ? `- ₱${discount.amount} (${discount.code})`
                 : '₱0';
@@ -480,26 +500,44 @@
             });
         }
 
-        document.getElementById('pu_ttl_amt').addEventListener('input', computeTotal);
-        document.getElementById('pu_ttl_amt').addEventListener('blur', enforceWholeNumberQuantity);
-        document.getElementById('pu_deldate').addEventListener('change', computeTotal);
-        document.getElementById('pu_deldate').addEventListener('input', enforceDeliveryDateMinimum);
-        document.getElementById('pu_deldate').addEventListener('focus', enforceDeliveryDateMinimum);
-        document.getElementById('disc_code').addEventListener('input', computeTotal);
-        document.getElementById('pu_delivery_area').addEventListener('change', function () {
-            updateDeliveryDays();
-            computeTotal();
-        });
-        const puImage = document.getElementById('pu_img');
-        if (puImage) {
-            puImage.addEventListener('click', toggleImageZoom);
+        function initializePopup(attempt = 0) {
+            const qtyInput = document.getElementById('pu_ttl_amt');
+            const deliveryDateInput = document.getElementById('pu_deldate');
+            const discountInput = document.getElementById('disc_code');
+            const deliveryAreaInput = document.getElementById('pu_delivery_area');
+            const puImage = document.getElementById('pu_img');
+
+            if (!qtyInput || !deliveryDateInput || !discountInput || !deliveryAreaInput) {
+                if (attempt < 5) {
+                    window.setTimeout(() => initializePopup(attempt + 1), 16);
+                }
+                return;
+            }
+
+            qtyInput.addEventListener('input', computeTotal);
+            qtyInput.addEventListener('blur', enforceWholeNumberQuantity);
+            deliveryDateInput.addEventListener('change', computeTotal);
+            deliveryDateInput.addEventListener('input', enforceDeliveryDateMinimum);
+            deliveryDateInput.addEventListener('focus', enforceDeliveryDateMinimum);
+            discountInput.addEventListener('input', computeTotal);
+            deliveryAreaInput.addEventListener('change', function () {
+                updateDeliveryDays();
+                computeTotal();
+            });
+
+            if (puImage) {
+                puImage.addEventListener('click', toggleImageZoom);
+            }
+
+            setupCollapsibleSection('pu_order_header', 'pu_order_comp', 'pu_order_body');
+            setupCollapsibleSection('pu_est_header', 'pu_est_comp', 'pu_est_body');
+            enforceWholeNumberQuantity();
+            enforceDeliveryDateMinimum();
+            updateSelectedProductUI();
+            loadCategoryVariations();
         }
-        setupCollapsibleSection('pu_order_header', 'pu_order_comp', 'pu_order_body');
-        setupCollapsibleSection('pu_est_header', 'pu_est_comp', 'pu_est_body');
-        enforceWholeNumberQuantity();
-        enforceDeliveryDateMinimum();
-        updateSelectedProductUI();
-        loadCategoryVariations();
+
+        window.requestAnimationFrame(() => initializePopup());
 
         function openCheckoutPopup() {
             if (document.getElementById('checkout_btn').disabled) {
@@ -511,7 +549,7 @@
                 return;
             }
 
-            const price = selectedProduct.price;
+            const unitPrice = Number(selectedProduct.price) || 0;
             const deliveryArea = document.getElementById('pu_delivery_area').value;
             const deliveryDays = document.getElementById('days').textContent;
             const total = document.getElementById('total').textContent;
@@ -521,7 +559,7 @@
             const hasDiscountInput = discountCode.trim().length > 0;
             const daysFromToday = getDaysFromToday(deliveryDate);
             const rushFee = getRushFee(daysFromToday);
-            const baseTotal = qty * price;
+            const baseTotal = qty * unitPrice;
             let addOnTotal = 0;
 
             // Collect add-ons
@@ -551,7 +589,7 @@
                 deliveryArea: deliveryArea,
                 deliveryDays: deliveryDays,
                 deliveryDate: deliveryDate,
-                priceBreakdownText: `₱${price} x ${qty} = ₱${baseTotal}`,
+                priceBreakdownText: `₱${unitPrice} x ${qty} = ₱${baseTotal}`,
                 hasDiscountInput: hasDiscountInput,
                 discountCode: discount.code,
                 discountAmount: discount.amount,
