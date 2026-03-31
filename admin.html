@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simply Favors Admin</title>
+  <link rel="stylesheet" href="style_admin.css">
+</head>
+
+<body>
+  <main class="admin-shell">
+    <section class="login-panel" id="loginPanel">
+      <h1>Admin Access</h1>
+      <p>Sign in to edit products.csv</p>
+
+      <form id="loginForm" class="login-form" autocomplete="off">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" required>
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required>
+
+        <button type="submit">Sign In</button>
+      </form>
+
+      <p id="loginMessage" class="message"></p>
+    </section>
+
+    <section class="editor-panel hidden" id="editorPanel">
+      <div class="toolbar">
+        <div>
+          <h2>products.csv editor</h2>
+          <p class="helper-text">Edit values directly in the table, then click Save CSV.</p>
+        </div>
+        <div class="toolbar-actions">
+          <button id="addRowBtn" type="button">Add Row</button>
+          <button id="saveBtn" type="button">Save CSV</button>
+          <button id="logoutBtn" type="button">Logout</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table id="csvTable" aria-label="CSV editor table"></table>
+      </div>
+
+      <p id="saveMessage" class="message"></p>
+    </section>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+
+</html>

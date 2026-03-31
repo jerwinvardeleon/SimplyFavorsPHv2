@@ -1,7 +1,8 @@
 id,name,price,category,bimg,bestseller
 12,Wet wipes in can,65,wipes,img/products/wipes/wipe_fairy.jpg,yes
-122,Wet wipes in can (acetate),80,wipes,img/products/wipes/wipe_acry.jpg,yes
-123,Wet wipes in can (acetate + omni),145,wipes,img/products/wipes/wipes_acry_omni.jpg,no
+9,Omni Hand Sanitizer,55,sanitizer,img/products/sanitizer/sani.jpg,yes
+122,Wet wipes in can (acetate),80,wipes,img/products/wipes/wipe_acry.jpg,no
+123,Wet wipes in can (acetate + omni),150,wipes,img/products/wipes/wipes_acry_omni.jpg,no
 124,Wet wipes in can (acetate + bear),150,wipes,img/products/wipes/wipe_acry_bear.jpg,no
 1,Keychain (bottle),35,keychain,img/products/keychain/KC_bottle.jpg,no
 2,Keychain (acrylic),35,keychain,img/products/keychain/KC_acrylic.jpg,no
@@ -10,7 +11,6 @@ id,name,price,category,bimg,bestseller
 5,Card type (alcohol),45,alcohol,img/products/alcohol/card_alc.jpg,no
 6,Spray Bottle (alcohol),40,alcohol,img/products/alcohol/spry_alc.png,no
 7,Spray Bottle (perfume),65,perfume,img/products/perfume/spry_per.png,no
-9,Omni Hand Sanitizer,55,sanitizer,img/products/sanitizer/sani.jpg,no
 10,Omni Hand Sanitizer (Organza Pouch),65,sanitizer,img/products/sanitizer/sani_org.jpg,no
 11,Omni Hand Sanitizer (Burlap Pouch),70,sanitizer,img/products/sanitizer/sani_bur.jpg,no
 13,Bear (pouch),80,bear,img/products/bear/bear.png,no
