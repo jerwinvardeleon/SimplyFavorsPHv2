@@ -21,6 +21,7 @@ body {
     min-height: 100vh;
     max-width: 400px;
     padding-top: 100px;
+    padding-bottom: 120px;
     /* Adjust if header height changes */
 }
 
@@ -164,7 +165,7 @@ h1 {
 
 #shop_filters_group {
     position: fixed;
-    top: 185px;
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
     width: calc(100% - 20px);
@@ -182,6 +183,7 @@ h1 {
     box-shadow: 0 8px 18px rgba(90, 62, 54, 0.12);
     cursor: pointer;
     align-items: start;
+    border-radius: 12px 12px 0 0;
 }
 
 .cart {
@@ -302,6 +304,8 @@ input {
     grid-template-columns: repeat(2, 1fr);
     gap: 7px;
     padding: 10px;
+    margin-top: 8px;
+    margin-bottom: 30px;
 }
 
 .card {
