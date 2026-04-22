@@ -1,7 +1,7 @@
 id,name,price,category,bimg,bestseller
-12,Wet wipes in can,65,wipes,img/products/wipes/wipe_fairy.jpg,yes
-9,Omni Hand Sanitizer,55,sanitizer,img/products/sanitizer/sani.jpg,yes
-122,Wet wipes in can (acetate),80,wipes,img/products/wipes/wipe_acry.jpg,no
+12,Wet wipes in can,70,wipes,img/products/wipes/wipe_fairy.jpg,yes
+9,Omni Hand Sanitizer,60,sanitizer,img/products/sanitizer/sani.jpg,yes
+122,Wet wipes in can (acetate),85,wipes,img/products/wipes/wipe_acry.jpg,no
 123,Wet wipes in can (acetate + omni),150,wipes,img/products/wipes/wipes_acry_omni.jpg,no
 124,Wet wipes in can (acetate + bear),150,wipes,img/products/wipes/wipe_acry_bear.jpg,no
 1,Keychain (bottle),35,keychain,img/products/keychain/KC_bottle.jpg,no
@@ -11,8 +11,8 @@ id,name,price,category,bimg,bestseller
 5,Card type (alcohol),45,alcohol,img/products/alcohol/card_alc.jpg,no
 6,Spray Bottle (alcohol),40,alcohol,img/products/alcohol/spry_alc.png,no
 7,Spray Bottle (perfume),65,perfume,img/products/perfume/spry_per.png,no
-10,Omni Hand Sanitizer (Organza Pouch),65,sanitizer,img/products/sanitizer/sani_org.jpg,no
-11,Omni Hand Sanitizer (Burlap Pouch),70,sanitizer,img/products/sanitizer/sani_bur.jpg,no
+10,Omni Hand Sanitizer (Organza Pouch),70,sanitizer,img/products/sanitizer/sani_org.jpg,no
+11,Omni Hand Sanitizer (Burlap Pouch),75,sanitizer,img/products/sanitizer/sani_bur.jpg,no
 13,Bear (pouch),80,bear,img/products/bear/bear.png,no
 14,Bear (bottle),100,bear,img/products/bear/bearb.jpg,no
 15,Bear w/ Sanitizer,150,bear,img/products/bear/bearh.jpg,no
@@ -23,7 +23,7 @@ id,name,price,category,bimg,bestseller
 19,Safari Plush Toy w/ Mug,180,bear,img/products/bear/safarim.png,no
 20,Mini Scented bubble candle,50,candle,img/products/candles/cand.jpeg,no
 21,Spray Bottle - Gold (perfume),55,perfume,img/products/perfume/perfg.jpg,no
-22,Scented Candle,65,candle,img/products/candles/scncand.jpg,no
+22,Scented Candle,90,candle,img/products/candles/scncand.jpg,no
 22,Keychain (perfume),55,keychain,img/products/keychain/KC_ess.png,no
 71,Spray Bottle (perfume),65,spray bottle,img/products/spray/spry_per.png,no
 61,Spray Bottle (alcohol),40,spray bottle,img/products/spray/spry_alc.png,no

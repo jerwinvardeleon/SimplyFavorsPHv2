@@ -178,7 +178,7 @@ h1 {
     grid-template-columns: 122px minmax(0, 1fr);
     gap: 12px;
     padding: 12px;
-    background: linear-gradient(90deg, #ffc6a8, #f3ebde, #c3f0ff);
+    background: linear-gradient(170deg, #ffc6a8, #f3ebde, #c3f0ff);
     border-radius: 12px;
     box-shadow: 0 8px 18px rgba(90, 62, 54, 0.12);
     cursor: pointer;
