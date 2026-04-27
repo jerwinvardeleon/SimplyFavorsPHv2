@@ -4,50 +4,166 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simply Favors Admin</title>
-  <link rel="stylesheet" href="style_admin.css">
+  <title>Excel Source Viewer</title>
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --card: #ffffff;
+      --text: #3f362f;
+      --accent: #7b5f4a;
+      --border: #dccfc3;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #f6f4ef, #eee5dc);
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 32px auto;
+      padding: 0 16px 24px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 8px 24px rgba(44, 31, 20, 0.08);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.55rem;
+    }
+
+    .hint {
+      margin: 0 0 14px;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    input[type="url"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    #status {
+      min-height: 20px;
+      margin: 6px 0 0;
+      font-size: 0.92rem;
+    }
+
+    #status.error {
+      color: #9a3030;
+    }
+
+    #status.ok {
+      color: #2a6f3f;
+    }
+
+    .table-wrap {
+      margin-top: 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: auto;
+      max-height: 70vh;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px;
+    }
+
+    th,
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #eee4db;
+      border-right: 1px solid #eee4db;
+      font-size: 0.92rem;
+      text-align: left;
+      vertical-align: top;
+      white-space: nowrap;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #f8efe6;
+      font-weight: 700;
+    }
+
+    tr:nth-child(even) td {
+      background: #fffdf9;
+    }
+
+    @media (max-width: 760px) {
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <main class="admin-shell">
-    <section class="login-panel" id="loginPanel">
-      <h1>Admin Access</h1>
-      <p>Sign in to edit products.csv</p>
+  <main>
+    <section class="panel">
+      <h1>OneDrive Excel Table Viewer</h1>
+      <p class="hint">Loads your shared OneDrive Excel file and renders the first worksheet as an HTML table.</p>
 
-      <form id="loginForm" class="login-form" autocomplete="off">
-        <label for="username">Username</label>
-        <input id="username" name="username" type="text" required>
-
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" required>
-
-        <button type="submit">Sign In</button>
-      </form>
-
-      <p id="loginMessage" class="message"></p>
-    </section>
-
-    <section class="editor-panel hidden" id="editorPanel">
-      <div class="toolbar">
-        <div>
-          <h2>products.csv editor</h2>
-          <p class="helper-text">Edit values directly in the table, then click Save CSV.</p>
-        </div>
-        <div class="toolbar-actions">
-          <button id="addRowBtn" type="button">Add Row</button>
-          <button id="saveBtn" type="button">Save CSV</button>
-          <button id="logoutBtn" type="button">Logout</button>
-        </div>
+      <div class="controls">
+        <input
+          id="sourceLink"
+          type="url"
+          placeholder="Paste OneDrive share link"
+          aria-label="OneDrive share link"
+        >
+        <button id="loadBtn" type="button">Load Table</button>
       </div>
+
+      <p id="status"></p>
 
       <div class="table-wrap">
-        <table id="csvTable" aria-label="CSV editor table"></table>
+        <table id="excelTable" aria-label="Excel data table"></table>
       </div>
-
-      <p id="saveMessage" class="message"></p>
     </section>
   </main>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="admin.js"></script>
 </body>
 

@@ -1,258 +1,106 @@
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "simplyfavors2026";
-const CSV_PATH = "products.csv";
+const DEFAULT_ONEDRIVE_LINK = "https://1drv.ms/x/c/7e2d5127cf0c5ecc/IQC4vTnk5iH8Q7RxUKc2ALNTAQXOkI-y6XliPZHDjQgM-D8?e=tbhraB";
 
-const loginPanel = document.getElementById("loginPanel");
-const editorPanel = document.getElementById("editorPanel");
-const loginForm = document.getElementById("loginForm");
-const loginMessage = document.getElementById("loginMessage");
-const saveMessage = document.getElementById("saveMessage");
-const table = document.getElementById("csvTable");
+const sourceLinkInput = document.getElementById("sourceLink");
+const loadBtn = document.getElementById("loadBtn");
+const statusText = document.getElementById("status");
+const excelTable = document.getElementById("excelTable");
 
-const addRowBtn = document.getElementById("addRowBtn");
-const saveBtn = document.getElementById("saveBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-
-let csvHeaders = [];
-let csvRows = [];
-
-function parseCsvLine(line) {
-  const values = [];
-  let current = "";
-  let insideQuotes = false;
-
-  for (let i = 0; i < line.length; i += 1) {
-    const char = line[i];
-
-    if (char === '"') {
-      const nextChar = line[i + 1];
-      if (insideQuotes && nextChar === '"') {
-        current += '"';
-        i += 1;
-      } else {
-        insideQuotes = !insideQuotes;
-      }
-      continue;
-    }
-
-    if (char === "," && !insideQuotes) {
-      values.push(current);
-      current = "";
-      continue;
-    }
-
-    current += char;
-  }
-
-  values.push(current);
-  return values;
+function setStatus(message, state = "") {
+  statusText.textContent = message;
+  statusText.classList.remove("error", "ok");
+  if (state) statusText.classList.add(state);
 }
 
-function parseCsv(csvText) {
-  const lines = csvText
-    .split(/\r?\n/)
-    .filter(line => line.trim().length > 0);
+function shareLinkToApiUrl(shareLink) {
+  const encoded = btoa(unescape(encodeURIComponent(shareLink)))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
 
-  if (lines.length === 0) {
-    return { headers: [], rows: [] };
-  }
-
-  const headers = parseCsvLine(lines[0]);
-  const rows = lines.slice(1).map(line => {
-    const values = parseCsvLine(line);
-    const row = {};
-
-    headers.forEach((header, index) => {
-      row[header] = values[index] ?? "";
-    });
-
-    return row;
-  });
-
-  return { headers, rows };
+  return `https://api.onedrive.com/v1.0/shares/u!${encoded}/root/content`;
 }
 
-function escapeCsvValue(value) {
-  const raw = String(value ?? "");
-  if (raw.includes('"') || raw.includes(",") || raw.includes("\n") || raw.includes("\r")) {
-    return `"${raw.replace(/"/g, '""')}"`;
-  }
-  return raw;
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
-function toCsv(headers, rows) {
-  const headerLine = headers.map(escapeCsvValue).join(",");
-  const rowLines = rows.map(row => headers.map(header => escapeCsvValue(row[header])).join(","));
-  return [headerLine, ...rowLines].join("\n");
-}
+function renderTable(rows) {
+  excelTable.innerHTML = "";
 
-function renderTable() {
-  if (!csvHeaders.length) {
-    table.innerHTML = "";
+  if (!Array.isArray(rows) || rows.length === 0) {
+    setStatus("No rows found in the first worksheet.", "error");
     return;
   }
 
-  const theadCells = csvHeaders.map(header => `<th>${header}</th>`).join("");
-
-  const bodyRows = csvRows.map((row, rowIndex) => {
-    const cells = csvHeaders.map(header => {
-      const cellValue = row[header] ?? "";
-      const safeValue = String(cellValue)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/\"/g, "&quot;");
-
-      return `<td><input data-row="${rowIndex}" data-col="${header}" value="${safeValue}"></td>`;
-    }).join("");
-
-    return `<tr>${cells}<td class="row-actions"><button type="button" data-delete-row="${rowIndex}">Delete</button></td></tr>`;
+  const firstRow = rows[0] || [];
+  const colCount = rows.reduce((max, row) => Math.max(max, row.length), firstRow.length);
+  const headerCells = Array.from({ length: colCount }, (_, index) => {
+    const label = firstRow[index] ?? `Column ${index + 1}`;
+    return `<th>${escapeHtml(label)}</th>`;
   }).join("");
 
-  table.innerHTML = `
-    <thead>
-      <tr>${theadCells}<th class="row-actions">Actions</th></tr>
-    </thead>
-    <tbody>
-      ${bodyRows}
-    </tbody>
+  const bodyRows = rows.slice(1).map(row => {
+    const cells = Array.from({ length: colCount }, (_, index) => `<td>${escapeHtml(row[index] ?? "")}</td>`).join("");
+    return `<tr>${cells}</tr>`;
+  }).join("");
+
+  excelTable.innerHTML = `
+    <thead><tr>${headerCells}</tr></thead>
+    <tbody>${bodyRows}</tbody>
   `;
+
+  setStatus(`Loaded ${rows.length - 1} rows from worksheet.`, "ok");
 }
 
-async function loadCsv() {
-  saveMessage.textContent = "Loading products.csv...";
-  saveMessage.classList.remove("ok");
-
-  const response = await fetch(CSV_PATH, { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error("Unable to load products.csv");
-  }
-
-  const csvText = await response.text();
-  const parsed = parseCsv(csvText);
-  csvHeaders = parsed.headers;
-  csvRows = parsed.rows;
-  renderTable();
-
-  saveMessage.textContent = "products.csv loaded.";
-  saveMessage.classList.add("ok");
-}
-
-function addEmptyRow() {
-  if (!csvHeaders.length) return;
-
-  const row = {};
-  csvHeaders.forEach(header => {
-    row[header] = "";
-  });
-
-  csvRows.push(row);
-  renderTable();
-}
-
-function removeRow(index) {
-  csvRows = csvRows.filter((_, rowIndex) => rowIndex !== index);
-  renderTable();
-}
-
-async function saveCsv() {
-  const csvText = toCsv(csvHeaders, csvRows);
-
-  if (window.showSaveFilePicker) {
-    try {
-      const handle = await window.showSaveFilePicker({
-        suggestedName: "products.csv",
-        types: [
-          {
-            description: "CSV Files",
-            accept: { "text/csv": [".csv"] }
-          }
-        ]
-      });
-
-      const writable = await handle.createWritable();
-      await writable.write(csvText);
-      await writable.close();
-
-      saveMessage.textContent = "Saved successfully.";
-      saveMessage.classList.add("ok");
-      return;
-    } catch (error) {
-      if (error && error.name === "AbortError") {
-        saveMessage.textContent = "Save canceled.";
-        saveMessage.classList.remove("ok");
-        return;
-      }
-    }
-  }
-
-  const blob = new Blob([csvText], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = "products.csv";
-  document.body.appendChild(anchor);
-  anchor.click();
-  document.body.removeChild(anchor);
-  URL.revokeObjectURL(url);
-
-  saveMessage.textContent = "Downloaded products.csv. Replace your project file with this downloaded copy.";
-  saveMessage.classList.remove("ok");
-}
-
-loginForm.addEventListener("submit", async event => {
-  event.preventDefault();
-  loginMessage.textContent = "";
-
-  const formData = new FormData(loginForm);
-  const username = String(formData.get("username") || "").trim();
-  const password = String(formData.get("password") || "");
-
-  if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
-    loginMessage.textContent = "Invalid username or password.";
+async function loadFromOneDrive(shareLink) {
+  const trimmedLink = String(shareLink || "").trim();
+  if (!trimmedLink) {
+    setStatus("Please provide a OneDrive share link.", "error");
     return;
   }
 
-  loginPanel.classList.add("hidden");
-  editorPanel.classList.remove("hidden");
+  setStatus("Loading workbook...");
 
   try {
-    await loadCsv();
+    const apiUrl = shareLinkToApiUrl(trimmedLink);
+    const response = await fetch(apiUrl, { cache: "no-store" });
+
+    if (!response.ok) {
+      throw new Error(`OneDrive API error ${response.status}`);
+    }
+
+    const fileBuffer = await response.arrayBuffer();
+    const workbook = XLSX.read(fileBuffer, { type: "array" });
+
+    if (!workbook.SheetNames.length) {
+      throw new Error("No worksheets found.");
+    }
+
+    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(firstSheet, {
+      header: 1,
+      blankrows: false,
+      defval: ""
+    });
+
+    renderTable(rows);
   } catch (error) {
-    saveMessage.textContent = "Failed to load CSV. Make sure products.csv is accessible.";
-    saveMessage.classList.remove("ok");
+    console.error(error);
+    setStatus("Unable to load the workbook. Ensure the file is shared as Anyone with the link can view.", "error");
   }
-});
+}
 
-addRowBtn.addEventListener("click", addEmptyRow);
-saveBtn.addEventListener("click", saveCsv);
-logoutBtn.addEventListener("click", () => {
-  loginForm.reset();
-  loginPanel.classList.remove("hidden");
-  editorPanel.classList.add("hidden");
-  loginMessage.textContent = "";
-  saveMessage.textContent = "";
-});
+if (sourceLinkInput) {
+  sourceLinkInput.value = DEFAULT_ONEDRIVE_LINK;
+}
 
-table.addEventListener("input", event => {
-  const target = event.target;
-  if (!(target instanceof HTMLInputElement)) return;
+if (loadBtn) {
+  loadBtn.addEventListener("click", () => loadFromOneDrive(sourceLinkInput.value));
+}
 
-  const rowIndex = Number(target.getAttribute("data-row"));
-  const column = target.getAttribute("data-col");
-
-  if (!Number.isInteger(rowIndex) || rowIndex < 0 || !column) return;
-  if (!csvRows[rowIndex]) return;
-
-  csvRows[rowIndex][column] = target.value;
-});
-
-table.addEventListener("click", event => {
-  const target = event.target;
-  if (!(target instanceof HTMLButtonElement)) return;
-
-  const rowToDelete = target.getAttribute("data-delete-row");
-  if (rowToDelete === null) return;
-
-  removeRow(Number(rowToDelete));
-});
+loadFromOneDrive(DEFAULT_ONEDRIVE_LINK);

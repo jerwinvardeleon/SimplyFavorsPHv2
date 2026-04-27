@@ -60,6 +60,8 @@
             <!-- <p>Delivery Area: <span id="delivery_area"></span></p> -->
             <!-- <p>Estimated Delivery: <span id="delivery_days"></span></p> -->
             <p>Requested Delivery Date: <span id="delivery_date"></span></p>
+            <p>Date of Event: <span id="event_date"></span></p>
+            <p>Event Theme / Layout Instruction: <span id="event_theme"></span></p>
         </div>
     </div>
 
@@ -68,8 +70,6 @@
         <div class="collapsible-content" id="customer_details_content">
             <p>Customer Name: <span id="customer_name"></span></p>
             <p>Celebrant's Name: <span id="celebrant_name"></span></p>
-            <p>Date of Event: <span id="event_date"></span></p>
-            <p>Event Theme / Layout Instruction: <span id="event_theme"></span></p>
             <p>Contact Number: <span id="contact_number"></span></p>
             <p>Delivery Address: <span id="delivery_address"></span></p>
         </div>
@@ -86,12 +86,26 @@
 
 
     <!-- Order Confirmation Modal -->
+    <div id="payment_methods_modal">
+        <div id="payment_methods_box">
+            <h3 id="payment_methods_title">Choose Payment Method</h3>
+            <p id="payment_methods_caption">Tap an image to zoom in or zoom out.</p>
+            <div id="payment_methods_grid" aria-label="Payment method options"></div>
+            <button id="show_final_popup_btn" type="button">Finalize Order Placement</button>
+            <button id="close_payment_methods_btn" type="button">Back to Summary</button>
+        </div>
+    </div>
+
+    <!-- Order Confirmation Modal -->
     <div id="order_confirm_modal">
         <div id="order_confirm_box">
             <div id="order_confirm_icon">🎉</div>
             <h3 id="order_confirm_title">Order Placed!</h3>
-            <p id="order_confirm_msg">Your order has been successfully submitted.<br>Please message Us below with your
-                reference number to confirm your order.</p>
+            <p id="order_confirm_msg">Your order has been successfully submitted.<br><br>
+                <span style="color: red; font-weight: bolder;">Please send us the following to confirm and verify your order. No proof, no production.</span></p>
+            <p style="color: red; font-weight: bolder; margin: 0;"> (1) Payment Screenshot</p>
+            <p style="color: red; font-weight: bolder; margin: 0, 0, 10px, 0;"> (2) Order Reference Number .</p>
+                
             <div id="order_ref_display">
                 <span>Order Reference No.</span>
                 <strong id="modal_order_ref"></strong>
@@ -101,16 +115,33 @@
                 on Facebook</button>
             <button id="modal_close_btn"
                 onclick="document.getElementById('order_confirm_modal').style.display='none'">Close</button>
+        
+        <p id="order_confirm_note">Thank you for trusting Simply Favors!<br>
+        We're excited to add a little magic to your event!</p>
+
         </div>
     </div>
 
-    <button id="confirm_btn">Submit Order Request</button>
+    <button id="payment_btn">Proceed to Payment</button>
     <button id="back_btn" onclick="window.close()">Cancel Booking</button>
+
+
 
     <script>
         // Load data from localStorage
         const checkoutData = JSON.parse(localStorage.getItem('checkoutData'));
         const orderFormData = JSON.parse(localStorage.getItem('orderFormData'));
+        const paymentMethodsModal = document.getElementById('payment_methods_modal');
+        const paymentMethodsGrid = document.getElementById('payment_methods_grid');
+        const paymentBtn = document.getElementById('payment_btn');
+        const showFinalPopupBtn = document.getElementById('show_final_popup_btn');
+        const closePaymentMethodsBtn = document.getElementById('close_payment_methods_btn');
+        const paymentMethodImages = [
+            'img/paymeth/bpi.jpg',
+            'img/paymeth/gcash.jpg',
+            'img/paymeth/gotyme.jpg',
+            'img/paymeth/maya.jpg'
+        ];
 
         const invoiceDateEl = document.getElementById('invoice_date');
         if (invoiceDateEl) {
@@ -122,6 +153,20 @@
             });
         }
 
+        function computeRequiredDownpayment(data) {
+            if (!data) {
+                return 0;
+            }
+
+            const unitPrice = Number(data.price) || 0;
+            const qty = Number(data.qty) || 0;
+            const rushFee = Number(data.rushFeeAmount) || 0;
+            const discount = Number(data.discountAmount) || 0;
+
+            const baseHalf = (unitPrice * qty) / 2;
+            return Math.max(0, baseHalf + rushFee - discount);
+        }
+
         if (checkoutData) {
             document.getElementById('prod_img').style.backgroundImage = `url(${checkoutData.bimg})`;
             document.getElementById('prod_name').textContent = checkoutData.name;
@@ -129,7 +174,7 @@
             document.getElementById('qty').textContent = checkoutData.qty;
             document.getElementById('delivery_date').textContent = checkoutData.deliveryDate || '-';
             document.getElementById('total_amount').textContent = checkoutData.total;
-            document.getElementById('downpayment_amount').textContent = (checkoutData.total * 0.5).toFixed(2);
+            document.getElementById('downpayment_amount').textContent = computeRequiredDownpayment(checkoutData).toFixed(2);
 
             const priceDetailsList = document.getElementById('price_details_list');
 
@@ -210,8 +255,44 @@
 
         setupCollapsibleSections();
 
-        // ── Confirm Order button ──────────────────────────────────────────────
-        document.getElementById('confirm_btn').addEventListener('click', function () {
+        function renderPaymentMethods() {
+            if (!paymentMethodsGrid) {
+                return;
+            }
+
+            paymentMethodsGrid.innerHTML = '';
+
+            paymentMethodImages.forEach((src) => {
+                const image = document.createElement('img');
+                image.className = 'paymeth_image';
+                image.src = src;
+                image.alt = 'Payment method option';
+
+                image.addEventListener('click', () => {
+                    const isZoomed = image.classList.contains('is-zoomed');
+                    paymentMethodsGrid.querySelectorAll('.paymeth_image').forEach((item) => {
+                        item.classList.remove('is-zoomed');
+                    });
+
+                    if (!isZoomed) {
+                        image.classList.add('is-zoomed');
+                    }
+                });
+
+                paymentMethodsGrid.appendChild(image);
+            });
+        }
+
+        function showPaymentMethodsModal() {
+            renderPaymentMethods();
+            paymentMethodsModal.style.display = 'flex';
+        }
+
+        function hidePaymentMethodsModal() {
+            paymentMethodsModal.style.display = 'none';
+        }
+
+        function showFinalOrderPlacedPopup() {
             // 1. Generate unique order reference: SF-YYYYMMDD-XXXXX
             const now = new Date();
             const pad = n => String(n).padStart(2, '0');
@@ -236,6 +317,7 @@
 
             const cd = checkoutData || {};
             const od = orderFormData || {};
+            const computedDownpayment = computeRequiredDownpayment(cd);
 
             const message = [
                 `Order Reference No.: ${orderRef}`,
@@ -261,7 +343,7 @@
                 (cd.addOnAmount || 0) > 0 ? `Add-Ons          : + ₱${cd.addOnAmount}` : null,
                 (cd.rushFeeAmount || 0) > 0 ? `Rush Fee         : ${cd.rushFeeText}` : null,
                 `Total Amount     : ₱${cd.total || '-'} + Delivery Fee`,
-                `Downpayment (50%): ₱${cd.total ? (cd.total * 0.5).toFixed(2) : '-'}`,
+                `Downpayment       : ₱${computedDownpayment.toFixed(2)}`,
             ].filter(line => line !== null).join('\n');
 
             emailjs.init(EMAILJS_PUBLIC_KEY);
@@ -272,6 +354,14 @@
             })
                 .then(() => console.log('Order notification email sent.'))
                 .catch(err => console.error('EmailJS error:', err));
+        }
+
+        // ── Payment button flow ──────────────────────────────────────────────
+        paymentBtn.addEventListener('click', showPaymentMethodsModal);
+        closePaymentMethodsBtn.addEventListener('click', hidePaymentMethodsModal);
+        showFinalPopupBtn.addEventListener('click', () => {
+            hidePaymentMethodsModal();
+            showFinalOrderPlacedPopup();
         });
     </script>
 

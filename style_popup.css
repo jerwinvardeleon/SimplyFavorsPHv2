@@ -3,6 +3,7 @@
     --peach: #ffc6a8;
     --cream: #fff5ec;
     --brown: #5a3e36;
+    --sky: #c3f0ff;
 }
 
 #pu_header {
@@ -181,7 +182,7 @@
 }
 
 #pu_est_comp {
-    background: linear-gradient(180deg, #f3ebde, #ffc6a8);
+    background: linear-gradient(180deg, #f3ebde, #c3f0ff);
     border-radius: 10px;
     padding: 0 0 10px 0;
     margin-top: 0px;

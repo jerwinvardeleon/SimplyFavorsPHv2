@@ -65,6 +65,13 @@
             resize: vertical;
         }
 
+        .field-error {
+            display: none;
+            margin-top: 6px;
+            color: #c62828;
+            font-size: 12px;
+        }
+
         #actions {
             margin-top: 8px;
             display: flex;
@@ -118,6 +125,7 @@
             <div class="field">
                 <label for="event_date">Date of Event:</label>
                 <input id="event_date" type="date" required>
+                    <p id="event_date_warning" class="field-error" style="display: none;">For orders that require delivery within 14 days from today, please send us a message to confirm availability.</p>
             </div>
 
             <div class="field">
@@ -128,6 +136,7 @@
             <div class="field">
                 <label for="contact_number">Contact Number:</label>
                 <input id="contact_number" type="text" required>
+                <p id="contact_number_error" class="field-error"></p>
             </div>
 
             <div class="field">
@@ -147,6 +156,9 @@
     <script>
         const orderForm = document.getElementById('order_form');
         const eventDateInput = document.getElementById('event_date');
+        const eventDateWarning = document.getElementById('event_date_warning');
+        const contactNumberInput = document.getElementById('contact_number');
+        const contactNumberError = document.getElementById('contact_number_error');
 
         function getTomorrowDateString() {
             const tomorrow = new Date();
@@ -158,6 +170,18 @@
             return `${year}-${month}-${day}`;
         }
 
+        function getDaysFromToday(dateValue) {
+            if (!dateValue) {
+                return null;
+            }
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const selectedDate = new Date(`${dateValue}T00:00:00`);
+            const msPerDay = 1000 * 60 * 60 * 24;
+            return Math.ceil((selectedDate - today) / msPerDay);
+        }
+
         function enforceEventDateMinimum() {
             const minDate = getTomorrowDateString();
             eventDateInput.min = minDate;
@@ -165,11 +189,45 @@
             if (eventDateInput.value && eventDateInput.value < minDate) {
                 eventDateInput.value = '';
             }
+
+            const days = getDaysFromToday(eventDateInput.value);
+            const isWithinSevenDays = days !== null && days >= 0 && days < 14;
+            eventDateWarning.style.display = isWithinSevenDays ? 'block' : 'none';
         }
 
         eventDateInput.addEventListener('focus', enforceEventDateMinimum);
         eventDateInput.addEventListener('input', enforceEventDateMinimum);
+        eventDateInput.addEventListener('change', enforceEventDateMinimum);
         enforceEventDateMinimum();
+
+        function showContactNumberError(message) {
+            contactNumberError.textContent = message;
+            contactNumberError.style.display = 'block';
+        }
+
+        function clearContactNumberError() {
+            contactNumberError.textContent = '';
+            contactNumberError.style.display = 'none';
+        }
+
+        function validateContactNumber() {
+            const value = contactNumberInput.value.trim();
+
+            if (!/^\d+$/.test(value)) {
+                showContactNumberError('Only digits are allowed.');
+                return false;
+            }
+
+            if (value.length !== 11) {
+                showContactNumberError('Contact number must be exactly 11 digits.');
+                return false;
+            }
+
+            clearContactNumberError();
+            return true;
+        }
+
+        contactNumberInput.addEventListener('input', clearContactNumberError);
 
         orderForm.addEventListener('submit', function (event) {
             event.preventDefault();
@@ -177,6 +235,17 @@
 
             if (!eventDateInput.value) {
                 eventDateInput.reportValidity();
+                return;
+            }
+
+            const daysUntilEvent = getDaysFromToday(eventDateInput.value);
+            if (daysUntilEvent !== null && daysUntilEvent >= 0 && daysUntilEvent < 14) {
+                eventDateWarning.style.display = 'block';
+                eventDateInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            if (!validateContactNumber()) {
                 return;
             }
 
