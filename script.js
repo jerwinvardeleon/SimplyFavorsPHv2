@@ -71,9 +71,14 @@ function parseProductsCsv(csvText) {
       price: Number(row.price),
       category: row.category,
       bimg: row.bimg,
-      bestseller: String(row.bestseller || "").trim().toLowerCase() === "yes"
+      bestseller: String(row.bestseller || "").trim().toLowerCase() === "yes",
+      outOfStock: String(row.outofstock || "").trim().toLowerCase() === "yes"
     };
   });
+}
+
+function isOutOfStockProduct(product) {
+  return Boolean(product && product.outOfStock);
 }
 
 function updateCategories() {
@@ -145,24 +150,40 @@ function renderProducts() {
 
   filtered.forEach(product => {
     const card = document.createElement("div");
-    card.className = product.bestseller ? "card bestseller-card" : "card";
+    const isOutOfStock = isOutOfStockProduct(product);
+    card.className = "card";
+    if (product.bestseller) {
+      card.classList.add("bestseller-card");
+    }
+    if (isOutOfStock) {
+      card.classList.add("out-of-stock-card");
+    }
+
     const ribbonHtml = product.bestseller
       ? `<img class="bestseller-ribbon" src="${BESTSELLER_RIBBON}" alt="Best Selling">`
       : "";
+    const outOfStockWatermarkHtml = isOutOfStock
+      ? `<div class="out-of-stock-watermark">Out of Stock</div>`
+      : "";
+    const cardImageClass = isOutOfStock ? "card-image out-of-stock-image" : "card-image";
+    const estimateButtonHtml = isOutOfStock
+      ? `<button disabled style="top: -50px; right: -45px; position: relative;">Out of stock</button>`
+      : `<button onclick="showPopup('popup-best-selling.html', {name: '${product.name}', price: '${product.price}', category: '${product.category}', bimg: '${product.bimg}'})" style="top: -50px; right: -45px; position: relative;">Get an estimate</button>`;
 
     card.innerHTML = `
       ${ribbonHtml}
-      <div class="card-image" style="
+      <div class="${cardImageClass}" style="
         position: relative;
         background-image: url(${product.bimg});
         background-size: cover;
         background-repeat: no-repeat;
         border-radius:15px;" >
+        ${outOfStockWatermarkHtml}
       </div>
       <h3>${product.name}</h3>
       <p>${product.category}</p>
       <strong>₱ ${product.price}</strong><br><br>
-      <button onclick="showPopup('popup-best-selling.html', {name: '${product.name}', price: '${product.price}', category: '${product.category}', bimg: '${product.bimg}'})" style="top: -50px; right: -45px; position: relative;">Get an estimate</button>
+      ${estimateButtonHtml}
     `;
 
     productsContainer.appendChild(card);
