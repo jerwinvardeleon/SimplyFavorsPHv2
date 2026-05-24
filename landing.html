@@ -80,66 +80,52 @@
         5.14.03</p>
 
     <script>
-        // Initialize visitor counter with robust persistence
-        function initVisitorCounter() {
-            let visitCount = null;
-            
-            // Try localStorage first (most reliable)
-            try {
-                visitCount = localStorage.getItem('visitCount');
-            } catch (e) {
-                console.warn('localStorage unavailable, checking cookies');
+        const VISITOR_COUNTER_NAMESPACE = 'simplyfavorsph';
+        const VISITOR_COUNTER_KEY = 'landing-page';
+
+        function updateVisitorDate() {
+            const dateElement = document.getElementById('visit-date');
+            if (dateElement) {
+                const now = new Date();
+                const formatted = now.toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                dateElement.textContent = 'As of ' + formatted;
             }
-            
-            // Fallback: check cookie if localStorage didn't work
-            if (visitCount === null) {
-                visitCount = getCookie('visitCount');
-            }
-            
-            // Initialize if no value found
-            if (visitCount === null || visitCount === '') {
-                visitCount = 1;
-            } else {
-                visitCount = parseInt(visitCount) + 1;
-            }
-            
-            // Validate it's a number
-            if (isNaN(visitCount)) {
-                visitCount = 1;
-            }
-            
-            // Store in both localStorage and cookie for redundancy
-            try {
-                localStorage.setItem('visitCount', visitCount.toString());
-            } catch (e) {
-                console.warn('Could not save to localStorage');
-            }
-            setCookie('visitCount', visitCount.toString(), 365); // 1 year expiry
-            
-            document.getElementById('count').textContent = visitCount;
-        }
-        
-        // Cookie helper functions
-        function setCookie(name, value, days) {
-            const expires = new Date();
-            expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-            document.cookie = name + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
-        }
-        
-        function getCookie(name) {
-            const nameEQ = name + '=';
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                let c = cookies[i].trim();
-                if (c.indexOf(nameEQ) === 0) {
-                    return c.substring(nameEQ.length);
-                }
-            }
-            return null;
         }
 
-        // Run on page load
-        window.addEventListener('load', initVisitorCounter);
+        function fetchVisitorCount() {
+            const counterUrl = `https://api.countapi.xyz/hit/${VISITOR_COUNTER_NAMESPACE}/${VISITOR_COUNTER_KEY}`;
+
+            fetch(counterUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && typeof data.value === 'number') {
+                        document.getElementById('count').textContent = data.value;
+                    } else {
+                        console.error('CountAPI returned unexpected data', data);
+                        showFallbackCount();
+                    }
+                })
+                .catch(error => {
+                    console.error('Visitor counter failed:', error);
+                    showFallbackCount();
+                });
+        }
+
+        function showFallbackCount() {
+            const countEl = document.getElementById('count');
+            if (countEl) {
+                countEl.textContent = 'N/A';
+            }
+        }
+
+        window.addEventListener('load', () => {
+            updateVisitorDate();
+            fetchVisitorCount();
+        });
     </script>
 </body>
 
