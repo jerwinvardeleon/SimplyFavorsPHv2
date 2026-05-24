@@ -68,10 +68,79 @@
                 </a>
                 
             </div>
+
+    <!-- Visitor Counter -->
+    <div id="visitor-counter" class="visitor-counter">
+        <p id="visit-count">Visitors: <span id="count">0</span></p>
+        <p id="visit-date">As of May 24, 2026</p>
+    </div>
             
     <p id="header_cap">All rights reserved © 2026</p>
     <p style="color: var(--brown);font-style: italic; text-align: center; font-size: xx-small; margin-top: 0px;">version
         5.14.03</p>
+
+    <script>
+        // Initialize visitor counter with robust persistence
+        function initVisitorCounter() {
+            let visitCount = null;
+            
+            // Try localStorage first (most reliable)
+            try {
+                visitCount = localStorage.getItem('visitCount');
+            } catch (e) {
+                console.warn('localStorage unavailable, checking cookies');
+            }
+            
+            // Fallback: check cookie if localStorage didn't work
+            if (visitCount === null) {
+                visitCount = getCookie('visitCount');
+            }
+            
+            // Initialize if no value found
+            if (visitCount === null || visitCount === '') {
+                visitCount = 1;
+            } else {
+                visitCount = parseInt(visitCount) + 1;
+            }
+            
+            // Validate it's a number
+            if (isNaN(visitCount)) {
+                visitCount = 1;
+            }
+            
+            // Store in both localStorage and cookie for redundancy
+            try {
+                localStorage.setItem('visitCount', visitCount.toString());
+            } catch (e) {
+                console.warn('Could not save to localStorage');
+            }
+            setCookie('visitCount', visitCount.toString(), 365); // 1 year expiry
+            
+            document.getElementById('count').textContent = visitCount;
+        }
+        
+        // Cookie helper functions
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+            document.cookie = name + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+        }
+        
+        function getCookie(name) {
+            const nameEQ = name + '=';
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                let c = cookies[i].trim();
+                if (c.indexOf(nameEQ) === 0) {
+                    return c.substring(nameEQ.length);
+                }
+            }
+            return null;
+        }
+
+        // Run on page load
+        window.addEventListener('load', initVisitorCounter);
+    </script>
 </body>
 
 </html>

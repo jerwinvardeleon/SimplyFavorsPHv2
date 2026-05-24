@@ -143,18 +143,19 @@
   <main>
     <section class="panel">
       <h1>OneDrive Excel Table Viewer</h1>
-      <p class="hint">Loads your shared OneDrive Excel file and renders the first worksheet as an HTML table.</p>
+      <p class="hint">Load a OneDrive shared Excel workbook and use it as a simple data source. The app parses the first worksheet as a table.</p>
 
       <div class="controls">
         <input
           id="sourceLink"
           type="url"
-          placeholder="Paste OneDrive share link"
+          placeholder="Paste OneDrive share link (Anyone with the link can view)"
           aria-label="OneDrive share link"
         >
         <button id="loadBtn" type="button">Load Table</button>
       </div>
 
+      <p class="hint">Use the file's share link, not a folder or preview page link. If you still see an error, open the browser console for detailed diagnostics.</p>
       <p id="status"></p>
 
       <div class="table-wrap">

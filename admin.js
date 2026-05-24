@@ -1,4 +1,4 @@
-const DEFAULT_ONEDRIVE_LINK = "https://1drv.ms/x/c/7e2d5127cf0c5ecc/IQC4vTnk5iH8Q7RxUKc2ALNTAQXOkI-y6XliPZHDjQgM-D8?e=tbhraB";
+const DEFAULT_ONEDRIVE_LINK = "";
 
 const sourceLinkInput = document.getElementById("sourceLink");
 const loadBtn = document.getElementById("loadBtn");
@@ -27,6 +27,24 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;")
     .replace(/\"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+function getErrorMessage(error) {
+  if (!error) {
+    return "Unable to load the workbook. Ensure the file is shared as Anyone with the link can view.";
+  }
+
+  const message = String(error.message || error);
+
+  if (message.startsWith("OneDrive API error")) {
+    return `${message}. Verify the file is shared publicly and the link is valid.`;
+  }
+
+  if (message.includes("No worksheets found")) {
+    return "Workbook loaded but no worksheets were found. Check that the file contains at least one worksheet.";
+  }
+
+  return "Unable to load the workbook. Ensure the file is shared as Anyone with the link can view.";
 }
 
 function renderTable(rows) {
@@ -69,9 +87,18 @@ async function loadFromOneDrive(shareLink) {
   try {
     const apiUrl = shareLinkToApiUrl(trimmedLink);
     const response = await fetch(apiUrl, { cache: "no-store" });
+    const contentType = (response.headers.get("content-type") || "").toLowerCase();
 
     if (!response.ok) {
-      throw new Error(`OneDrive API error ${response.status}`);
+      const bodyText = await response.text();
+      const preview = bodyText.slice(0, 300).replace(/\s+/g, " ");
+      throw new Error(`OneDrive API error ${response.status} ${response.statusText}: ${preview}`);
+    }
+
+    if (contentType.includes("text/html")) {
+      const bodyText = await response.clone().text();
+      const preview = bodyText.slice(0, 300).replace(/\s+/g, " ");
+      throw new Error(`OneDrive returned HTML instead of a workbook. This usually means the link is not a direct shared file URL or access is blocked. Preview: ${preview}`);
     }
 
     const fileBuffer = await response.arrayBuffer();
@@ -90,8 +117,8 @@ async function loadFromOneDrive(shareLink) {
 
     renderTable(rows);
   } catch (error) {
-    console.error(error);
-    setStatus("Unable to load the workbook. Ensure the file is shared as Anyone with the link can view.", "error");
+    console.error("Workbook loading failed:", error);
+    setStatus(getErrorMessage(error), "error");
   }
 }
 
@@ -103,4 +130,6 @@ if (loadBtn) {
   loadBtn.addEventListener("click", () => loadFromOneDrive(sourceLinkInput.value));
 }
 
-loadFromOneDrive(DEFAULT_ONEDRIVE_LINK);
+if (DEFAULT_ONEDRIVE_LINK) {
+  loadFromOneDrive(DEFAULT_ONEDRIVE_LINK);
+}
