@@ -80,8 +80,8 @@
         5.14.03</p>
 
     <script>
-        const VISITOR_COUNTER_NAMESPACE = 'simplyfavorsph';
-        const VISITOR_COUNTER_KEY = 'landing-page';
+        const REMOTE_COUNTER_URL = 'https://hits.seeyoufarm.com/api/count/incr?url=https://simplyfavorsph.com/landing';
+        const LOCAL_COUNTER_KEY = 'simplyfavorsph-landing-visitor-backup';
 
         function updateVisitorDate() {
             const dateElement = document.getElementById('visit-date');
@@ -96,29 +96,57 @@
             }
         }
 
-        function fetchVisitorCount() {
-            const counterUrl = `https://api.countapi.xyz/hit/${VISITOR_COUNTER_NAMESPACE}/${VISITOR_COUNTER_KEY}`;
+        function setCountText(count) {
+            const countEl = document.getElementById('count');
+            if (countEl) {
+                countEl.textContent = count;
+            }
+        }
 
-            fetch(counterUrl)
+        function fetchVisitorCount() {
+            fetch(REMOTE_COUNTER_URL)
                 .then(response => response.json())
                 .then(data => {
-                    if (data && typeof data.value === 'number') {
-                        document.getElementById('count').textContent = data.value;
+                    const count = parseRemoteCount(data);
+                    if (count !== null) {
+                        setCountText(count);
+                        localStorage.setItem(LOCAL_COUNTER_KEY, String(count));
                     } else {
-                        console.error('CountAPI returned unexpected data', data);
-                        showFallbackCount();
+                        console.error('Remote counter returned unexpected data', data);
+                        fallbackLocalCount();
                     }
                 })
                 .catch(error => {
-                    console.error('Visitor counter failed:', error);
-                    showFallbackCount();
+                    console.error('Remote visitor counter failed:', error);
+                    fallbackLocalCount();
                 });
         }
 
-        function showFallbackCount() {
-            const countEl = document.getElementById('count');
-            if (countEl) {
-                countEl.textContent = 'N/A';
+        function parseRemoteCount(data) {
+            if (!data || typeof data !== 'object') {
+                return null;
+            }
+            if (typeof data.value === 'number') {
+                return data.value;
+            }
+            if (typeof data.count === 'number') {
+                return data.count;
+            }
+            return null;
+        }
+
+        function fallbackLocalCount() {
+            try {
+                let count = parseInt(localStorage.getItem(LOCAL_COUNTER_KEY), 10);
+                if (Number.isNaN(count) || count < 0) {
+                    count = 0;
+                }
+                count += 1;
+                localStorage.setItem(LOCAL_COUNTER_KEY, String(count));
+                setCountText(count);
+            } catch (error) {
+                console.warn('Local fallback counter failed:', error);
+                setCountText('N/A');
             }
         }
 
