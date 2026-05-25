@@ -142,20 +142,20 @@
 <body>
   <main>
     <section class="panel">
-      <h1>OneDrive Excel Table Viewer</h1>
-      <p class="hint">Load a OneDrive shared Excel workbook and use it as a simple data source. The app parses the first worksheet as a table.</p>
-
-      <div class="controls">
-        <input
-          id="sourceLink"
-          type="url"
-          placeholder="Paste OneDrive share link (Anyone with the link can view)"
-          aria-label="OneDrive share link"
-        >
-        <button id="loadBtn" type="button">Load Table</button>
+      <h1>Admin Data Viewer</h1>
+      <div style="height:12px"></div>
+      <h2 style="margin:12px 0 6px;font-size:1.1rem;">Supabase Table Viewer</h2>
+      <div class="controls" style="grid-template-columns: 1fr; gap:8px;">
+        <input id="supabaseUrl" type="url" placeholder="Supabase URL (eg https://xyz.supabase.co)" aria-label="Supabase URL">
+        <input id="supabaseKey" type="text" placeholder="Supabase anon/public API key" aria-label="Supabase Key">
+        <input id="supabaseTable" type="text" placeholder="Table name" aria-label="Supabase Table">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button id="loadSupabaseBtn" type="button">Load from Supabase</button>
+          <button id="saveSupabaseBtn" type="button" style="background:#ddd;color:#222;font-weight:600;">Save creds</button>
+        </div>
       </div>
 
-      <p class="hint">Use the file's share link, not a folder or preview page link. If you still see an error, open the browser console for detailed diagnostics.</p>
+      
       <p id="status"></p>
 
       <div class="table-wrap">
@@ -166,6 +166,97 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="admin.js"></script>
+  <!-- Supabase client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <script>
+    // Supabase table loader and renderer
+    const STATUS_EL = document.getElementById('status');
+
+    function setStatus(message, cls) {
+      if (!STATUS_EL) return;
+      STATUS_EL.textContent = message;
+      STATUS_EL.className = cls || '';
+    }
+
+    function renderTableFromRows(rows) {
+      const table = document.getElementById('excelTable');
+      table.innerHTML = '';
+      if (!rows || !rows.length) {
+        table.innerHTML = '<tr><td style="padding:12px">No rows found</td></tr>';
+        return;
+      }
+      // Build header from keys of first row
+      const headerRow = document.createElement('tr');
+      const keys = Object.keys(rows[0]);
+      keys.forEach(k => {
+        const th = document.createElement('th');
+        th.textContent = k;
+        headerRow.appendChild(th);
+      });
+      table.appendChild(headerRow);
+
+      rows.forEach(r => {
+        const tr = document.createElement('tr');
+        keys.forEach(k => {
+          const td = document.createElement('td');
+          let v = r[k];
+          if (v === null || v === undefined) v = '';
+          td.textContent = String(v);
+          tr.appendChild(td);
+        });
+        table.appendChild(tr);
+      });
+    }
+
+    async function loadFromSupabase() {
+      const url = document.getElementById('supabaseUrl').value.trim() || localStorage.getItem('supabaseUrl');
+      const key = document.getElementById('supabaseKey').value.trim() || localStorage.getItem('supabaseKey');
+      const tableName = document.getElementById('supabaseTable').value.trim() || localStorage.getItem('supabaseTable');
+
+      if (!url || !key || !tableName) {
+        setStatus('Provide Supabase URL, anon key, and table name.', 'error');
+        return;
+      }
+
+      setStatus('Connecting to Supabase...', '');
+      try {
+        const supabase = supabaseJs.createClient(url, key);
+        const { data, error } = await supabase.from(tableName).select('*').limit(1000);
+        if (error) {
+          console.error('Supabase error', error);
+          setStatus('Supabase error: ' + error.message, 'error');
+          return;
+        }
+        renderTableFromRows(data || []);
+        setStatus('Loaded ' + (data ? data.length : 0) + ' rows', 'ok');
+      } catch (err) {
+        console.error(err);
+        setStatus('Failed to fetch from Supabase: ' + err.message, 'error');
+      }
+    }
+
+    document.getElementById('loadSupabaseBtn').addEventListener('click', loadFromSupabase);
+    document.getElementById('saveSupabaseBtn').addEventListener('click', () => {
+      const url = document.getElementById('supabaseUrl').value.trim();
+      const key = document.getElementById('supabaseKey').value.trim();
+      const tableName = document.getElementById('supabaseTable').value.trim();
+      if (url) localStorage.setItem('supabaseUrl', url);
+      if (key) localStorage.setItem('supabaseKey', key);
+      if (tableName) localStorage.setItem('supabaseTable', tableName);
+      setStatus('Saved Supabase settings locally', 'ok');
+    });
+
+    // Auto-fill saved creds on load
+    (function fillSaved() {
+      const url = localStorage.getItem('supabaseUrl');
+      const key = localStorage.getItem('supabaseKey');
+      const tableName = localStorage.getItem('supabaseTable');
+      if (url) document.getElementById('supabaseUrl').value = url;
+      if (key) document.getElementById('supabaseKey').value = key;
+      if (tableName) document.getElementById('supabaseTable').value = tableName;
+    })();
+  </script>
 </body>
 
 </html>
