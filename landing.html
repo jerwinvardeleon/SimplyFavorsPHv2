@@ -82,8 +82,8 @@
         5.14.03</p>
 
     <script>
-        const REMOTE_COUNTER_URL = 'https://hits.seeyoufarm.com/api/count/incr?url=https://simplyfavorsph.com/landing';
-        const LOCAL_COUNTER_KEY = 'simplyfavorsph-landing-visitor-backup';
+        const REMOTE_COUNTER_URL = 'https://hits.seeyoufarm.com/api/count/incr?url=https://simplyfavorsph.com';
+        const LOCAL_COUNTER_KEY = 'simplyfavorsph-site-visitor-backup';
 
         function updateVisitorDate() {
             const dateElement = document.getElementById('visit-date');
@@ -106,7 +106,7 @@
         }
 
         function fetchVisitorCount() {
-            fetch(REMOTE_COUNTER_URL)
+            fetch(REMOTE_COUNTER_URL, { cache: 'no-store' })
                 .then(response => response.json())
                 .then(data => {
                     const count = parseRemoteCount(data);
@@ -128,13 +128,8 @@
             if (!data || typeof data !== 'object') {
                 return null;
             }
-            if (typeof data.value === 'number') {
-                return data.value;
-            }
-            if (typeof data.count === 'number') {
-                return data.count;
-            }
-            return null;
+            const count = Number(data.value ?? data.count);
+            return Number.isFinite(count) ? count : null;
         }
 
         function fallbackLocalCount() {
