@@ -72,18 +72,17 @@
     <!-- Visitor Counter -->
      <!-- Visitor Counter -->
       <!-- Visitor Counter -->
-    <div id="visitor-counter" class="visitor-counter">
+    <!-- <div id="visitor-counter" class="visitor-counter">
         <p id="visit-count">Visitors: <span id="count">0</span></p>
         <p id="visit-date">As of May 24, 2026</p>
-    </div>
+    </div> -->
             
     <p id="header_cap">All rights reserved © 2026</p>
     <p style="color: var(--brown);font-style: italic; text-align: center; font-size: xx-small; margin-top: 0px;">version
         5.14.03</p>
 
     <script>
-        const REMOTE_COUNTER_URL = 'https://hits.seeyoufarm.com/api/count/incr?url=https://simplyfavorsph.com';
-        const LOCAL_COUNTER_KEY = 'simplyfavorsph-site-visitor-backup';
+        const REMOTE_COUNTER_URL = 'https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fsimplyfavorsph.shop%2Flanding.html&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=&edge_flat=true';
 
         function updateVisitorDate() {
             const dateElement = document.getElementById('visit-date');
@@ -112,15 +111,14 @@
                     const count = parseRemoteCount(data);
                     if (count !== null) {
                         setCountText(count);
-                        localStorage.setItem(LOCAL_COUNTER_KEY, String(count));
                     } else {
                         console.error('Remote counter returned unexpected data', data);
-                        fallbackLocalCount();
+                        setCountText('N/A');
                     }
                 })
                 .catch(error => {
                     console.error('Remote visitor counter failed:', error);
-                    fallbackLocalCount();
+                    setCountText('N/A');
                 });
         }
 
@@ -132,26 +130,12 @@
             return Number.isFinite(count) ? count : null;
         }
 
-        function fallbackLocalCount() {
-            try {
-                let count = parseInt(localStorage.getItem(LOCAL_COUNTER_KEY), 10);
-                if (Number.isNaN(count) || count < 0) {
-                    count = 0;
-                }
-                count += 1;
-                localStorage.setItem(LOCAL_COUNTER_KEY, String(count));
-                setCountText(count);
-            } catch (error) {
-                console.warn('Local fallback counter failed:', error);
-                setCountText('N/A');
-            }
-        }
-
         window.addEventListener('load', () => {
             updateVisitorDate();
             fetchVisitorCount();
         });
     </script>
+    
 </body>
 
 </html>
