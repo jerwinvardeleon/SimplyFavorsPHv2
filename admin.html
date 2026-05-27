@@ -221,8 +221,8 @@
 
       setStatus('Connecting to Supabase...', '');
       try {
-        const supabase = supabaseJs.createClient(url, key);
-        const { data, error } = await supabase.from(tableName).select('*').limit(1000);
+        const supabaseClient = supabase.createClient(url, key);
+        const { data, error } = await supabaseClient.from(tableName).select('*').limit(1000);
         if (error) {
           console.error('Supabase error', error);
           setStatus('Supabase error: ' + error.message, 'error');
