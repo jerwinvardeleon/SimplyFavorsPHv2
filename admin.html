@@ -145,18 +145,7 @@
       <h1>Admin Data Viewer</h1>
       <div style="height:12px"></div>
       <h2 style="margin:12px 0 6px;font-size:1.1rem;">Supabase Table Viewer</h2>
-      <div class="controls" style="grid-template-columns: 1fr; gap:8px;">
-        <input id="supabaseUrl" type="url" placeholder="Supabase URL (eg https://xyz.supabase.co)" aria-label="Supabase URL">
-        <input id="supabaseKey" type="text" placeholder="Supabase anon/public API key" aria-label="Supabase Key">
-        <input id="supabaseTable" type="text" placeholder="Table name" aria-label="Supabase Table">
-        <div style="display:flex;gap:8px;align-items:center;">
-          <button id="loadSupabaseBtn" type="button">Load from Supabase</button>
-          <button id="saveSupabaseBtn" type="button" style="background:#ddd;color:#222;font-weight:600;">Save creds</button>
-        </div>
-      </div>
-
-      
-      <p id="status"></p>
+      <p id="status">Loading Supabase table automatically...</p>
 
       <div class="table-wrap">
         <table id="excelTable" aria-label="Excel data table"></table>
@@ -209,20 +198,15 @@
       });
     }
 
+    const SUPABASE_URL = 'https://pwypezikutjneesnevnv.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXBlemlrdXRqbmVlc25ldm52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MzE3NzYsImV4cCI6MjA5MjUwNzc3Nn0.ufITq5TJBz3RLYVoNyy_S30EZbAZxrn-WU5CAOrxtpQ';
+    const SUPABASE_TABLE_NAME = 'products';
+
     async function loadFromSupabase() {
-      const url = document.getElementById('supabaseUrl').value.trim() || localStorage.getItem('supabaseUrl');
-      const key = document.getElementById('supabaseKey').value.trim() || localStorage.getItem('supabaseKey');
-      const tableName = document.getElementById('supabaseTable').value.trim() || localStorage.getItem('supabaseTable');
-
-      if (!url || !key || !tableName) {
-        setStatus('Provide Supabase URL, anon key, and table name.', 'error');
-        return;
-      }
-
       setStatus('Connecting to Supabase...', '');
       try {
-        const supabaseClient = supabase.createClient(url, key);
-        const { data, error } = await supabaseClient.from(tableName).select('*').limit(1000);
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const { data, error } = await supabaseClient.from(SUPABASE_TABLE_NAME).select('*').limit(1000);
         if (error) {
           console.error('Supabase error', error);
           setStatus('Supabase error: ' + error.message, 'error');
@@ -236,26 +220,7 @@
       }
     }
 
-    document.getElementById('loadSupabaseBtn').addEventListener('click', loadFromSupabase);
-    document.getElementById('saveSupabaseBtn').addEventListener('click', () => {
-      const url = document.getElementById('supabaseUrl').value.trim();
-      const key = document.getElementById('supabaseKey').value.trim();
-      const tableName = document.getElementById('supabaseTable').value.trim();
-      if (url) localStorage.setItem('supabaseUrl', url);
-      if (key) localStorage.setItem('supabaseKey', key);
-      if (tableName) localStorage.setItem('supabaseTable', tableName);
-      setStatus('Saved Supabase settings locally', 'ok');
-    });
-
-    // Auto-fill saved creds on load
-    (function fillSaved() {
-      const url = localStorage.getItem('supabaseUrl');
-      const key = localStorage.getItem('supabaseKey');
-      const tableName = localStorage.getItem('supabaseTable');
-      if (url) document.getElementById('supabaseUrl').value = url;
-      if (key) document.getElementById('supabaseKey').value = key;
-      if (tableName) document.getElementById('supabaseTable').value = tableName;
-    })();
+    loadFromSupabase();
   </script>
 </body>
 
