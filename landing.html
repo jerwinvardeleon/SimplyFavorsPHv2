@@ -81,7 +81,7 @@
     <p style="color: var(--brown);font-style: italic; text-align: center; font-size: xx-small; margin-top: 0px;">version
         6.01.01</p>
 
-    <script>
+    <!-- <script>
         const REMOTE_COUNTER_URL = 'https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fsimplyfavorsph.shop%2Flanding.html&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=&edge_flat=true';
 
         function updateVisitorDate() {
@@ -134,8 +134,37 @@
             updateVisitorDate();
             fetchVisitorCount();
         });
+    </script> -->
+
+
+    <div style="text-align: right; width: 100%;">
+        <a href="https://toolszu.com/tools/real-time-website-visitor-counter/" target="_blank">
+            <img src="https://toolszu.com/tools/real-time-website-visitor-counter/tracker.php?id=eeb8b8f5d5753365839dae659be8c000593e03ea9ebb0d99571942e2bc855257" alt="Web Visitor Counter" border="0" style="display: inline-block;border-radius: 5px;">
+        </a>
+        <p id="visit-date">Visitors as of <span id="today"></span></p>
+    <script>
+        try {
+            // Get today's date
+            const today = new Date();
+
+            // Format date as YYYY-MM-DD
+            const formattedDate = today.toLocaleDateString(undefined, { 
+             year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+            });
+
+
+            // Insert into HTML element
+            document.getElementById('today').textContent = formattedDate;
+        } catch (error) {
+            console.error("Error displaying date:", error);
+            document.getElementById('today').textContent = "Unable to load date";
+        }
     </script>
-    
+    </div>
+
+
 </body>
 
 </html>
