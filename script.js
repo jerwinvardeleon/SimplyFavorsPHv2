@@ -49,6 +49,10 @@ function parseCsvLine(line) {
   return values;
 }
 
+function isTruthyFlag(value) {
+  return ["yes", "true", "1", "y", "on"].includes(String(value ?? "").trim().toLowerCase());
+}
+
 function parseProductsCsv(csvText) {
   const lines = csvText
     .split(/\r?\n/)
@@ -71,8 +75,8 @@ function parseProductsCsv(csvText) {
       price: Number(row.price),
       category: row.category,
       bimg: row.bimg,
-      bestseller: String(row.bestseller || "").trim().toLowerCase() === "yes",
-      outOfStock: String(row.outofstock || "").trim().toLowerCase() === "yes"
+      bestseller: isTruthyFlag(row.bestseller),
+      outOfStock: isTruthyFlag(row.outofstock)
     };
   });
 }

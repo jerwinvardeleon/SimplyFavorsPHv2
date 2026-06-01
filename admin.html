@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Excel Source Viewer</title>
+  <title>Admin Data Center</title>
   <style>
     :root {
       --bg: #f6f4ef;
@@ -145,7 +145,11 @@
       <h1>Admin Data Viewer</h1>
       <div style="height:12px"></div>
       <h2 style="margin:12px 0 6px;font-size:1.1rem;">Supabase Table Viewer</h2>
-      <p id="status">Loading Supabase table automatically...</p>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:8px;">
+        <button id="refreshBtn" type="button">Refresh Table</button>
+        <button id="syncCsvBtn" type="button">Update products.csv</button>
+        <p id="status" style="margin:0;">Use Refresh Table to load the latest Supabase data, or Update products.csv to regenerate the CSV file.</p>
+      </div>
 
       <div class="table-wrap">
         <table id="excelTable" aria-label="Excel data table"></table>
@@ -154,7 +158,6 @@
   </main>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="admin.js"></script>
   <!-- Supabase client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
@@ -168,7 +171,60 @@
       STATUS_EL.className = cls || '';
     }
 
+    const TABLE_SYNC_ENDPOINT = '/api/sync-products';
+    const REFRESH_BTN = document.getElementById('refreshBtn');
+    const SYNC_CSV_BTN = document.getElementById('syncCsvBtn');
+    let currentRows = [];
+
+    function canSyncCsvFromBrowser() {
+      return window.location.protocol === 'http:' || window.location.protocol === 'https:';
+    }
+
+    async function syncTableToCsv(rows) {
+      if (!Array.isArray(rows) || !rows.length) return;
+      if (!canSyncCsvFromBrowser()) {
+        console.info('Skipping CSV sync because the admin page is not being served over HTTP.');
+        return;
+      }
+
+      try {
+        const response = await fetch(TABLE_SYNC_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          cache: 'no-store',
+          body: JSON.stringify({ rows })
+        });
+
+        const payload = await response.json();
+        if (!response.ok || !payload.ok) {
+          throw new Error(payload.error || 'Unable to sync products.csv');
+        }
+
+        console.log('products.csv synced from admin table:', payload);
+      } catch (error) {
+        console.error('Failed to sync products.csv:', error);
+        setStatus('CSV sync failed: ' + error.message, 'error');
+      }
+    }
+
+    function getCurrentRowsFromTable() {
+      const table = document.getElementById('excelTable');
+      if (!table) return [];
+
+      return Array.from(table.querySelectorAll('tr')).slice(1).map((tr) => {
+        const row = {};
+        tr.querySelectorAll('td input').forEach(input => {
+          const key = input.dataset.column || '';
+          if (key) {
+            row[key] = input.value;
+          }
+        });
+        return row;
+      });
+    }
+
     function renderTableFromRows(rows) {
+      currentRows = Array.isArray(rows) ? rows.map(row => ({ ...row })) : [];
       const table = document.getElementById('excelTable');
       table.innerHTML = '';
       if (!rows || !rows.length) {
@@ -185,13 +241,29 @@
       });
       table.appendChild(headerRow);
 
-      rows.forEach(r => {
+      rows.forEach((r, rowIndex) => {
         const tr = document.createElement('tr');
         keys.forEach(k => {
           const td = document.createElement('td');
           let v = r[k];
           if (v === null || v === undefined) v = '';
-          td.textContent = String(v);
+
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.value = String(v);
+          input.dataset.column = k;
+          input.dataset.rowIndex = String(rowIndex);
+          input.addEventListener('input', () => {
+            currentRows[rowIndex] = currentRows[rowIndex] || {};
+            currentRows[rowIndex][k] = input.value;
+          });
+          input.style.width = '100%';
+          input.style.border = 'none';
+          input.style.background = 'transparent';
+          input.style.font = 'inherit';
+          input.style.color = 'inherit';
+
+          td.appendChild(input);
           tr.appendChild(td);
         });
         table.appendChild(tr);
@@ -202,25 +274,71 @@
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXBlemlrdXRqbmVlc25ldm52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MzE3NzYsImV4cCI6MjA5MjUwNzc3Nn0.ufITq5TJBz3RLYVoNyy_S30EZbAZxrn-WU5CAOrxtpQ';
     const SUPABASE_TABLE_NAME = 'products';
 
+    function createSupabaseClient() {
+      return supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+        global: {
+          fetch: (...args) => fetch(...args, { cache: 'no-store' })
+        }
+      });
+    }
+
+    function sortRowsByProductOrder(rows) {
+      const normalizedRows = Array.isArray(rows) ? rows.slice() : [];
+
+      return normalizedRows.sort((left, right) => {
+        const leftValue = Number(left?.productOrder ?? left?.productorder ?? left?.product_order ?? 0);
+        const rightValue = Number(right?.productOrder ?? right?.productorder ?? right?.product_order ?? 0);
+        return leftValue - rightValue;
+      });
+    }
+
     async function loadFromSupabase() {
       setStatus('Connecting to Supabase...', '');
       try {
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabaseClient = createSupabaseClient();
         const { data, error } = await supabaseClient.from(SUPABASE_TABLE_NAME).select('*').limit(1000);
         if (error) {
           console.error('Supabase error', error);
           setStatus('Supabase error: ' + error.message, 'error');
           return;
         }
-        renderTableFromRows(data || []);
-        setStatus('Loaded ' + (data ? data.length : 0) + ' rows', 'ok');
+        const tableRows = sortRowsByProductOrder(data || []);
+        renderTableFromRows(tableRows);
+        setStatus('Loaded ' + tableRows.length + ' rows', 'ok');
       } catch (err) {
         console.error(err);
         setStatus('Failed to fetch from Supabase: ' + err.message, 'error');
       }
     }
 
-    loadFromSupabase();
+    async function refreshProductsCsv() {
+      setStatus('Regenerating products.csv...', '');
+      try {
+        const tableRows = sortRowsByProductOrder(getCurrentRowsFromTable().length ? getCurrentRowsFromTable() : currentRows);
+        if (!tableRows.length) {
+          throw new Error('No editable rows are available to sync. Refresh the table first.');
+        }
+
+        await syncTableToCsv(tableRows);
+        currentRows = tableRows.map(row => ({ ...row }));
+        setStatus('Updated products.csv with ' + tableRows.length + ' rows', 'ok');
+      } catch (err) {
+        console.error(err);
+        setStatus('Failed to update products.csv: ' + err.message, 'error');
+      }
+    }
+
+    if (REFRESH_BTN) {
+      REFRESH_BTN.addEventListener('click', () => {
+        loadFromSupabase();
+      });
+    }
+
+    if (SYNC_CSV_BTN) {
+      SYNC_CSV_BTN.addEventListener('click', () => {
+        refreshProductsCsv();
+      });
+    }
   </script>
 </body>
 
