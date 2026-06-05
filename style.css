@@ -20,7 +20,7 @@ body {
     background: linear-gradient(135deg, #f3ebde, #ffc6a8, #c3f0ff);
     min-height: 100vh;
     max-width: 400px;
-    padding-top: 100px;
+    padding-top: 0px;
     padding-bottom: 120px;
     /* Adjust if header height changes */
 }
@@ -118,7 +118,7 @@ header p#header_cap {
     border-radius: 22px;
     padding: 20px;
     box-shadow: 0 10px 24px rgba(90, 62, 54, 0.12);
-    position: sticky;
+    margin-top: 10px;
     top: 100px;
     z-index: 998;
 }
@@ -269,7 +269,7 @@ input {
 }
 
 .filters button {
-    padding: 3px 15px;
+    padding: 3px 8px;
     border: none;
     border-radius: 20px;
     cursor: pointer;
@@ -319,7 +319,7 @@ input {
 }
 
 .card.bestseller-card {
-    background: linear-gradient(145deg, #ffc6a8 0%, #fff5ec 50%, #ffc6a8 100%);
+    background: linear-gradient(145deg, #ffc6a8 20%, #fff5ec 50%, #ffc6a8 60%);
     background-size: 200% 200%;
     border: 1px solid rgba(255, 175, 95, 0.55);
     animation: bestsellerCardShimmer 4.5s ease-in-out infinite;

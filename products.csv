@@ -7,8 +7,8 @@ id,name,price,category,bimg,bestseller,outofstock,productOrder
 124,Wet wipes (acetate + Hand Santizer),150,wipes,img/products/wipes/wipes_acry_omni.jpg,false,no,5
 126,Wet wipes (acetate + fluffy bear),150,wipes,img/products/wipes/wipe_acry_flbear.jpg,false,no,7
 25,Scented Candle in Jar,90,candle,img/products/candles/scncand.jpg,false,no,8
-22,Mini Bubble Candle (scented),50,candle,img/products/candles/candle_sce.jpg,false,no,9
-23,Mini Bubble Candle (colored),55,candle,img/products/candles/candle_cla.jpg,false,no,10
+22,Mini Bubble Candle (scented),50,candle,img/products/candles/candle_cla.jpg,false,no,9
+23,Mini Bubble Candle (colored),55,candle,img/products/candles/candle_sce.jpg,false,no,10
 10,Hand Sanitizer (Organza Pouch),70,sanitizer,img/products/sanitizer/sani_org.jpg,false,no,11
 11,Hand Sanitizer (Burlap Pouch),75,sanitizer,img/products/sanitizer/sani_bur.jpg,false,no,12
 13,Bear keychain,55,bear,img/products/bear/bearNew.jpg,false,no,13
