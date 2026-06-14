@@ -68,6 +68,9 @@
 
     <script>
         (function () {
+        const SUPABASE_URL = 'https://pwypezikutjneesnevnv.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXBlemlrdXRqbmVlc25ldm52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MzE3NzYsImV4cCI6MjA5MjUwNzc3Nn0.ufITq5TJBz3RLYVoNyy_S30EZbAZxrn-WU5CAOrxtpQ';
+        const SUPABASE_TABLE_NAME = 'products';
         const initialProduct = {
             name: '${name}',
             price: parseFloat('${price}'),
@@ -112,62 +115,23 @@
             imageZoomOverlay = overlay;
         }
 
-        function parseCsvLine(line) {
-            const values = [];
-            let current = '';
-            let insideQuotes = false;
-
-            for (let index = 0; index < line.length; index += 1) {
-                const character = line[index];
-
-                if (character === '"') {
-                    const nextCharacter = line[index + 1];
-                    if (insideQuotes && nextCharacter === '"') {
-                        current += '"';
-                        index += 1;
-                    } else {
-                        insideQuotes = !insideQuotes;
-                    }
-                    continue;
-                }
-
-                if (character === ',' && !insideQuotes) {
-                    values.push(current);
-                    current = '';
-                    continue;
-                }
-
-                current += character;
-            }
-
-            values.push(current);
-            return values;
+        function normalizeProductRow(row) {
+            return {
+                id: Number(row.id) || 0,
+                name: String(row.name || row.product_name || row.title || ''),
+                price: Number(row.price ?? row.Price ?? 0) || 0,
+                category: String(row.category || 'Uncategorized'),
+                bimg: String(row.bimg || row.image || '')
+            };
         }
 
-        function parseProductsCsv(csvText) {
-            const lines = csvText
-                .split(/\r?\n/)
-                .map(line => line.trim())
-                .filter(Boolean);
-
-            if (lines.length <= 1) {
-                return [];
+        async function createSupabaseClient() {
+            if (window.supabase && typeof window.supabase.createClient === 'function') {
+                return window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             }
 
-            const headers = parseCsvLine(lines[0]);
-
-            return lines.slice(1).map(line => {
-                const values = parseCsvLine(line);
-                const row = Object.fromEntries(headers.map((header, index) => [header, values[index] ?? '']));
-
-                return {
-                    id: Number(row.id),
-                    name: row.name,
-                    price: Number(row.price),
-                    category: row.category,
-                    bimg: row.bimg
-                };
-            });
+            const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm');
+            return createClient(SUPABASE_URL, SUPABASE_KEY);
         }
 
         function isSameProduct(productA, productB) {
@@ -259,13 +223,13 @@
 
         async function loadCategoryVariations() {
             try {
-                const response = await fetch('products.csv', { cache: 'no-store' });
-                if (!response.ok) {
-                    throw new Error('Unable to load products.csv');
+                const supabaseClient = await createSupabaseClient();
+                const { data, error } = await supabaseClient.from(SUPABASE_TABLE_NAME).select('*').eq('category', initialProduct.category).limit(1000);
+                if (error) {
+                    throw error;
                 }
 
-                const csvText = await response.text();
-                const products = parseProductsCsv(csvText);
+                const products = (Array.isArray(data) ? data : []).map(normalizeProductRow);
                 const sameCategory = products.filter(product => product.category === initialProduct.category);
                 categoryProducts = sameCategory.length > 0 ? sameCategory : [{ ...initialProduct }];
 

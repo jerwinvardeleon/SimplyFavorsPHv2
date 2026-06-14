@@ -1,6 +1,8 @@
 let products = [];
 let categories = ["All"];
-const productsDataPath = "products.csv";
+const SUPABASE_URL = 'https://pwypezikutjneesnevnv.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXBlemlrdXRqbmVlc25ldm52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MzE3NzYsImV4cCI6MjA5MjUwNzc3Nn0.ufITq5TJBz3RLYVoNyy_S30EZbAZxrn-WU5CAOrxtpQ';
+const SUPABASE_TABLE_NAME = 'products';
 const BESTSELLER_RIBBON = "img/icon/BestSellingv3.gif";
 const MAX_FILTER_BUTTONS = 9;
 
@@ -17,68 +19,29 @@ const shopFiltersGroup = document.getElementById("shop_filters_group");
 // FILTER PER CATEGORY SECTION
 // FILTER PER CATEGORY SECTION
 // FILTER PER CATEGORY SECTION
-function parseCsvLine(line) {
-  const values = [];
-  let current = "";
-  let insideQuotes = false;
+function normalizeProductRow(row) {
+  const bestsellerValue = row.bestseller ?? row.bestselling ?? row.bestSeller ?? row.best_selling ?? row.isFeatured ?? row.featured;
+  const outOfStockValue = row.outofstock ?? row.out_of_stock ?? row.outOfStock;
 
-  for (let index = 0; index < line.length; index += 1) {
-    const character = line[index];
-
-    if (character === '"') {
-      const nextCharacter = line[index + 1];
-      if (insideQuotes && nextCharacter === '"') {
-        current += '"';
-        index += 1;
-      } else {
-        insideQuotes = !insideQuotes;
-      }
-      continue;
-    }
-
-    if (character === ',' && !insideQuotes) {
-      values.push(current);
-      current = "";
-      continue;
-    }
-
-    current += character;
-  }
-
-  values.push(current);
-  return values;
+  return {
+    id: Number(row.id) || 0,
+    name: String(row.name || row.product_name || row.title || ''),
+    price: Number(row.price ?? row.Price ?? 0) || 0,
+    category: String(row.category || 'Uncategorized'),
+    bimg: String(row.bimg || row.image || ''),
+    productOrder: Number(row.productOrder ?? row.product_order ?? row.order ?? 0) || 0,
+    bestseller: ['yes', 'true', '1'].includes(String(bestsellerValue).trim().toLowerCase()) || bestsellerValue === true || bestsellerValue === 1,
+    outOfStock: ['yes', 'true', '1'].includes(String(outOfStockValue).trim().toLowerCase()) || outOfStockValue === true || outOfStockValue === 1
+  };
 }
 
-function isTruthyFlag(value) {
-  return ["yes", "true", "1", "y", "on"].includes(String(value ?? "").trim().toLowerCase());
-}
-
-function parseProductsCsv(csvText) {
-  const lines = csvText
-    .split(/\r?\n/)
-    .map(line => line.trim())
-    .filter(Boolean);
-
-  if (lines.length <= 1) {
-    return [];
+async function createSupabaseClient() {
+  if (window.supabase && typeof window.supabase.createClient === 'function') {
+    return window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   }
 
-  const headers = parseCsvLine(lines[0]);
-
-  return lines.slice(1).map(line => {
-    const values = parseCsvLine(line);
-    const row = Object.fromEntries(headers.map((header, index) => [header, values[index] ?? ""]));
-
-    return {
-      id: Number(row.id),
-      name: row.name,
-      price: Number(row.price),
-      category: row.category,
-      bimg: row.bimg,
-      bestseller: isTruthyFlag(row.bestseller),
-      outOfStock: isTruthyFlag(row.outofstock)
-    };
-  });
+  const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm');
+  return createClient(SUPABASE_URL, SUPABASE_KEY);
 }
 
 function isOutOfStockProduct(product) {
@@ -243,13 +206,17 @@ function renderProducts() {
 
 async function loadProducts() {
   try {
-    const response = await fetch(productsDataPath, { cache: "no-store" });
-    if (!response.ok) {
-      throw new Error(`Failed to load ${productsDataPath}`);
+    const supabaseClient = await createSupabaseClient();
+    const { data, error } = await supabaseClient.from(SUPABASE_TABLE_NAME).select('*').limit(1000);
+
+    if (error) {
+      throw error;
     }
 
-    const csvText = await response.text();
-    products = parseProductsCsv(csvText);
+    products = (Array.isArray(data) ? data : [])
+      .map(normalizeProductRow)
+      .sort((left, right) => (left.productOrder || left.id) - (right.productOrder || right.id));
+
     updateCategories();
     ensureDefaultFilter();
     renderFilters();
