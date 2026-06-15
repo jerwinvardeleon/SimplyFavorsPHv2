@@ -10,6 +10,7 @@
     box-sizing: border-box;
 }
 
+
 html {
     display: flex;
     justify-content: center;
@@ -139,10 +140,169 @@ header {
     align-items: center;
 }
 
+img.bestseller-ribbon
+{
+    width: 180px;
+}
+
 .landing_nav {
+    display: grid;
+    gap: 16px;
+}
+
+.landing_section {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 12px;
+    /* padding: 14px; */
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(90, 62, 54, 0.08);
+    box-shadow: 0 10px 24px rgba(90, 62, 54, 0.08);
+}
+
+.landing_section_head {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 4px;
+    align-items: center;
+}
+
+.landing_feature_ribbon {
+    display: block;
+    width: 100%;
+    max-width: 210px;
+    height: auto;
+    margin-top: -2px;
+    margin-left: 0;
+    pointer-events: none;
+}
+
+.landing_section_kicker {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(90, 62, 54, 0.72);
+    padding-top: 14px;
+}
+
+.landing_section_title {
+    margin: 0;
+    color: var(--brown);
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+    padding-left: 20px;
+}
+
+.landing_section_feature {
+    min-height: 250px;
+}
+
+.landing_bestseller_row {
+    display: flex;
+    gap: 15px;
+    /* overflow-x: auto; */
+    padding: 4px 4px 8px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.landing_bestseller_row::-webkit-scrollbar {
+    height: 8px;
+}
+
+.landing_bestseller_row::-webkit-scrollbar-thumb {
+    background: rgba(90, 62, 54, 0.22);
+    border-radius: 999px;
+}
+
+.landing_bestseller_card {
+    flex: 0 0 187px;
+    width: 187px;
+    max-width: 170px;
+    scroll-snap-align: start;
+    height:184px
+}
+
+.landing_bestseller_card .card-image {
+    width: 175px;
+    height: 154px;
+}
+
+.landing_bestseller_card button {
+    font-family: inherit;
+    font-size: 12px;
+    padding: 6px 6px;
+    border: none;
+    border-radius: 15px;
+    background: #ffc6a8;
+    color: var(--brown);
+    cursor: pointer;
+}
+
+.landing_status {
+    margin: 0;
+    color: var(--brown);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.landing_section_buttons {
+    gap: 12px;
+}
+
+.landing_card_shop {
+    min-height: 176px;
+}
+
+.landing_button_grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.landing_card_compact {
+    min-height: 128px;
+    gap: 12px;
+    padding: 10px;
+}
+
+.landing_card_compact .card_icon_wrap {
+    flex-basis: 78px;
+    width: 78px;
+    height: 78px;
+    border-radius: 22px;
+}
+
+.landing_card_compact .card_icon {
+    width: 66px;
+    height: 66px;
+}
+
+.landing_card_compact .card_label {
+    font-size: 20px;
+}
+
+.landing_card_compact .card_copy p {
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.landing_card_shop .card_icon_wrap {
+    flex-basis: 104px;
+    width: 104px;
+    height: 104px;
+}
+
+.landing_card_shop .card_icon {
+    width: 90px;
+    height: 90px;
+}
+
+.landing_card_shop .card_label {
+    font-size: 26px;
 }
 
 .landing_card {
@@ -262,9 +422,36 @@ header {
         padding-right: 12px;
     }
 
+    .landing_section {
+        padding: 12px;
+    }
+
+    .landing_section_feature {
+        min-height: 230px;
+    }
+
+    .landing_button_grid {
+        gap: 10px;
+    }
+
     .landing_card {
         min-height: 150px;
         gap: 12px;
+    }
+
+    .landing_card_shop {
+        min-height: 160px;
+    }
+
+    .landing_card_compact {
+        min-height: 118px;
+        padding: 8px;
+    }
+
+    .landing_bestseller_card {
+        width: 187px;
+        max-width: 187px;
+        flex: 0 0 187px;
     }
 
     .card_icon_wrap {
@@ -280,6 +467,25 @@ header {
 
     .card_label {
         font-size: 24px;
+    }
+
+    .landing_card_compact .card_icon_wrap {
+        flex-basis: 70px;
+        width: 70px;
+        height: 70px;
+    }
+
+    .landing_card_compact .card_icon {
+        width: 58px;
+        height: 58px;
+    }
+
+    .landing_card_compact .card_label {
+        font-size: 18px;
+    }
+
+    .landing_card_shop .card_label {
+        font-size: 22px;
     }
 }
 

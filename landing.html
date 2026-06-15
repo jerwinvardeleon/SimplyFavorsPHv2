@@ -18,36 +18,48 @@
 
     <main class="landing_main">
         <nav class="landing_nav" aria-label="Site sections">
+            <section class="landing_section landing_section_feature" aria-label="Featured best sellers">
+                <div class="landing_section_head">
+                    <span class="landing_section_kicker">Featured</span>
+                    <img class="landing_feature_ribbon" src="img/icon/BestSellingv3.gif" alt="Best Selling">
+                    <!-- <h2 class="landing_section_title">Best Sellers</h2> -->
+                </div>
+                <div id="landing_bestseller_row" class="landing_bestseller_row" aria-live="polite"></div>
+            </section>
 
-            <a class="landing_card card_shop" href="shop.html">
-                <div class="card_icon_wrap">
-                    <img class="card_icon" src="img/icon/icon_shop.png" alt="Shop icon">
-                </div>
-                <div class="card_copy">
-                    <span class="card_label">Shop Now</span>
-                    <p>Go straight to browse our list of products.</p>
-                </div>
-            </a>
+            <section class="landing_section landing_section_buttons" aria-label="Browse sections">
+                <a class="landing_card card_shop landing_card_shop" href="shop.html">
+                    <div class="card_icon_wrap">
+                        <img class="card_icon" src="img/icon/icon_shop.png" alt="Shop icon">
+                    </div>
+                    <div class="card_copy">
+                        <span class="card_label">Shop Now</span>
+                        <p>Go straight to browse our list of products.</p>
+                    </div>
+                </a>
 
-            <a class="landing_card card_album" href="album.html">
-                <div class="card_icon_wrap">
-                    <img class="card_icon" src="img/icon/icon_album.png" alt="Album icon">
-                </div>
-                <div class="card_copy">
-                    <span class="card_label">View Gallery</span>
-                    <p>See actual photos of our products and events.</p>
-                </div>
-            </a>
+                <div class="landing_button_grid">
+                    <a class="landing_card card_album landing_card_compact" href="album.html">
+                        <div class="card_icon_wrap">
+                            <img class="card_icon" src="img/icon/icon_album.png" alt="Album icon">
+                        </div>
+                        <div class="card_copy">
+                            <span class="card_label">View Gallery</span>
+                            <p>See actual photos of our products and events.</p>
+                        </div>
+                    </a>
 
-            <a class="landing_card card_reviews" href="reviews.html">
-                <div class="card_icon_wrap">
-                    <img class="card_icon" src="img/icon/icon_review.png" alt="Reviews icon">
+                    <a class="landing_card card_reviews landing_card_compact" href="reviews.html">
+                        <div class="card_icon_wrap">
+                            <img class="card_icon" src="img/icon/icon_review.png" alt="Reviews icon">
+                        </div>
+                        <div class="card_copy">
+                            <span class="card_label">Read Reviews</span>
+                            <p>See reviews and feedbacks from our customers.</p>
+                        </div>
+                    </a>
                 </div>
-                <div class="card_copy">
-                    <span class="card_label">Read Reviews</span>
-                    <p>See reviews and feedbacks from our customers.</p>
-                </div>
-            </a>
+            </section>
         </nav>
     </main>
 
@@ -135,6 +147,91 @@
             fetchVisitorCount();
         });
     </script> -->
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+        const SUPABASE_URL = 'https://pwypezikutjneesnevnv.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXBlemlrdXRqbmVlc25ldm52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MzE3NzYsImV4cCI6MjA5MjUwNzc3Nn0.ufITq5TJBz3RLYVoNyy_S30EZbAZxrn-WU5CAOrxtpQ';
+        const SUPABASE_TABLE_NAME = 'products';
+        const bestsellerRow = document.getElementById('landing_bestseller_row');
+
+        function isTruthyFlag(value) {
+            return ['yes', 'true', '1', 'y', 'on'].includes(String(value ?? '').trim().toLowerCase());
+        }
+
+        function normalizeProductRow(row) {
+            return {
+                id: Number(row.id) || 0,
+                name: String(row.name || row.product_name || row.title || ''),
+                price: Number(row.price ?? row.Price ?? 0) || 0,
+                category: String(row.category || 'Uncategorized'),
+                bimg: String(row.bimg || row.image || ''),
+                bestseller: isTruthyFlag(row.bestseller) || isTruthyFlag(row.bestselling) || isTruthyFlag(row.bestSeller) || isTruthyFlag(row.best_selling),
+                outOfStock: isTruthyFlag(row.outofstock) || isTruthyFlag(row.out_of_stock) || isTruthyFlag(row.outOfStock)
+            };
+        }
+
+        function createBestsellerCard(product) {
+            const card = document.createElement('div');
+            card.className = 'card bestseller-card landing_bestseller_card';
+
+            const outOfStock = Boolean(product.outOfStock);
+            const ribbonHtml = '<img class="bestseller-ribbon" src="img/icon/BestSellingv3.gif" alt="Best Selling">';
+            const watermarkHtml = outOfStock ? '<div class="out-of-stock-watermark">Out of Stock</div>' : '';
+            const imageClass = outOfStock ? 'card-image out-of-stock-image' : 'card-image';
+            const buttonHtml = outOfStock
+                ? '<button disabled style="top: -50px; right: -45px; position: relative;">Out of stock</button>'
+                : '<button onclick="window.location.href=\'shop.html\'" style="top: -50px; right: -45px; position: relative;">View in Shop</button>';
+
+            card.innerHTML = `
+                
+                <div class="${imageClass}" style="position: relative; background-image: url(${product.bimg}); background-size: cover; background-repeat: no-repeat; border-radius:15px;">
+                    ${watermarkHtml}
+                </div>
+                <h3 style="position: relative; top: -50px; left: 10px; margin: 0px; padding-bottom: 10px; color: var(--brown); width: 150px;">${product.name}</h3>
+                <strong style="position: relative; top: -60px; left: 10px; margin: 0px; padding-bottom: 10px; color: var(--brown); width: 150px;">₱ ${product.price}</strong>
+                <br>
+                ${buttonHtml}
+            `;
+
+            return card;
+        }
+
+        async function loadBestSellers() {
+            if (!bestsellerRow) return;
+
+            bestsellerRow.innerHTML = '<p class="landing_status">Loading featured products...</p>';
+
+            try {
+                const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+                const { data, error } = await supabase.from(SUPABASE_TABLE_NAME).select('*').limit(1000);
+
+                if (error) throw error;
+
+                const products = (Array.isArray(data) ? data : []).map(normalizeProductRow);
+                const bestsellers = products
+                    .filter(product => product.bestseller)
+                    .sort((left, right) => (left.id || 0) - (right.id || 0))
+                    .slice(0, 6);
+
+                if (!bestsellers.length) {
+                    bestsellerRow.innerHTML = '<p class="landing_status">No featured products found.</p>';
+                    return;
+                }
+
+                bestsellerRow.innerHTML = '';
+                bestsellers.forEach(product => {
+                    bestsellerRow.appendChild(createBestsellerCard(product));
+                });
+            } catch (error) {
+                console.error('Failed to load featured products:', error);
+                bestsellerRow.innerHTML = '<p class="landing_status">Unable to load featured products right now.</p>';
+            }
+        }
+
+        loadBestSellers();
+    </script>
 
 
     <div style="text-align: right; width: 100%;">
