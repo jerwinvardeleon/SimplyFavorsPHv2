@@ -28,35 +28,20 @@
             </section>
 
             <section class="landing_section landing_section_buttons" aria-label="Browse sections">
-                <a class="landing_card card_shop landing_card_shop" href="shop.html">
-                    <div class="card_icon_wrap">
+                <div class="landing_card card_shop landing_card_shop">
+                    <a class="landing_card_part" href="shop.html" aria-label="Shop">
                         <img class="card_icon" src="img/icon/icon_shop.png" alt="Shop icon">
-                    </div>
-                    <div class="card_copy">
-                        <span class="card_label">Shop Now</span>
-                        <p>Go straight to browse our list of products.</p>
-                    </div>
-                </a>
-
-                <div class="landing_button_grid">
-                    <a class="landing_card card_album landing_card_compact" href="album.html">
-                        <div class="card_icon_wrap">
-                            <img class="card_icon" src="img/icon/icon_album.png" alt="Album icon">
-                        </div>
-                        <div class="card_copy">
-                            <span class="card_label">View Gallery</span>
-                            <p>See actual photos of our products and events.</p>
-                        </div>
+                        <!-- <span class="card_label">Shop</span> -->
                     </a>
 
-                    <a class="landing_card card_reviews landing_card_compact" href="reviews.html">
-                        <div class="card_icon_wrap">
-                            <img class="card_icon" src="img/icon/icon_review.png" alt="Reviews icon">
-                        </div>
-                        <div class="card_copy">
-                            <span class="card_label">Read Reviews</span>
-                            <p>See reviews and feedbacks from our customers.</p>
-                        </div>
+                    <a class="landing_card_part" href="album.html" aria-label="Album">
+                        <img class="card_icon" src="img/icon/icon_album.png" alt="Album icon">
+                        <!-- <span class="card_label">Album</span> -->
+                    </a>
+
+                    <a class="landing_card_part" href="reviews.html" aria-label="Reviews">
+                        <img class="card_icon" src="img/icon/icon_review.png" alt="Reviews icon">
+                        <!-- <span class="card_label">Reviews</span> -->
                     </a>
                 </div>
             </section>
@@ -189,10 +174,13 @@
                 <div class="${imageClass}" style="position: relative; background-image: url(${product.bimg}); background-size: cover; background-repeat: no-repeat; border-radius:15px;">
                     ${watermarkHtml}
                 </div>
-                <h3 style="position: relative; top: -50px; left: 10px; margin: 0px; padding-bottom: 10px; color: var(--brown); width: 150px;">${product.name}</h3>
-                <strong style="position: relative; top: -60px; left: 10px; margin: 0px; padding-bottom: 10px; color: var(--brown); width: 150px;">₱ ${product.price}</strong>
+                <h3 style="font-size: 14px; position: relative; top: 0px; left: 10px; margin: 0px; padding-bottom: 10px; color: var(--brown); width: 150px;">${product.name}</h3>
+                <strong style="position: relative; top: -31px; left: 110px; margin: 0px; padding-bottom: 10px; color: var(--brown); width: 150px;">₱ ${product.price}</strong>
                 <br>
-                ${buttonHtml}
+                <div style="position: relative; top: -38px; right:15px;">
+                    ${buttonHtml}
+                </div>
+                
             `;
 
             return card;
