@@ -16,17 +16,6 @@
         </div>
     </header>
 
-    <main class="landing_main">
-        <nav class="landing_nav" aria-label="Site sections">
-            <section class="landing_section landing_section_feature" aria-label="Featured best sellers">
-                <div class="landing_section_head">
-                    <span class="landing_section_kicker">Featured</span>
-                    <img class="landing_feature_ribbon" src="img/icon/BestSellingv3.gif" alt="Best Selling">
-                    <!-- <h2 class="landing_section_title">Best Sellers</h2> -->
-                </div>
-                <div id="landing_bestseller_row" class="landing_bestseller_row" aria-live="polite"></div>
-            </section>
-
             <section class="landing_section landing_section_buttons" aria-label="Browse sections">
                 <div class="landing_card card_shop landing_card_shop">
                     <a class="landing_card_part" href="shop.html" aria-label="Shop">
@@ -44,6 +33,22 @@
                         <!-- <span class="card_label">Reviews</span> -->
                     </a>
                 </div>
+            </section>
+    <main class="landing_main">
+        <nav class="landing_nav" aria-label="Site sections">
+            <section class="landing_section_bestseller" aria-label="Featured best sellers">
+                <div class="landing_section_head landing_section_head_bestseller">
+                    <span class="landing_section_kicker">BEST SELLING</span>
+                    <!-- <img class="landing_feature_ribbon" src="img/icon/BestSellingv3.gif" alt="Best Selling"> -->
+                    <!-- <h2 class="landing_section_title">Best Sellers</h2> -->
+                </div>
+                <div id="landing_bestseller_row" class="landing_bestseller_row" aria-live="polite"></div>
+            </section>
+            <section class="landing_section_features" aria-label="Featured videos">
+                <div class="landing_section_head landing_section_head_features">
+                    <span class="landing_section_kicker">FEATURES</span>
+                </div>
+                <div id="landing_features_row" class="landing_features_row" aria-live="polite"></div>
             </section>
         </nav>
     </main>
@@ -140,6 +145,49 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXBlemlrdXRqbmVlc25ldm52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MzE3NzYsImV4cCI6MjA5MjUwNzc3Nn0.ufITq5TJBz3RLYVoNyy_S30EZbAZxrn-WU5CAOrxtpQ';
         const SUPABASE_TABLE_NAME = 'products';
         const bestsellerRow = document.getElementById('landing_bestseller_row');
+        const landingFeaturesRow = document.getElementById('landing_features_row');
+        const highlightManifestPath = 'img/highlights/manifest.json';
+
+        function createFeatureCard(videoItem) {
+            const card = document.createElement('div');
+            card.className = 'landing_feature_card';
+
+            const src = videoItem.file ? `img/highlights/${videoItem.file}` : '';
+            const captionText = videoItem.caption || (videoItem.file ? videoItem.file.split('/').pop().replace(/\.mp4$/, '').replace(/[-_]/g, ' ') : '');
+
+            card.innerHTML = `
+                <video controls preload="metadata" muted playsinline>
+                    <source src="${src}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="landing_feature_card_caption">${captionText}</div>
+            `;
+
+            return card;
+        }
+
+        async function renderFeatureVideos() {
+            if (!landingFeaturesRow) return;
+            landingFeaturesRow.innerHTML = '<p class="landing_status">Loading feature videos...</p>';
+
+            try {
+                const response = await fetch(highlightManifestPath);
+                if (!response.ok) throw new Error(`Failed to load ${highlightManifestPath}`);
+                const videoItems = await response.json();
+                if (!Array.isArray(videoItems) || !videoItems.length) {
+                    landingFeaturesRow.innerHTML = '<p class="landing_status">No feature videos found.</p>';
+                    return;
+                }
+
+                landingFeaturesRow.innerHTML = '';
+                videoItems.forEach(item => {
+                    landingFeaturesRow.appendChild(createFeatureCard(item));
+                });
+            } catch (error) {
+                console.error('Failed to load feature videos:', error);
+                landingFeaturesRow.innerHTML = '<p class="landing_status">Unable to load feature videos right now.</p>';
+            }
+        }
 
         function isTruthyFlag(value) {
             return ['yes', 'true', '1', 'y', 'on'].includes(String(value ?? '').trim().toLowerCase());
@@ -219,8 +267,8 @@
         }
 
         loadBestSellers();
+        renderFeatureVideos();
     </script>
-
 
     <div style="text-align: right; width: 100%;">
         <a href="https://toolszu.com/tools/real-time-website-visitor-counter/" target="_blank">

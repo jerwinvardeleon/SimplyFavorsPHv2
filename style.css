@@ -123,6 +123,11 @@ header p#header_cap {
     z-index: 998;
 }
 
+.gallery_intro.gallery_intro_fixed {
+    position: sticky;
+    top: 10px;
+}
+
 .back_link {
     display: inline-flex;
     align-items: center;
@@ -178,12 +183,45 @@ h1 {
     grid-template-columns: 122px minmax(0, 1fr);
     gap: 12px;
     padding: 12px;
-    background: linear-gradient(170deg, #ffc6a8, #f3ebde, #c3f0ff);
+    background: linear-gradient(170deg, #ffc6a8, #c3f0ff, #e0b671);
     border-radius: 12px;
     box-shadow: 0 8px 18px rgba(90, 62, 54, 0.12);
     cursor: pointer;
     align-items: start;
     border-radius: 12px 12px 0 0;
+    transform: translateY(0) scale(1);
+    transition: transform 0.6s ease, padding 0.6s ease, gap 0.6s ease, border-radius 0.6s ease, bottom 0.6s ease, box-shadow 0.6s ease;
+}
+
+.shop-controls-panel.shrunk {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 0px 14px 28px 14px;
+    align-items: center;
+    border-radius: 100px;
+    position: relative;
+    bottom: -18px;
+    transform: translateY(6px) scale(0.98);
+    box-shadow: 0 4px 12px rgba(90, 62, 54, 0.12);    
+}
+
+.shop-controls-panel.shrunk .priceSearch,
+.shop-controls-panel.shrunk .controls {
+    display: none;
+}
+
+.shop-controls-panel.shrunk::after {
+    content: 'Apply filter';
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    font-style: italic;
+    font-weight: 700;
+    color: var(--brown);
+    padding: 5px 0;
+    
 }
 
 .cart {

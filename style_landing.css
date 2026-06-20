@@ -25,7 +25,10 @@ body {
     min-height: 100vh;
     max-width: 400px;
     width: 100%;
-    padding: 110px 16px 24px;
+    padding: 90px 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
 }
 
 header {
@@ -98,7 +101,7 @@ header {
 
 .hero_cap {
     margin: 0px;
-    font-size: 12px;
+    font-size: 8px;
     text-shadow: -6px 3px 8px peachpuff;
     text-align: center;
     font-weight:bolder;
@@ -150,23 +153,47 @@ img.bestseller-ribbon
     gap: 16px;
 }
 
-.landing_section {
+.landing_section_bestseller,
+.landing_section_features,
+.landing_section_buttons {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     /* padding: 14px; */
     border-radius: 28px;
-    background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(90, 62, 54, 0.08);
     box-shadow: 0 10px 24px rgba(90, 62, 54, 0.08);
 }
 
+.landing_section_bestseller {
+    background: rgba(255, 255, 255, 0.22);
+    border: 1px solid rgba(90, 62, 54, 0.10);
+}
+
+.landing_section_features {
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(90, 62, 54, 0.06);
+}
+
+.landing_section_buttons {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(90, 62, 54, 0.05);
+}
 .landing_section_head {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    padding: 0 4px;
+    /* padding: 0 4px; */
     align-items: center;
+}
+
+.landing_section_head_bestseller {
+    align-items: center;
+    padding: 0 16px 0 16px;
+}
+
+.landing_section_head_features {
+    align-items: center;
+    padding: 8px 16px 0 16px;
 }
 
 .landing_feature_ribbon {
@@ -184,8 +211,8 @@ img.bestseller-ribbon
     font-weight: 800;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: rgba(90, 62, 54, 0.72);
-    padding-top: 14px;
+    color: rgb(90, 62, 54);
+    padding-top: 8px;
 }
 
 .landing_section_title {
@@ -196,19 +223,64 @@ img.bestseller-ribbon
     padding-left: 20px;
 }
 
-.landing_section_feature {
-    min-height: 250px;
-}
-
 .landing_bestseller_row {
     display: flex;
     justify-content: center;
     gap: 15px;
     /* overflow-x: auto; */
-    padding: 4px 4px 8px;
+    /* padding: 4px 4px 8px; */
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     /* padding-left: 16px; */
+}
+
+.landing_features_row {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding: 10px 4px 12px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    max-width: 368px;
+}
+
+.landing_features_row::-webkit-scrollbar {
+    height: 8px;
+}
+
+.landing_features_row::-webkit-scrollbar-thumb {
+    background: rgba(90, 62, 54, 0.22);
+    border-radius: 999px;
+}
+
+.landing_feature_card {
+    flex: 0 0 auto;
+    min-width: 145px;
+    width: 145px;
+    border-radius: 22px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 8px 18px rgba(90, 62, 54, 0.12);
+    scroll-snap-align: start;
+}
+
+.landing_feature_card video {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    background: #000;
+}
+
+.landing_feature_card_caption {
+    padding: 10px 12px 5px;
+    color: var(--brown);
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.3;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .landing_bestseller_row::-webkit-scrollbar {
@@ -256,12 +328,7 @@ img.bestseller-ribbon
 }
 
 .landing_card_shop {
-    min-height: 176px;
-    padding: 8px;
-    display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    align-items: stretch;
 }
 
 .landing_card_shop .landing_card_part {
@@ -274,13 +341,11 @@ img.bestseller-ribbon
     background: rgba(255,255,255,0.06);
     text-decoration: none;
     color: inherit;
-    min-height: 120px;
 }
 
 .landing_card_shop .landing_card_part .card_icon {
     width: 105px;
     height: 100%;
-    margin-bottom: 8px;
 }
 
 .landing_card_shop .landing_card_part .card_label {
@@ -342,7 +407,7 @@ img.bestseller-ribbon
     display: flex;
     align-items: center;
     gap: 2px;
-    min-height: 140px;
+    /* min-height: 140px; */
     padding: 10px;
     border-radius: 24px;
     text-decoration: none;
@@ -359,17 +424,18 @@ img.bestseller-ribbon
 
 .card_shop {
     background-image:
-        linear-gradient(125deg, rgba(255, 198, 168, 0.92), rgba(255, 198, 168, 0.12), rgba(195, 240, 255, 0.94)),
+        linear-gradient(250deg, rgba(255, 198, 168, 0.92), rgba(255, 198, 168, 0.12), rgba(195, 240, 255, 0.94)),
         repeating-linear-gradient(110deg,
             rgba(255, 255, 255, 0) 0px,
             rgba(255, 255, 255, 0) 92px,
             rgba(255, 255, 255, 0.55) 130px,
             rgba(255, 255, 255, 0) 152px,
             rgba(255, 255, 255, 0) 240px);
-    background-size: 100% 100%, 240px 100%;
-    background-position: 0 0, 0 0;
+    /* background-size: 100% 100%, 100% 100%; */
     animation: cardShopShimmerLeft 5.4s linear infinite;
     will-change: background-position;
+    padding: 2px;
+    justify-content: center;
 }
 
 @keyframes cardShopShimmerLeft {
@@ -455,11 +521,13 @@ img.bestseller-ribbon
         padding-right: 12px;
     }
 
-    .landing_section {
+    .landing_section_buttons,
+    .landing_section_bestseller,
+    .landing_section_features {
         padding: 12px;
     }
 
-    .landing_section_feature {
+    .landing_section_features {
         min-height: 230px;
     }
 
