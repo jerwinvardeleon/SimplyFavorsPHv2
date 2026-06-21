@@ -146,18 +146,22 @@
         const SUPABASE_TABLE_NAME = 'products';
         const bestsellerRow = document.getElementById('landing_bestseller_row');
         const landingFeaturesRow = document.getElementById('landing_features_row');
-        const highlightManifestPath = 'img/highlights/manifest.json';
+        const highlightVideos = [
+            'img/highlights/AQM_zwEeoxuTm7P4hKL-snWlDLFzahIckitK6DN4wZpyyCnQFWl5kkcizzGG_6EvhoPk4mC7ef2azPSGhQO05p9sJbksZf4bBQi7SUhJ2_LXEQ.mp4',
+            'img/highlights/AQNNRC6XPcnIfKfK6I6uIl3VjLusNkRiVUy-GgjekD9aVoEeVURolHBQjVn935N6r3lTyTFGlcqQTWpqIaqW-w99JoovdsCDYd9n23EbVMuG8w.mp4',
+            'img/highlights/AQNt6Bqrm8XkivYh3TU_4Cr_GnwScxA6BvwKGVtfH76yWGBCMalVXgJOM5bNYGWR7svv5rMJOa6kYTDPDvKM-zoYZH1EJtgtt1x6D5dH55WfwQ.mp4',
+            'img/highlights/AQOePb94qdxQMvLEFuYHenSNSOGIWuyLhDQMLZqHkzLk6fZC4vCSQ49eOUNpjXaICtL4n69itk8sKWUe81vaKoqbbhOMmKhgwocciISqLFks3g.mp4'
+        ];
 
-        function createFeatureCard(videoItem) {
+        function createFeatureCard(videoSrc) {
             const card = document.createElement('div');
             card.className = 'landing_feature_card';
 
-            const src = videoItem.file ? `img/highlights/${videoItem.file}` : '';
-            const captionText = videoItem.caption || (videoItem.file ? videoItem.file.split('/').pop().replace(/\.mp4$/, '').replace(/[-_]/g, ' ') : '');
+            const captionText = videoSrc.split('/').pop().replace(/\.mp4$/, '').replace(/[-_]/g, ' ');
 
             card.innerHTML = `
                 <video controls preload="metadata" muted playsinline>
-                    <source src="${src}" type="video/mp4">
+                    <source src="${videoSrc}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
                 <div class="landing_feature_card_caption">${captionText}</div>
@@ -166,27 +170,12 @@
             return card;
         }
 
-        async function renderFeatureVideos() {
+        function renderFeatureVideos() {
             if (!landingFeaturesRow) return;
-            landingFeaturesRow.innerHTML = '<p class="landing_status">Loading feature videos...</p>';
-
-            try {
-                const response = await fetch(highlightManifestPath);
-                if (!response.ok) throw new Error(`Failed to load ${highlightManifestPath}`);
-                const videoItems = await response.json();
-                if (!Array.isArray(videoItems) || !videoItems.length) {
-                    landingFeaturesRow.innerHTML = '<p class="landing_status">No feature videos found.</p>';
-                    return;
-                }
-
-                landingFeaturesRow.innerHTML = '';
-                videoItems.forEach(item => {
-                    landingFeaturesRow.appendChild(createFeatureCard(item));
-                });
-            } catch (error) {
-                console.error('Failed to load feature videos:', error);
-                landingFeaturesRow.innerHTML = '<p class="landing_status">Unable to load feature videos right now.</p>';
-            }
+            landingFeaturesRow.innerHTML = '';
+            highlightVideos.forEach(src => {
+                landingFeaturesRow.appendChild(createFeatureCard(src));
+            });
         }
 
         function isTruthyFlag(value) {

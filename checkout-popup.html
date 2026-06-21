@@ -88,7 +88,7 @@
     <!-- Order Confirmation Modal -->
     <div id="payment_methods_modal">
         <div id="payment_methods_box">
-            <p id="downpay"> Required Downpayment: ₱<span id="payment_modal_downpayment_amount"></span></p>
+            <p id="downpay"> Required Downpayment: ₱<span id="downpayment_amount"></span></p>
             <h3 id="payment_methods_title">Send your DownPayment to any of the available payment methods below:</h3>
             <p id="payment_methods_caption">Tap an image to zoom in or zoom out.</p>
             <div id="payment_methods_grid" aria-label="Payment method options"></div>
@@ -177,7 +177,6 @@
             document.getElementById('delivery_date').textContent = checkoutData.deliveryDate || '-';
             document.getElementById('total_amount').textContent = checkoutData.total;
             document.getElementById('downpayment_amount').textContent = computeRequiredDownpayment(checkoutData).toFixed(2);
-            document.getElementById('payment_modal_downpayment_amount').textContent = computeRequiredDownpayment(checkoutData).toFixed(2);
 
             const priceDetailsList = document.getElementById('price_details_list');
 

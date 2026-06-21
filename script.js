@@ -12,8 +12,26 @@ const productsContainer = document.getElementById("products");
 const searchInput = document.getElementById("search");
 const filtersContainer = document.getElementById("filters");
 const shopFiltersGroup = document.getElementById("shop_filters_group");
+const shopControlsPanel = document.querySelector(".shop-controls-panel");
+const shopFiltersCaption = document.getElementById("shop_filters_caption");
 
+function updateShopControlVisibility() {
+  if (!shopControlsPanel || !shopFiltersGroup) return;
+  const shouldHide = window.scrollY > 100;
+  shopControlsPanel.classList.toggle("shrunk", shouldHide);
+  shopFiltersGroup.classList.toggle("caption-visible", shouldHide);
+}
 
+window.addEventListener("scroll", updateShopControlVisibility);
+
+if (shopFiltersCaption) {
+  shopFiltersCaption.addEventListener("click", () => {
+    if (!shopControlsPanel || !shopFiltersGroup) return;
+    shopControlsPanel.classList.remove("shrunk");
+    shopFiltersGroup.classList.remove("caption-visible");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
 
 
 // FILTER PER CATEGORY SECTION
