@@ -18,6 +18,17 @@ html {
     min-height: 100%;
 }
 
+#homecaption {
+    font-size: 10px;
+    text-shadow: -6px 3px 8px peachpuff;
+    text-align: center;
+    font-weight:bolder;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brown);
+    padding: 10px 0px 2px;
+    margin: 0;
+}
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
