@@ -340,7 +340,27 @@ img.bestseller-ribbon
 }
 
 .landing_card_shop {
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.landing_card_row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.landing_card_row:first-child {
+    width: 374px;
+    justify-content: space-between;
+    margin: 0 auto;
+}
+
+.landing_card_row:first-child .landing_card_part {
+    width: calc((374px - 12px) / 2);
+    max-width: 181px;
 }
 
 .landing_card_shop .landing_card_part {
@@ -349,15 +369,23 @@ img.bestseller-ribbon
     align-items: center;
     justify-content: center;
     padding: 5px;
+    min-width: 100px;
     border-radius: 16px;
     background: rgba(255,255,255,0.06);
     text-decoration: none;
     color: inherit;
 }
 
-.landing_card_shop .landing_card_part .card_icon {
+.landing_card_row:first-child .landing_card_part .card_icon {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+}
+
+.landing_card_row:nth-child(2) .landing_card_part .card_icon {
     width: 105px;
-    height: 100%;
+    height: auto;
+    max-width: 100%;
 }
 
 .landing_card_shop .landing_card_part .card_label {
