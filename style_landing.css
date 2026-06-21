@@ -242,6 +242,7 @@ img.bestseller-ribbon
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     max-width: 368px;
+    margin-left: 10px;
 }
 
 .landing_features_row::-webkit-scrollbar {

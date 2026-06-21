@@ -208,7 +208,7 @@ h1 {
     font-weight: 700;
     cursor: pointer;
     text-align: center;
-    writing-mode: vertical-rl;
+    writing-mode: sideways-lr;
     text-orientation: mixed;
     box-shadow: 0 8px 18px rgba(90, 62, 54, 0.12);
     transition: opacity 0.35s ease, transform 0.35s ease;
