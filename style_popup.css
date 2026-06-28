@@ -287,17 +287,21 @@
 }
 
 #checkout_btn {
-    margin: 10px 0 0 0px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0 10px 0px;
     padding: 8px;
     width: 100%;
     height: 30px;
     background: #ffc6a8;
     border: none;
     border-radius: 10px;
-    margin-bottom: 10px;
     color: black;
     cursor: pointer;
     transition: transform 0.1s ease;
+    text-decoration: none;
+    box-sizing: border-box;
 }
 
 #checkout_btn:active {
