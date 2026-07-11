@@ -50,19 +50,18 @@
       opacity: 0.9;
     }
 
-    .controls {
-      display: grid;
-      grid-template-columns: 1fr auto;
+    .toolbar {
+      display: flex;
       gap: 10px;
-      margin-bottom: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 14px 0 12px;
     }
 
-    input[type="url"] {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.95rem;
+    .table-switcher {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     button {
@@ -75,9 +74,18 @@
       cursor: pointer;
     }
 
+    button:hover {
+      filter: brightness(1.05);
+    }
+
+    .table-btn.active {
+      background: #4f3b2b;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    }
+
     #status {
       min-height: 20px;
-      margin: 6px 0 0;
+      margin: 0;
       font-size: 0.92rem;
     }
 
@@ -123,13 +131,19 @@
       font-weight: 700;
     }
 
-    tr:nth-child(even) td {
+    tbody tr:nth-child(even) td {
       background: #fffdf9;
     }
 
+    .empty {
+      padding: 14px;
+      color: #6d5b4f;
+    }
+
     @media (max-width: 760px) {
-      .controls {
-        grid-template-columns: 1fr;
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
       }
 
       button {
@@ -142,28 +156,41 @@
 <body>
   <main>
     <section class="panel">
-      <h1>Admin Data Viewer</h1>
-      <div style="height:12px"></div>
-      <h2 style="margin:12px 0 6px;font-size:1.1rem;">Supabase Table Viewer</h2>
-      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:8px;">
-        <button id="refreshBtn" type="button">Refresh Table</button>
-        <button id="syncCsvBtn" type="button">Update products.csv</button>
-        <p id="status" style="margin:0;">Use Refresh Table to load the latest Supabase data, or Update products.csv to regenerate the CSV file.</p>
+      <h1>Admin Viewer</h1>
+      <p class="hint">Choose a Supabase table to inspect. The page loads the queue table by default when opened.</p>
+
+      <div class="toolbar">
+        <div class="table-switcher" id="tableSwitcher">
+          <button class="table-btn active" data-table="queue" type="button">queue</button>
+          <button class="table-btn" data-table="products" type="button">products</button>
+          <button class="table-btn" data-table="cost" type="button">cost</button>
+          <button class="table-btn" data-table="orders" type="button">orders</button>
+          <button class="table-btn" data-table="profits" type="button">profits</button>
+        </div>
+        <p id="status">Loading queue table...</p>
       </div>
 
       <div class="table-wrap">
-        <table id="excelTable" aria-label="Excel data table"></table>
+        <table id="dataTable" aria-label="Admin data table"></table>
       </div>
     </section>
   </main>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <!-- Supabase client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <script>
-    // Supabase table loader and renderer
     const STATUS_EL = document.getElementById('status');
+    const TABLE_EL = document.getElementById('dataTable');
+    const TABLE_SWITCHER = document.getElementById('tableSwitcher');
+    const TABLE_BUTTONS = Array.from(document.querySelectorAll('.table-btn'));
+
+    const SUPABASE_URL = 'https://pwypezikutjneesnevnv.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXBlemlrdXRqbmVlc25ldm52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MzE3NzYsImV4cCI6MjA5MjUwNzc3Nn0.ufITq5TJBz3RLYVoNyy_S30EZbAZxrn-WU5CAOrxtpQ';
+    const DEFAULT_TABLE = 'queue';
+
+    function normalizeTableName(tableName) {
+      return String(tableName || '').trim().toLowerCase();
+    }
 
     function setStatus(message, cls) {
       if (!STATUS_EL) return;
@@ -171,108 +198,14 @@
       STATUS_EL.className = cls || '';
     }
 
-    const TABLE_SYNC_ENDPOINT = '/api/sync-products';
-    const REFRESH_BTN = document.getElementById('refreshBtn');
-    const SYNC_CSV_BTN = document.getElementById('syncCsvBtn');
-    let currentRows = [];
+    function setActiveTableButton(tableName) {
+      const normalized = normalizeTableName(tableName);
 
-    function canSyncCsvFromBrowser() {
-      return window.location.protocol === 'http:' || window.location.protocol === 'https:';
-    }
-
-    async function syncTableToCsv(rows) {
-      if (!Array.isArray(rows) || !rows.length) return;
-      if (!canSyncCsvFromBrowser()) {
-        console.info('Skipping CSV sync because the admin page is not being served over HTTP.');
-        return;
-      }
-
-      try {
-        const response = await fetch(TABLE_SYNC_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          cache: 'no-store',
-          body: JSON.stringify({ rows })
-        });
-
-        const payload = await response.json();
-        if (!response.ok || !payload.ok) {
-          throw new Error(payload.error || 'Unable to sync products.csv');
-        }
-
-        console.log('products.csv synced from admin table:', payload);
-      } catch (error) {
-        console.error('Failed to sync products.csv:', error);
-        setStatus('CSV sync failed: ' + error.message, 'error');
-      }
-    }
-
-    function getCurrentRowsFromTable() {
-      const table = document.getElementById('excelTable');
-      if (!table) return [];
-
-      return Array.from(table.querySelectorAll('tr')).slice(1).map((tr) => {
-        const row = {};
-        tr.querySelectorAll('td input').forEach(input => {
-          const key = input.dataset.column || '';
-          if (key) {
-            row[key] = input.value;
-          }
-        });
-        return row;
+      TABLE_BUTTONS.forEach((button) => {
+        const isActive = normalizeTableName(button.dataset.table) === normalized;
+        button.classList.toggle('active', isActive);
       });
     }
-
-    function renderTableFromRows(rows) {
-      currentRows = Array.isArray(rows) ? rows.map(row => ({ ...row })) : [];
-      const table = document.getElementById('excelTable');
-      table.innerHTML = '';
-      if (!rows || !rows.length) {
-        table.innerHTML = '<tr><td style="padding:12px">No rows found</td></tr>';
-        return;
-      }
-      // Build header from keys of first row
-      const headerRow = document.createElement('tr');
-      const keys = Object.keys(rows[0]);
-      keys.forEach(k => {
-        const th = document.createElement('th');
-        th.textContent = k;
-        headerRow.appendChild(th);
-      });
-      table.appendChild(headerRow);
-
-      rows.forEach((r, rowIndex) => {
-        const tr = document.createElement('tr');
-        keys.forEach(k => {
-          const td = document.createElement('td');
-          let v = r[k];
-          if (v === null || v === undefined) v = '';
-
-          const input = document.createElement('input');
-          input.type = 'text';
-          input.value = String(v);
-          input.dataset.column = k;
-          input.dataset.rowIndex = String(rowIndex);
-          input.addEventListener('input', () => {
-            currentRows[rowIndex] = currentRows[rowIndex] || {};
-            currentRows[rowIndex][k] = input.value;
-          });
-          input.style.width = '100%';
-          input.style.border = 'none';
-          input.style.background = 'transparent';
-          input.style.font = 'inherit';
-          input.style.color = 'inherit';
-
-          td.appendChild(input);
-          tr.appendChild(td);
-        });
-        table.appendChild(tr);
-      });
-    }
-
-    const SUPABASE_URL = 'https://pwypezikutjneesnevnv.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXBlemlrdXRqbmVlc25ldm52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MzE3NzYsImV4cCI6MjA5MjUwNzc3Nn0.ufITq5TJBz3RLYVoNyy_S30EZbAZxrn-WU5CAOrxtpQ';
-    const SUPABASE_TABLE_NAME = 'products';
 
     function createSupabaseClient() {
       return supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
@@ -282,63 +215,87 @@
       });
     }
 
-    function sortRowsByProductOrder(rows) {
-      const normalizedRows = Array.isArray(rows) ? rows.slice() : [];
+    function renderTable(rows, tableName) {
+      if (!TABLE_EL) return;
 
-      return normalizedRows.sort((left, right) => {
-        const leftValue = Number(left?.productOrder ?? left?.productorder ?? left?.product_order ?? 0);
-        const rightValue = Number(right?.productOrder ?? right?.productorder ?? right?.product_order ?? 0);
-        return leftValue - rightValue;
+      TABLE_EL.innerHTML = '';
+
+      if (!Array.isArray(rows) || !rows.length) {
+        TABLE_EL.innerHTML = '<tbody><tr><td class="empty">No rows found in the ' + tableName + ' table.</td></tr></tbody>';
+        return;
+      }
+
+      const headerKeys = Object.keys(rows[0]);
+      const thead = document.createElement('thead');
+      const headerRow = document.createElement('tr');
+
+      headerKeys.forEach((key) => {
+        const th = document.createElement('th');
+        th.textContent = key;
+        headerRow.appendChild(th);
       });
+
+      thead.appendChild(headerRow);
+      TABLE_EL.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+      rows.forEach((row) => {
+        const tr = document.createElement('tr');
+
+        headerKeys.forEach((key) => {
+          const td = document.createElement('td');
+          const rawValue = row[key];
+          td.textContent = rawValue === null || rawValue === undefined ? '' : String(rawValue);
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+
+      TABLE_EL.appendChild(tbody);
     }
 
-    async function loadFromSupabase() {
-      setStatus('Connecting to Supabase...', '');
+    async function loadTableFromSupabase(tableName) {
+      const normalizedName = normalizeTableName(tableName);
+      setStatus('Loading ' + normalizedName + ' table...', '');
+      setActiveTableButton(normalizedName);
+
       try {
         const supabaseClient = createSupabaseClient();
-        const { data, error } = await supabaseClient.from(SUPABASE_TABLE_NAME).select('*').limit(1000);
+        let query = supabaseClient
+          .from(normalizedName)
+          .select('*')
+          .limit(1000);
+
+        if (normalizedName === 'orders') {
+          query = query.order('Submitted Date', { ascending: false });
+        }
+
+        const { data, error } = await query;
+
         if (error) {
-          console.error('Supabase error', error);
-          setStatus('Supabase error: ' + error.message, 'error');
-          return;
+          throw error;
         }
-        const tableRows = sortRowsByProductOrder(data || []);
-        renderTableFromRows(tableRows);
-        setStatus('Loaded ' + tableRows.length + ' rows', 'ok');
-      } catch (err) {
-        console.error(err);
-        setStatus('Failed to fetch from Supabase: ' + err.message, 'error');
+
+        const rows = Array.isArray(data) ? data : [];
+        renderTable(rows, normalizedName);
+        setStatus('Loaded ' + rows.length + ' rows from ' + normalizedName, 'ok');
+      } catch (error) {
+        console.error('Failed to fetch table:', error);
+        setStatus('Failed to load ' + normalizedName + ' table: ' + error.message, 'error');
       }
     }
 
-    async function refreshProductsCsv() {
-      setStatus('Regenerating products.csv...', '');
-      try {
-        const tableRows = sortRowsByProductOrder(getCurrentRowsFromTable().length ? getCurrentRowsFromTable() : currentRows);
-        if (!tableRows.length) {
-          throw new Error('No editable rows are available to sync. Refresh the table first.');
-        }
+    if (TABLE_SWITCHER) {
+      TABLE_SWITCHER.addEventListener('click', (event) => {
+        const target = event.target.closest('.table-btn');
+        if (!target) return;
 
-        await syncTableToCsv(tableRows);
-        currentRows = tableRows.map(row => ({ ...row }));
-        setStatus('Updated products.csv with ' + tableRows.length + ' rows', 'ok');
-      } catch (err) {
-        console.error(err);
-        setStatus('Failed to update products.csv: ' + err.message, 'error');
-      }
-    }
-
-    if (REFRESH_BTN) {
-      REFRESH_BTN.addEventListener('click', () => {
-        loadFromSupabase();
+        loadTableFromSupabase(target.dataset.table);
       });
     }
 
-    if (SYNC_CSV_BTN) {
-      SYNC_CSV_BTN.addEventListener('click', () => {
-        refreshProductsCsv();
-      });
-    }
+    loadTableFromSupabase(DEFAULT_TABLE);
   </script>
 </body>
 
