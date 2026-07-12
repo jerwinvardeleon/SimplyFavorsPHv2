@@ -3,8 +3,21 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = process.env.PORT || 3000;
-const ROOT_DIR = __dirname;
+const ROOT_DIR = path.resolve(__dirname);
 const PRODUCTS_CSV = path.join(ROOT_DIR, 'products.csv');
+const PAGE_ALIASES = Object.freeze({
+  '/': '/home.html',
+  '/home': '/home.html',
+  '/shop': '/shop.html',
+  '/track': '/track.html',
+  '/album': '/album.html',
+  '/review': '/reviews.html',
+  '/reviews': '/reviews.html',
+  '/order-form': '/order-form.html',
+  '/checkout': '/checkout-popup.html',
+  '/checkout-popup': '/checkout-popup.html',
+  '/admin': '/admin.html'
+});
 
 function escapeCsvValue(value) {
   const text = value === null || value === undefined ? '' : String(value);
@@ -45,9 +58,35 @@ function getContentType(filePath) {
   }
 }
 
+function resolveRequestPath(requestUrl) {
+  const parsedUrl = new URL(requestUrl, 'http://localhost');
+  const pathname = parsedUrl.pathname.replace(/\/+$/, '') || '/';
+  let resolvedPath = pathname;
+
+  for (let index = 0; index < 5; index += 1) {
+    const aliasTarget = PAGE_ALIASES[resolvedPath];
+    if (!aliasTarget) {
+      if (!path.extname(resolvedPath)) {
+        const fallbackPath = resolvedPath + '.html';
+        const fallbackFile = path.resolve(ROOT_DIR, fallbackPath.replace(/^\/+/, ''));
+        if (fs.existsSync(fallbackFile)) {
+          resolvedPath = fallbackPath;
+          continue;
+        }
+      }
+      break;
+    }
+
+    resolvedPath = aliasTarget;
+  }
+
+  return resolvedPath;
+}
+
 function serveStaticFile(req, res, requestedPath) {
-  const safePath = path.normalize(requestedPath).replace(/^\.+/, '');
-  const fullPath = path.join(ROOT_DIR, safePath);
+  const normalizedPath = (requestedPath || '/').replace(/^\/+/, '');
+  const safePath = path.normalize(normalizedPath).replace(/^\.+/, '');
+  const fullPath = path.resolve(ROOT_DIR, safePath);
 
   if (!fullPath.startsWith(ROOT_DIR)) {
     res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
@@ -102,7 +141,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  const requestPath = req.url === '/' ? '/admin.html' : req.url.split('?')[0];
+  const requestPath = resolveRequestPath(req.url);
   serveStaticFile(req, res, requestPath);
 });
 
