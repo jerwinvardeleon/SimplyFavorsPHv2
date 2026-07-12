@@ -39,6 +39,50 @@
       box-shadow: 0 8px 24px rgba(44, 31, 20, 0.08);
     }
 
+    .pin-modal {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(63, 54, 47, 0.5);
+      z-index: 50;
+    }
+
+    .pin-card {
+      width: min(420px, 100%);
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 20px;
+      box-shadow: 0 10px 28px rgba(44, 31, 20, 0.16);
+    }
+
+    .pin-card h2 {
+      margin: 0 0 8px;
+      font-size: 1.25rem;
+    }
+
+    .pin-card p {
+      margin: 0 0 12px;
+    }
+
+    .pin-input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .pin-error {
+      margin-top: 10px;
+      color: #9a3030;
+      font-size: 0.92rem;
+    }
+
     h1 {
       margin: 0 0 8px;
       font-size: 1.55rem;
@@ -154,7 +198,17 @@
 </head>
 
 <body>
-  <main>
+  <div class="pin-modal" id="pinModal" aria-modal="true" role="dialog">
+    <div class="pin-card">
+      <h2>Admin Access</h2>
+      <p>Enter the 6-digit admin PIN to unlock the viewer.</p>
+      <input id="pinInput" class="pin-input" type="password" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="Enter 6-digit PIN">
+      <button id="pinSubmit" type="button">Unlock Admin</button>
+      <p id="pinError" class="pin-error" hidden>Incorrect PIN. Please try again.</p>
+    </div>
+  </div>
+
+  <main id="adminMain" hidden>
     <section class="panel">
       <h1>Admin Viewer</h1>
       <p class="hint">Choose a Supabase table to inspect. The page loads the queue table by default when opened.</p>
@@ -183,10 +237,16 @@
     const TABLE_EL = document.getElementById('dataTable');
     const TABLE_SWITCHER = document.getElementById('tableSwitcher');
     const TABLE_BUTTONS = Array.from(document.querySelectorAll('.table-btn'));
+    const PIN_MODAL = document.getElementById('pinModal');
+    const PIN_INPUT = document.getElementById('pinInput');
+    const PIN_SUBMIT = document.getElementById('pinSubmit');
+    const PIN_ERROR = document.getElementById('pinError');
+    const ADMIN_MAIN = document.getElementById('adminMain');
 
     const SUPABASE_URL = 'https://pwypezikutjneesnevnv.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3eXBlemlrdXRqbmVlc25ldm52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MzE3NzYsImV4cCI6MjA5MjUwNzc3Nn0.ufITq5TJBz3RLYVoNyy_S30EZbAZxrn-WU5CAOrxtpQ';
     const DEFAULT_TABLE = 'queue';
+    const ADMIN_PIN = '286586';
 
     function normalizeTableName(tableName) {
       return String(tableName || '').trim().toLowerCase();
@@ -205,6 +265,41 @@
         const isActive = normalizeTableName(button.dataset.table) === normalized;
         button.classList.toggle('active', isActive);
       });
+    }
+
+    function showPinError(message) {
+      if (!PIN_ERROR) return;
+      PIN_ERROR.hidden = false;
+      PIN_ERROR.textContent = message;
+    }
+
+    function unlockAdmin() {
+      const enteredPin = String(PIN_INPUT?.value || '').trim();
+
+      if (enteredPin !== ADMIN_PIN) {
+        showPinError('Incorrect PIN. Please try again.');
+        if (PIN_INPUT) {
+          PIN_INPUT.value = '';
+          PIN_INPUT.focus();
+        }
+        return;
+      }
+
+      if (PIN_MODAL) {
+        PIN_MODAL.hidden = true;
+        PIN_MODAL.style.display = 'none';
+        PIN_MODAL.setAttribute('aria-hidden', 'true');
+      }
+
+      if (PIN_ERROR) {
+        PIN_ERROR.hidden = true;
+      }
+
+      if (ADMIN_MAIN) {
+        ADMIN_MAIN.hidden = false;
+      }
+
+      loadTableFromSupabase(DEFAULT_TABLE);
     }
 
     function createSupabaseClient() {
@@ -286,6 +381,26 @@
       }
     }
 
+    if (PIN_INPUT) {
+      PIN_INPUT.addEventListener('input', () => {
+        PIN_INPUT.value = PIN_INPUT.value.replace(/\D/g, '').slice(0, 6);
+        if (PIN_ERROR) {
+          PIN_ERROR.hidden = true;
+        }
+      });
+
+      PIN_INPUT.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          unlockAdmin();
+        }
+      });
+    }
+
+    if (PIN_SUBMIT) {
+      PIN_SUBMIT.addEventListener('click', unlockAdmin);
+    }
+
     if (TABLE_SWITCHER) {
       TABLE_SWITCHER.addEventListener('click', (event) => {
         const target = event.target.closest('.table-btn');
@@ -295,7 +410,7 @@
       });
     }
 
-    loadTableFromSupabase(DEFAULT_TABLE);
+    PIN_INPUT?.focus();
   </script>
 </body>
 
