@@ -18,6 +18,19 @@ const PAGE_ALIASES = Object.freeze({
   '/checkout-popup': '/checkout-popup.html',
   '/admin': '/admin.html'
 });
+const LEGACY_REDIRECTS = Object.freeze({
+  '/shop.html': '/',
+  '/landing.htm': '/',
+  '/landing.html': '/',
+  '/shop': '/',
+  '/landing': '/'
+});
+
+function getLegacyRedirectTarget(requestUrl) {
+  const parsedUrl = new URL(requestUrl, 'http://localhost');
+  const pathname = parsedUrl.pathname.replace(/\/+$/, '') || '/';
+  return LEGACY_REDIRECTS[pathname] || null;
+}
 
 function escapeCsvValue(value) {
   const text = value === null || value === undefined ? '' : String(value);
@@ -62,6 +75,10 @@ function resolveRequestPath(requestUrl) {
   const parsedUrl = new URL(requestUrl, 'http://localhost');
   const pathname = parsedUrl.pathname.replace(/\/+$/, '') || '/';
   let resolvedPath = pathname;
+
+  if (LEGACY_REDIRECTS[resolvedPath]) {
+    return LEGACY_REDIRECTS[resolvedPath];
+  }
 
   for (let index = 0; index < 5; index += 1) {
     const aliasTarget = PAGE_ALIASES[resolvedPath];
@@ -138,6 +155,18 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ ok: false, error: error.message }));
       }
     });
+    return;
+  }
+
+  const redirectTarget = getLegacyRedirectTarget(req.url);
+  if (redirectTarget) {
+    res.writeHead(301, {
+      Location: redirectTarget,
+      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    });
+    res.end();
     return;
   }
 
